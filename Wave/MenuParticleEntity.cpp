@@ -1,6 +1,6 @@
 #include "MenuParticleEntity.h"
 
-MenuParticleEntity::MenuParticleEntity(float_t x, float_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e) : x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), color(std::rand()%(255), std::rand()%(255), std::rand()%(255)) {
+MenuParticleEntity::MenuParticleEntity(float_t x, float_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui) : x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(std::rand()%(255), std::rand()%(255), std::rand()%(255)) {
 	r.setSize(sf::Vector2f(32, 32));
 	r.setPosition(sf::Vector2f(x, y));
 	r.setFillColor(color);

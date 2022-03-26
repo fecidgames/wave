@@ -60,12 +60,17 @@ public:
 		this->velY = velY;
 	}
 
+	virtual bool renderOverGui() {
+		return overGui;
+	}
+
 private:
 	Entity* parent;
 	float_t x = 0, y = 0, velX = 0, velY = 0, life = 0;
 	ID id;
 	uint32_t uid;
 	uint32_t alpha = 255;
+	bool overGui;
 
 	sf::Color c;
 

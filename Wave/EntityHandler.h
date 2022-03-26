@@ -11,7 +11,7 @@ public:
 
 	void add(Entity* e);
 
-	void render(sf::RenderWindow& w);
+	void render(sf::RenderWindow& w, bool afterGui);
 	void tick(sf::Time& dt);
 
 	std::vector<Entity*> entities;

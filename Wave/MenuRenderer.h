@@ -5,6 +5,9 @@
 #include <iostream>
 
 #include "STATE.h"
+#include "EntityHandler.h"
+
+class EntityHandler;
 
 namespace Gui {
 	class Button {
@@ -56,7 +59,7 @@ namespace Gui {
 class MenuRenderer {
 
 public:
-	MenuRenderer();
+	MenuRenderer(EntityHandler& e);
 	~MenuRenderer();
 
 	void render(sf::RenderWindow& window);
@@ -76,7 +79,10 @@ private:
 
 	sf::Font menuFont;
 
+	EntityHandler& e;
+
 	void setupButtons(STATE gameState);
 	void setupDrawables(STATE gameState);
+	void setupEntities(STATE gameState);
 };
 

@@ -1,6 +1,6 @@
 #include "MenuRenderer.h"
 
-MenuRenderer::MenuRenderer() {
+MenuRenderer::MenuRenderer(EntityHandler& e) : e(e) {
 	if(!menuFont.loadFromFile("fonts/mainFont.ttf")) {
 		throw "[mainFont.ttf] could not be loaded";
 	}
@@ -17,6 +17,7 @@ MenuRenderer::~MenuRenderer() {
 void MenuRenderer::setup(STATE gameState) {
 	setupDrawables(gameState);
 	setupButtons(gameState);
+	setupEntities(gameState);
 }
 
 void MenuRenderer::setupDrawables(STATE gameState) {
@@ -40,6 +41,15 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 
 		rects.insert(rects.begin(), r1);
+	}
+}
+
+void MenuRenderer::setupEntities(STATE gameState) {
+	if(gameState == STATE::STATE_MENU_SELECT) {
+		e.add(new MenuParticleEntity(Window::WIDTH / 2 + 50, 50, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
+		e.add(new MenuParticleEntity(Window::WIDTH / 2 + Window::WIDTH / 2 - 62, Window::HEIGHT / 2, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
+		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 3, Window::HEIGHT - Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
+		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 4, Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
 	}
 }
 
