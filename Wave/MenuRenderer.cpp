@@ -16,8 +16,6 @@ MenuRenderer::~MenuRenderer() {
 
 void MenuRenderer::setup(STATE gameState) {
 	setupDrawables(gameState);
-	//Comment to test <3
-	//Test2
 	setupButtons(gameState);
 }
 
