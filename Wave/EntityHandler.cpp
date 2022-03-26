@@ -4,7 +4,7 @@ EntityHandler::EntityHandler() {
 	std::srand(NULL);
 
 	for(int32_t i = 0; i < 15; i++) {
-		add(new MenuParticleEntity(std::rand()%Window::WIDTH, std::rand()%Window::HEIGHT, ID::MenuParticle, 0, *this));
+		add(new MenuParticleEntity(std::rand()%Window::WIDTH, std::rand()%Window::HEIGHT, ID::MenuParticle, 0, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
 	}
 }
 
@@ -17,19 +17,6 @@ EntityHandler::~EntityHandler() {
 void EntityHandler::tick(sf::Time& dt) {
 	for(Entity* e : entities) {
 		e->tick(dt);
-		sf::Vector2f pos;
-		if(!(e->getId() == ID::Player)) {
-			pos = e->getBounds().getPosition();
-
-			if((pos.x >= Window::WIDTH - 30) || (pos.x <= 0)) {
-				e->setVelX(-e->getVelX());
-				e->tick(dt);
-			}
-			if((pos.y >= Window::HEIGHT - 30) || (pos.y <= 0)) {
-				e->setVelY(-e->getVelY());
-				e->tick(dt);
-			}
-		}
 	}
 
 	for(auto const& t : trails) {

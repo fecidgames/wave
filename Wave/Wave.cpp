@@ -1,7 +1,6 @@
 #include "Wave.h"
 
 Wave::Wave(sf::ContextSettings settings) : window(sf::VideoMode(Window::WIDTH, Window::HEIGHT), "Wave! - Release 1.1", sf::Style::Close | sf::Style::Titlebar, settings), menuRenderer(), inputHandler(menuRenderer), entityHandler() {
-	//Load stuff
 	init();
 }
 
@@ -62,8 +61,6 @@ void Wave::loop() {
 		double_t now = clock2.getElapsedTime().asMilliseconds() * 1000;
 		delta += (now - lastTime) / ms;
 		lastTime = now;
-
-		std::cout << delta << "\n";
 
 		while(delta >= .0007) {
 			tick(dt);
