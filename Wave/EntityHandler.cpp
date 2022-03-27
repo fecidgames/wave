@@ -14,13 +14,13 @@ EntityHandler::~EntityHandler() {
 	}
 }
 
-void EntityHandler::tick(sf::Time& dt) {
+void EntityHandler::tick() {
 	for(Entity* e : entities) {
-		e->tick(dt);
+		e->tick();
 	}
 
 	for(auto const& t : trails) {
-		t.first->tick(dt);
+		t.first->tick();
 	}
 }
 
