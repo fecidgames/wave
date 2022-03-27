@@ -45,9 +45,6 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 }
 
 void MenuRenderer::setupEntities(STATE gameState) {
-	uint32_t indices [100] = {};
-
-	int j = 0;
 	for(int i = 0; i < e.entities.size(); ++i) {
 		if(e.entities.at(i)->renderOverGui() && e.entities.at(i)->getId() == ID::MenuParticle) {
 			e.entities.erase(e.entities.begin() + i);
