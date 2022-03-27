@@ -65,6 +65,9 @@ void InputHandler::update(sf::Event* e) {
 void InputHandler::tick() {
 	for(Entity* e : entityHandler->entities) {
 		if(PlayerEntity* p = dynamic_cast<PlayerEntity*>(e)) {
+			if(!p->isControllable())
+				return;
+
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 				p->setVelY(-4.0f);
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
