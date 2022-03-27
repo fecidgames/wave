@@ -45,6 +45,16 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 }
 
 void MenuRenderer::setupEntities(STATE gameState) {
+	uint32_t indices [100] = {};
+
+	int j = 0;
+	for(int i = 0; i < e.entities.size(); ++i) {
+		if(e.entities.at(i)->renderOverGui() && e.entities.at(i)->getId() == ID::MenuParticle) {
+			e.entities.erase(e.entities.begin() + i);
+			i--;
+		}
+	}
+
 	if(gameState == STATE::STATE_MENU_SELECT) {
 		e.add(new MenuParticleEntity(Window::WIDTH / 2 + 50, 50, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
 		e.add(new MenuParticleEntity(Window::WIDTH / 2 + Window::WIDTH / 2 - 62, Window::HEIGHT / 2, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
