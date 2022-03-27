@@ -9,5 +9,8 @@ public:
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
 	virtual sf::RectangleShape getBounds();
+
+private:
+	EntityHandler& e;
 };
 
