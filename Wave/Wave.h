@@ -17,8 +17,8 @@ public:
 
 private:
 	void init();
-	void render(sf::Time& dt);
-	void tick(sf::Time& dt);
+	void render();
+	void tick();
 	void loop();
 
 	MenuRenderer menuRenderer;

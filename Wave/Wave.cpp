@@ -1,6 +1,6 @@
 #include "Wave.h"
 
-Wave::Wave(sf::ContextSettings settings) : window(sf::VideoMode(Window::WIDTH, Window::HEIGHT), "Wave! - Release 1.1", sf::Style::Close | sf::Style::Titlebar, settings), entityHandler(), menuRenderer(entityHandler), inputHandler(menuRenderer) {
+Wave::Wave(sf::ContextSettings settings) : window(sf::VideoMode(Window::WIDTH, Window::HEIGHT), "Wave! - Release 1.1", sf::Style::Close | sf::Style::Titlebar, settings), entityHandler(), menuRenderer(entityHandler), inputHandler(menuRenderer, entityHandler) {
 	init();
 }
 
@@ -8,12 +8,13 @@ Wave::~Wave() {
 	
 }
 
-void Wave::tick(sf::Time& dt) {
-	entityHandler.tick(dt);
+void Wave::tick() {
+	entityHandler.tick();
+	inputHandler.tick();
 }
 
 double startupFadeCol = 250;
-void Wave::render(sf::Time& dt) {
+void Wave::render() {
 	startupFadeCol = (startupFadeCol >= 25) ? (startupFadeCol - 25) : 0;
 	window.clear(sf::Color(startupFadeCol, startupFadeCol, startupFadeCol));
 
@@ -64,13 +65,13 @@ void Wave::loop() {
 		lastTime = now;
 
 		while(delta >= .0007) {
-			tick(dt);
+			tick();
 			delta -= .0007;
 		}
 
 		if(window.isOpen()) {
 			fps++;
-			render(dt);
+			render();
 		}
 		if(clock1.restart().asMilliseconds() - timer > 1000) {
 			timer += 1000;

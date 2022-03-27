@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MenuParticleEntity.h"
+#include "PlayerEntity.h"
 #include "TrailEntity.h"
 
 class EntityHandler {

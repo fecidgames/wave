@@ -19,11 +19,6 @@ void MenuParticleEntity::render(sf::RenderWindow& w) {
 
 void MenuParticleEntity::tick() {
 	r.move(sf::Vector2f((velX), (velY)));
-
-	float_t mov_x = std::abs(r.getPosition().x - x);
-	float_t mov_y = std::abs(r.getPosition().y - y);
-	float_t moved = (mov_x + mov_y) / 2;
-
 	x = r.getPosition().x;
 	y = r.getPosition().y;
 

@@ -1,6 +1,6 @@
 #include "InputHandler.h"
 
-InputHandler::InputHandler(MenuRenderer& menuRenderer) : menuRenderer(&menuRenderer), gameState(menuRenderer.gameState) {
+InputHandler::InputHandler(MenuRenderer& menuRenderer, EntityHandler& entityHandler) : menuRenderer(&menuRenderer), entityHandler(&entityHandler), gameState(menuRenderer.gameState) {
 
 }
 
@@ -39,6 +39,10 @@ void InputHandler::update(sf::Event* e) {
 						gameState.setGameState(STATE::STATE_MENU_MAIN);
 						menuRenderer->setup(STATE::STATE_MENU_MAIN);
 					}
+					if(b->getId(5)) {
+						gameState.setGameState(STATE::STATE_GAME_INGAME);
+						menuRenderer->setup(STATE::STATE_GAME_INGAME);
+					}
 				}
 			}
 
@@ -55,6 +59,28 @@ void InputHandler::update(sf::Event* e) {
 
 		default:
 			break;
+	}
+}
+
+void InputHandler::tick() {
+	for(Entity* e : entityHandler->entities) {
+		if(PlayerEntity* p = dynamic_cast<PlayerEntity*>(e)) {
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+				p->setVelY(-4.0f);
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+				p->setVelY(4.0F);
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				p->setVelY(0.0F);
+			}
+
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+				p->setVelX(-4.0f);
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				p->setVelX(4.0F);
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				p->setVelX(0.0F);
+			}
+		}
 	}
 }
 

@@ -65,7 +65,7 @@ public:
 	}
 
 private:
-	float_t x, y, velX = 0, velY = 0;
+	float_t x, y, velX, velY;
 	ID id;
 	uint32_t uid;
 	bool overGui;
