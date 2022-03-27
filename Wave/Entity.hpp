@@ -8,7 +8,7 @@
 class Entity {
 public:
 	virtual void render(sf::RenderWindow& w) = 0;
-	virtual void tick(sf::Time& dt) = 0;
+	virtual void tick() = 0;
 	virtual sf::RectangleShape getBounds() = 0;
 	virtual uint32_t getUid() = 0;
 	virtual sf::Color getColor() = 0;

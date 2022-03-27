@@ -9,7 +9,7 @@ public:
 	TrailEntity(float_t x, float_t y, ID id, uint32_t uid, float_t life, sf::Color c, EntityHandler& e);
 
 	virtual void render(sf::RenderWindow& w);
-	virtual void tick(sf::Time& dt);
+	virtual void tick();
 	virtual sf::RectangleShape getBounds();
 
 	void setX(float_t x) {

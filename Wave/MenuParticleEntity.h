@@ -9,7 +9,7 @@ public:
 	MenuParticleEntity(float_t x, float_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui);
 
 	virtual void render(sf::RenderWindow& w);
-	virtual void tick(sf::Time& dt);
+	virtual void tick();
 	virtual sf::RectangleShape getBounds();
 
 	void setX(float_t x) {

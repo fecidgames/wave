@@ -19,7 +19,7 @@ void TrailEntity::render(sf::RenderWindow& w) {
 	w.draw(r);
 }
 
-void TrailEntity::tick(sf::Time& dt) {
+void TrailEntity::tick() {
 	std::map<Entity*, Entity*>::iterator it;
 	it=e.trails.find(this);
 

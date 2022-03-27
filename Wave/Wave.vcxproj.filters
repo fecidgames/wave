@@ -63,6 +63,9 @@
     <ClCompile Include="TrailEntity.cpp">
       <Filter>Source Files\Entity\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerEntity.cpp">
+      <Filter>Source Files\Entity\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Wave.h">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="Entity.hpp">
       <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerEntity.h">
+      <Filter>Header Files\Entity\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

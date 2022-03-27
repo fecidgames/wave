@@ -12,7 +12,7 @@ public:
 	void add(Entity* e);
 
 	void render(sf::RenderWindow& w, bool afterGui);
-	void tick(sf::Time& dt);
+	void tick();
 
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;
