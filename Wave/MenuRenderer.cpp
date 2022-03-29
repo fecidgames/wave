@@ -60,12 +60,8 @@ void MenuRenderer::setupEntities(STATE gameState) {
 	}
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
-		for(int i = 0; i < e.entities.size(); ++i) {
-		if(e.entities.at(i)->getId() == ID::MenuParticle) {
-			e.entities.erase(e.entities.begin() + i);
-			i--;
-		}
-	}
+		e.entities.clear();
+		e.add(new PlayerEntity(Window::WIDTH / 2 - 16, (Window::HEIGHT / 2) - 16, ID::Player, 17, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), e, true, true));			
 	}
 }
 

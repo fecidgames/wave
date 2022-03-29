@@ -6,8 +6,6 @@ EntityHandler::EntityHandler() {
 	for(int32_t i = 0; i < 15; i++) {
 		add(new MenuParticleEntity(std::rand()%Window::WIDTH, std::rand()%Window::HEIGHT, ID::MenuParticle, i, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this, false));
 	}
-
-	add(new PlayerEntity(10, 10, ID::Player, 17, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this, true, true));
 }
 
 EntityHandler::~EntityHandler() {

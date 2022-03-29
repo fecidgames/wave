@@ -3,7 +3,7 @@
 
 namespace Window {
 	const static int WIDTH = 1080;
-	const static int HEIGHT = WIDTH / 12 * 8;
+	const static int HEIGHT = 720;
 }
 
 enum class ID {

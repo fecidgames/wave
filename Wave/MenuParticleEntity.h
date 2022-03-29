@@ -6,19 +6,11 @@ class EntityHandler;
 
 class MenuParticleEntity : public Entity { 
 public:
-	MenuParticleEntity(float_t x, float_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui);
+	MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
 	virtual sf::RectangleShape getBounds();
-
-	void setX(float_t x) {
-		this->x = x;
-	}
-	
-	void setY(float_t y) {
-		this->y = y;
-	}
 	
 	float getX() {
 		return x;
@@ -64,8 +56,17 @@ public:
 		return overGui;
 	}
 
+	virtual void setX(int32_t x) {
+		this->x = x;
+	}
+
+	virtual void setY(int32_t y) {
+		this-> y = y;
+	}
+
 private:
-	float_t x, y, velX, velY;
+	int32_t x, y;
+	float_t velX, velY;
 	ID id;
 	uint32_t uid;
 	bool overGui;

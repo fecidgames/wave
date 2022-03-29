@@ -20,6 +20,9 @@ public:
 	virtual void setVelX(float_t velX) = 0;
 	virtual void setVelY(float_t velY) = 0;
 
+	virtual void setX(int32_t x) = 0;
+	virtual void setY(int32_t y) = 0;
+
 	virtual bool renderOverGui() = 0;
 
 };
