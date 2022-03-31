@@ -72,17 +72,15 @@ void InputHandler::tick() {
 				p->setVelY(-4.0f);
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 				p->setVelY(4.0F);
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 				p->setVelY(0.0F);
-			}
 
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 				p->setVelX(-4.0f);
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 				p->setVelX(4.0F);
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 				p->setVelX(0.0F);
-			}
 		}
 	}
 }
