@@ -61,7 +61,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
 		e.entities.clear();
-		e.add(new PlayerEntity(Window::WIDTH / 2 - 16, -16 + Window::HEIGHT / 2, ID::Player, 17, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), e, true, true));			
+		e.entities.insert(e.entities.begin(), new PlayerEntity(540, 360, ID::Player, 17, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), e, false, true));			
 	}
 }
 

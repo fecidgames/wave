@@ -36,19 +36,19 @@ public:
 		return color;
 	}
 
-	virtual float_t getVelX() {
+	virtual int32_t getVelX() {
 		return velX;
 	}
 
-	virtual float_t getVelY() {
+	virtual int32_t getVelY() {
 		return velY;
 	}
 
-	virtual void setVelX(float_t velX) {
+	virtual void setVelX(int32_t velX) {
 		this->velX = velX;
 	}
 
-	virtual void setVelY(float_t velY) {
+	virtual void setVelY(int32_t velY) {
 		this->velY = velY;
 	}
 
@@ -66,7 +66,7 @@ public:
 
 private:
 	int32_t x, y;
-	float_t velX, velY;
+	int32_t velX, velY;
 	ID id;
 	uint32_t uid;
 	bool overGui;

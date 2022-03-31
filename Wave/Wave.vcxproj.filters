@@ -66,6 +66,9 @@
     <ClCompile Include="PlayerEntity.cpp">
       <Filter>Source Files\Entity\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Wave.h">
@@ -100,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="PlayerEntity.h">
       <Filter>Header Files\Entity\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

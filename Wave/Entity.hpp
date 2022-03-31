@@ -14,11 +14,11 @@ public:
 	virtual sf::Color getColor() = 0;
 	virtual ID getId() = 0;
 
-	virtual float_t getVelX() = 0;
-	virtual float_t getVelY() = 0;
+	virtual int32_t getVelX() = 0;
+	virtual int32_t getVelY() = 0;
 
-	virtual void setVelX(float_t velX) = 0;
-	virtual void setVelY(float_t velY) = 0;
+	virtual void setVelX(int32_t velX) = 0;
+	virtual void setVelY(int32_t velY) = 0;
 
 	virtual void setX(int32_t x) = 0;
 	virtual void setY(int32_t y) = 0;

@@ -6,7 +6,7 @@ class EntityHandler;
 
 class TrailEntity : public Entity {
 public:
-	TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, float_t life, sf::Color c, EntityHandler& e);
+	TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, int32_t life, sf::Color c, EntityHandler& e);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -36,19 +36,19 @@ public:
 		return parent->getColor();
 	}
 
-	virtual float_t getVelX() {
+	virtual int32_t getVelX() {
 		return parent->getVelX();
 	}
 
-	virtual float_t getVelY() {
+	virtual int32_t getVelY() {
 		return parent->getVelY();
 	}
 
-	virtual void setVelX(float_t velX) {
+	virtual void setVelX(int32_t velX) {
 		this->velX = velX;
 	}
 
-	virtual void setVelY(float_t velY) {
+	virtual void setVelY(int32_t velY) {
 		this->velY = velY;
 	}
 
@@ -67,7 +67,7 @@ public:
 private:
 	Entity* parent;
 	int32_t x = 0, y = 0;
-	float_t velX = 0, velY = 0, life = 0;
+	int32_t velX = 0, velY = 0, life = 0;
 	ID id;
 	uint32_t uid;
 	uint32_t alpha = 255;

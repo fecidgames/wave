@@ -6,7 +6,7 @@ class EntityHandler;
 
 class PlayerEntity : public Entity {
 public:
-	PlayerEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, bool controllable);
+	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, bool controllable);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -24,19 +24,19 @@ public:
 		return id;
 	}
 
-	virtual float_t getVelX() {
+	virtual int32_t getVelX() {
 		return velX;
 	}
 
-	virtual float_t getVelY() {
+	virtual int32_t getVelY() {
 		return velY;
 	}
 
-	virtual void setVelX(float_t velX) {
+	virtual void setVelX(int32_t velX) {
 		this->velX = velX;
 	}
 
-	virtual void setVelY(float_t velY) {
+	virtual void setVelY(int32_t velY) {
 		this->velY = velY;
 	}
 
@@ -56,11 +56,13 @@ public:
 		this-> y = y;
 	}
 
-	float_t velX, velY;
+	int32_t velX, velY;
 
 private:
-	int32_t x;
-	int32_t y;
+	uint32_t x;
+	uint32_t y;
+
+	uint32_t oldX, oldY;
 
 	ID id;
 	uint32_t uid;

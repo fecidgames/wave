@@ -6,6 +6,7 @@
 
 #include "InputHandler.h"
 #include "EntityHandler.h"
+#include "HUD.h"
 
 class Wave {
 
@@ -24,6 +25,7 @@ private:
 	MenuRenderer menuRenderer;
 	InputHandler inputHandler;
 	EntityHandler entityHandler;
+	HUD hud;
 
 	GameState state;
 

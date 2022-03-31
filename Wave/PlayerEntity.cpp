@@ -1,6 +1,6 @@
 #include "PlayerEntity.h"
 
-PlayerEntity::PlayerEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, bool controllable) : x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), controllable(controllable) {
+PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, bool controllable) : x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), controllable(controllable) {
 	if(controllable) {
 		for(Entity* entity : e.entities)
 			if(entity->getId() == ID::Player)
@@ -10,6 +10,11 @@ PlayerEntity::PlayerEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector
 	} else {
 		color = sf::Color::White;
 	}
+
+	std::cout << "Player created: " << x << ", " << y << "\n";
+
+	oldX = x;
+	oldY = y;
 }
 
 void PlayerEntity::render(sf::RenderWindow& w) {
@@ -24,6 +29,13 @@ void PlayerEntity::tick() {
 	x += velX;
 	y += velY;
 
+	std::cout << "Player ticked: " << x << ", " << y << "\n";
+
+	if(x >= horizontalBounds.y - 30)
+		setX(oldX);
+	if(y >= verticalBounds.y - 30)
+		setY(oldY);
+
 	if(x >= horizontalBounds.y - 30)
 		setX(horizontalBounds.y - 30);
 	if(x <= horizontalBounds.x)
@@ -35,6 +47,9 @@ void PlayerEntity::tick() {
 
 	if(!(velX == 0 && velY == 0))
 		e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity(x, y, id, uid, 25.5f, color, e), this));
+
+	oldX = x;
+	oldY = y;
 }
 
 sf::RectangleShape PlayerEntity::getBounds() {
