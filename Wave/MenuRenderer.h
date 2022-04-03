@@ -17,7 +17,6 @@ namespace Gui {
 		bool hover = false;
 
 		Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id);
-		~Button();
 
 		void render(sf::RenderWindow& window);
 
@@ -54,6 +53,14 @@ namespace Gui {
 		float_t width, height;
 		std::string text;
 		int32_t id;
+	};
+
+	class Checkbox {
+	
+	};
+
+	class Slider {
+	
 	};
 }
 
@@ -97,5 +104,7 @@ private:
 	void setupButtons(STATE gameState);
 	void setupDrawables(STATE gameState);
 	void setupEntities(STATE gameState);
+
+	void playerPos(PlayerEntity* p);
 };
 

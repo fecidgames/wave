@@ -39,8 +39,14 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		r1.setOutlineColor(sf::Color::White);
 		r1.setOutlineThickness(1.0f);
 
-
 		rects.insert(rects.begin(), r1);
+	}
+
+	if(gameState == STATE::STATE_MENU_SETTINGS) {
+		sf::Text title("Options", menuFont, 50);
+		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
+
+		texts.insert(texts.begin(), title);
 	}
 }
 
@@ -83,6 +89,9 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 280, (Window::WIDTH / 2) - 32, 64, "Play gamemode", 5));
 			break;
+
+		case STATE::STATE_MENU_SETTINGS:
+			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
 	}
 }
 
@@ -96,108 +105,108 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 	for(sf::RectangleShape r : rects)
 		window.draw(r);
 
-	if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
+	//======================================================//
+
+	if(gameState.getGameState(STATE::STATE_GAME_INGAME))
 		hud.render();
-	}
 
 	if(gameState.getGameState(STATE::STATE_MENU_SELECT)) {
 		for(int i = 0; i < e.entities.size(); i++) {
 			if(e.entities.at(i)->getId() == ID::Player) {
+
 				PlayerEntity* p = (PlayerEntity*) e.entities.at(i);
 				if(!p->isControllable()) {
 					if(time < 1)
 						p->setVelX(5);
 
-					std::srand(time);
 					time++;
-
-					if(p->getVelX() > 0) {
-						if(p->getBounds().getPosition().x > (Window::WIDTH - 16) - std::rand()%130 + 20) {
-							if(isOdd(time)) {
-								p->setVelY(5);
-								p->setVelX(0);
-							} else {
-								p->setVelY(-5);
-								p->setVelX(-5);
-							}
-						}
-					} 
-					if(p->getVelX() < 0) {
-						if(p->getBounds().getPosition().x < (Window::WIDTH / 2 + 16) + std::rand()%130 - 20) {
-							if(isOdd(time)) {
-								p->setVelY(5);
-								p->setVelX(0);
-							} else {
-								p->setVelY(-5);
-								p->setVelX(5);
-							}
-						}
-					}
-					if(p->getVelY() > 0) {
-						if(p->getBounds().getPosition().y > (Window::HEIGHT - 16) - std::rand()%130 + 20) {
-							if(isOdd(time)) {
-								p->setVelY(0);
-								p->setVelX(-5);
-							} else {
-								p->setVelY(-5);
-								p->setVelX(5);
-							}
-						}
-					} 
-					if(p->getVelY() < 0) {
-						if(p->getBounds().getPosition().y < (16) + std::rand()%130 - 20) {
-							if(isOdd(time)) {
-								p->setVelY(0);
-								p->setVelX(-5);
-							} else {
-								p->setVelY(5);
-								p->setVelX(5);
-							}
-						}
-					}
-
-					//for(Entity* en : e.entities) {
-						//if(!(en->getId() == ID::Player)) {
-						//	if(p->getBounds().getGlobalBounds().intersects(en->getBounds().getGlobalBounds())){
-						//		p->setVelX(-p->getVelX());
-						//		p->setVelY(-p->getVelY());
-						//		std::cout << "Intersect with " << en->getUid() << "\n";
-						//	}
-						//}
-					//}
+					std::srand(time);
+					playerPos(p);
 				}
 			}
 		}
 	}
 }
 
-//GUI STUFF VVV
-
-Gui::Button::Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id) {
-	this->x = x;
-	this->y = y;
-	this->width = width;
-	this->height = height;
-	this->text = text;
-	this->id = id;
+void MenuRenderer::playerPos(PlayerEntity* p) {
+	if(p->getVelX() > 0) {
+		if(p->getBounds().getPosition().x > (Window::WIDTH - 16) - std::rand()%130 + 20) {
+			if(isOdd(time)) {
+				p->setVelY(5);
+				p->setVelX(0);
+			} else {
+				p->setVelY(-5);
+				p->setVelX(-5);
+			}
+		}
+	} 
+	if(p->getVelX() < 0) {
+		if(p->getBounds().getPosition().x < (Window::WIDTH / 2 + 16) + std::rand()%130 - 20) {
+			if(isOdd(time)) {
+				p->setVelY(5);
+				p->setVelX(0);
+			} else {
+				p->setVelY(-5);
+				p->setVelX(5);
+			}
+		}
+	}
+	if(p->getVelY() > 0) {
+		if(p->getBounds().getPosition().y > (Window::HEIGHT - 16) - std::rand()%130 + 20) {
+			if(isOdd(time)) {
+				p->setVelY(0);
+				p->setVelX(-5);
+			} else {
+				p->setVelY(-5);
+				p->setVelX(5);
+			}
+		}
+	} 
+	if(p->getVelY() < 0) {
+		if(p->getBounds().getPosition().y < (16) + std::rand()%130 - 20) {
+			if(isOdd(time)) {
+				p->setVelY(0);
+				p->setVelX(-5);
+			} else {
+				p->setVelY(5);
+				p->setVelX(5);
+			}
+		}
+	}
 }
 
-Gui::Button::~Button() {
-	
+
+
+
+
+
+
+
+/*
+===========================================================================================================================================================
+						######  #	 #  #####		######  ######  ##   ##  ######  ######  #    #  ######  #    #  #######  ######
+						#       #	 #    #			#     	#    #  # # # #  #    #	 #    #	 ##   #  #		 ##   #     #     #
+						#   ##  #	 #    #			#   	#    #  #  #  #  ######	 #    #	 # #  #  ####	 # #  #     #     ######
+						#    #  #	 #    #			#    	#    #  #     #  #		 #    #	 #  # #  #		 #  # #     #          #
+						######  ######  #####		######	######  #     #  #		 ######	 #   ##  ######  #   ##     #     ######
+===========================================================================================================================================================
+*/
+
+Gui::Button::Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id) : x(x), y(y), width(width), height(height), text(text), id(id) {
+
 }
 
 void Gui::Button::render(sf::RenderWindow& window) {
 	sf::RectangleShape btnShape(sf::Vector2f(!hover ? width : width + 6, !hover ? height : height + 6));
 	btnShape.setPosition(!hover ? x : x - 3, !hover ? y : y - 3);
 	btnShape.setOutlineThickness(1.0f);
-
 	btnShape.setFillColor(!down ? sf::Color::Black : sf::Color::White);
 	btnShape.setOutlineColor(sf::Color::White);
 
 	sf::Font f;
 	f.loadFromFile("fonts/mainFont.ttf");
-	sf::Text btnText(text, f, 35);
 
+	sf::Text btnText(text, f, 35);
 	while(btnText.getGlobalBounds().width > btnShape.getGlobalBounds().width)
 		btnText.setCharacterSize(btnText.getCharacterSize() - 2.5);
 
