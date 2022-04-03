@@ -12,11 +12,11 @@ public:
 	virtual void tick();
 	virtual sf::RectangleShape getBounds();
 	
-	float getX() {
+	int32_t getX() {
 		return x;
 	}
 	
-	float getY() {
+	int32_t getY() {
 		return y;
 	}
 	

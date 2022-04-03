@@ -8,7 +8,7 @@ void InputHandler::update(sf::Event* e) {
 	switch(e->type) {
 		case sf::Event::MouseButtonPressed:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
-				if(mouseOver((float_t) e->mouseButton.x, (float_t) e->mouseButton.y, b)) {
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
 					b->down = true;
 				}
 			}
@@ -19,7 +19,7 @@ void InputHandler::update(sf::Event* e) {
 			for(Gui::Button* b : menuRenderer->getButtons()) {
 				b->down = false;
 
-				if(mouseOver((float_t) e->mouseButton.x, (float_t) e->mouseButton.y, b)) {
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
 					if(b->getId(0)) {
 						gameState.setGameState(STATE::STATE_MENU_SELECT);
 						menuRenderer->setup(STATE::STATE_MENU_SELECT);
@@ -50,7 +50,7 @@ void InputHandler::update(sf::Event* e) {
 
 		case sf::Event::MouseMoved:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
-				if(mouseOver((float_t) e->mouseMove.x, (float_t) e->mouseMove.y, b)) {
+				if(mouseOver(e->mouseMove.x, e->mouseMove.y, b)) {
 					b->hover = true;
 				} else {
 					b->hover = false;
@@ -85,7 +85,7 @@ void InputHandler::tick() {
 	}
 }
 
-bool InputHandler::mouseOver(float_t mx, float_t my, Gui::Button* button) {
+bool InputHandler::mouseOver(double mx, double my, Gui::Button* button) {
 	if((mx > button->getX()) && (mx < button->getX() + button->getWidth()))
 		if((my > button->getY()) && (my < button->getY() + button->getHeight()))
 			return true;
@@ -93,7 +93,7 @@ bool InputHandler::mouseOver(float_t mx, float_t my, Gui::Button* button) {
 	return false;
 }
 
-bool InputHandler::mouseOver(float_t mx, float_t my, float_t x, float_t y, float_t width, float_t height) {
+bool InputHandler::mouseOver(double mx, double my, double x, double y, double width, double height) {
 	if((mx > x) && (mx < x + width))
 		if((my > y) && (my < y + height))
 			return true;

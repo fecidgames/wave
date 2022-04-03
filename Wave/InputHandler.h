@@ -10,8 +10,8 @@ public:
 
 	void update(sf::Event* e);
 
-	bool mouseOver(float_t mx, float_t my, float_t x, float_t y, float_t width, float_t height);
-	bool mouseOver(float_t mx, float_t my, Gui::Button* button);
+	bool mouseOver(double mx, double my, double x, double y, double width, double height);
+	bool mouseOver(double mx, double my, Gui::Button* button);
 
 	void tick();
 

@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 
 namespace Window {
-	const static int WIDTH = 1080;
-	const static int HEIGHT = 720;
+	const static uint32_t WIDTH = 1080;
+	const static uint32_t HEIGHT = 720;
 }
 
 enum class ID {
