@@ -1,6 +1,6 @@
 #include "MenuRenderer.h"
 
-MenuRenderer::MenuRenderer(EntityHandler& e) : e(e) {
+MenuRenderer::MenuRenderer(EntityHandler& e, HUD& hud) : e(e), hud(hud) {
 	if(!menuFont.loadFromFile("fonts/mainFont.ttf")) {
 		throw "[mainFont.ttf] could not be loaded";
 	}
@@ -45,8 +45,10 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 }
 
 void MenuRenderer::setupEntities(STATE gameState) {
+	time = 0;
+
 	for(int i = 0; i < e.entities.size(); ++i) {
-		if(e.entities.at(i)->renderOverGui() && e.entities.at(i)->getId() == ID::MenuParticle) {
+		if(e.entities.at(i)->renderOverGui() && e.entities.at(i)->getId() == ID::MenuParticle || e.entities.at(i)->getId() == ID::Player) {
 			e.entities.erase(e.entities.begin() + i);
 			i--;
 		}
@@ -57,11 +59,12 @@ void MenuRenderer::setupEntities(STATE gameState) {
 		e.add(new MenuParticleEntity(Window::WIDTH / 2 + Window::WIDTH / 2 - 62, Window::HEIGHT / 2, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
 		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 3, Window::HEIGHT - Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
 		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 4, Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
+		e.add(new PlayerEntity(Window::WIDTH - Window::WIDTH / 4 - 16, Window::HEIGHT / 2 - 16, ID::Player, 18, sf::Vector2i(Window::WIDTH / 2 + 16, Window::WIDTH - 16), sf::Vector2i(16, Window::HEIGHT - 16), e, true, false));
 	}
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
 		e.entities.clear();
-		e.entities.insert(e.entities.begin(), new PlayerEntity(540, 360, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));			
+		e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));			
 	}
 }
 
@@ -92,6 +95,80 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 
 	for(sf::RectangleShape r : rects)
 		window.draw(r);
+
+	if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
+		hud.render();
+	}
+
+	if(gameState.getGameState(STATE::STATE_MENU_SELECT)) {
+		for(int i = 0; i < e.entities.size(); i++) {
+			if(e.entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*) e.entities.at(i);
+				if(!p->isControllable()) {
+					if(time < 1)
+						p->setVelX(5);
+
+					std::srand(time);
+					time++;
+
+					if(p->getVelX() > 0) {
+						if(p->getBounds().getPosition().x > (Window::WIDTH - 16) - std::rand()%130 + 20) {
+							if(isOdd(time)) {
+								p->setVelY(5);
+								p->setVelX(0);
+							} else {
+								p->setVelY(-5);
+								p->setVelX(-5);
+							}
+						}
+					} 
+					if(p->getVelX() < 0) {
+						if(p->getBounds().getPosition().x < (Window::WIDTH / 2 + 16) + std::rand()%130 - 20) {
+							if(isOdd(time)) {
+								p->setVelY(5);
+								p->setVelX(0);
+							} else {
+								p->setVelY(-5);
+								p->setVelX(5);
+							}
+						}
+					}
+					if(p->getVelY() > 0) {
+						if(p->getBounds().getPosition().y > (Window::HEIGHT - 16) - std::rand()%130 + 20) {
+							if(isOdd(time)) {
+								p->setVelY(0);
+								p->setVelX(-5);
+							} else {
+								p->setVelY(-5);
+								p->setVelX(5);
+							}
+						}
+					} 
+					if(p->getVelY() < 0) {
+						if(p->getBounds().getPosition().y < (16) + std::rand()%130 - 20) {
+							if(isOdd(time)) {
+								p->setVelY(0);
+								p->setVelX(-5);
+							} else {
+								p->setVelY(5);
+								p->setVelX(5);
+							}
+						}
+					}
+
+					//for(Entity* en : e.entities) {
+						//if(!(en->getId() == ID::Player)) {
+						//	if(p->getBounds().getGlobalBounds().intersects(en->getBounds().getGlobalBounds())){
+						//		p->setVelX(-p->getVelX());
+						//		p->setVelY(-p->getVelY());
+						//		std::cout << "Intersect with " << en->getUid() << "\n";
+						//	}
+						//}
+					//}
+				}
+			}
+		}
+	}
 }
 
 //GUI STUFF VVV

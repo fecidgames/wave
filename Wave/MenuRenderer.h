@@ -6,6 +6,7 @@
 
 #include "STATE.h"
 #include "EntityHandler.h"
+#include "HUD.h"
 
 class EntityHandler;
 
@@ -59,7 +60,7 @@ namespace Gui {
 class MenuRenderer {
 
 public:
-	MenuRenderer(EntityHandler& e);
+	MenuRenderer(EntityHandler& e, HUD& hud);
 	~MenuRenderer();
 
 	void render(sf::RenderWindow& window);
@@ -72,14 +73,26 @@ public:
 
 	void setup(STATE gameState);
 
+	HUD& getHud() {
+		return hud;
+	}
+
 private:
 	std::list<Gui::Button*> buttons;
 	std::vector<sf::RectangleShape> rects;
 	std::list<sf::Text> texts;
 
+	HUD& hud;
+
 	sf::Font menuFont;
 
 	EntityHandler& e;
+
+	uint32_t time = 0;
+
+	bool isOdd(int n) {
+		return n % 2 == 0;
+	}
 
 	void setupButtons(STATE gameState);
 	void setupDrawables(STATE gameState);

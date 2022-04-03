@@ -9,7 +9,7 @@ class EntityHandler;
 class HUD {
 
 public:
-	HUD(sf::RenderWindow& window, EntityHandler& entityHandler);
+	HUD(sf::RenderWindow& window, EntityHandler& e);
 	~HUD();
 
 	void render();
@@ -19,7 +19,7 @@ public:
 private:
 	sf::RenderWindow& window;
 
-	EntityHandler& entityHandler;
+	EntityHandler& e;
 	Timer timer{};
 
 	void renderHealth(PlayerEntity* player);
@@ -39,15 +39,21 @@ private:
 		int hours = minutes / 60;
 		minutes %= 60;
 
-		std::string ret = "00:00";
+		std::string sec = "00";
+		std::string min = "00";
+		std::string ret = min + ":" + sec;
+
+		sec = (seconds < 10) ? ("0" + std::to_string(seconds)) : std::to_string(seconds);
+		min = (seconds < 10) ? ("0" + std::to_string(minutes)) : std::to_string(minutes);
+
 		if(hours > 0)
-			ret = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
+			ret = std::to_string(hours) + ":" + min + ":" + sec;
 		if(hours <= 0)
-			ret = std::to_string(minutes) + ":" + std::to_string(seconds);
+			ret = min + ":" + sec;
 		if(hours > 0 && showMilliseconds)
-			ret = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds) + ":" + std::to_string(ms);
+			ret = std::to_string(hours) + ":" + min + ":" + sec + ":" + std::to_string(ms);
 		if(hours <= 0 && showMilliseconds)
-			ret = std::to_string(minutes) + ":" + std::to_string(seconds) + ":" + std::to_string(ms);
+			ret = min + ":" + sec + ":" + std::to_string(ms);
 
 		return ret;
 	}

@@ -42,6 +42,7 @@ void InputHandler::update(sf::Event* e) {
 					if(b->getId(5)) {
 						gameState.setGameState(STATE::STATE_GAME_INGAME);
 						menuRenderer->setup(STATE::STATE_GAME_INGAME);
+						menuRenderer->getHud().startTime();
 					}
 				}
 			}
