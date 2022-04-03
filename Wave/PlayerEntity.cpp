@@ -10,8 +10,6 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 	} else {
 		color = sf::Color::White;
 	}
-
-	std::cout << "Player created: " << x << ", " << y << "\n";
 }
 
 void PlayerEntity::render(sf::RenderWindow& w) {
