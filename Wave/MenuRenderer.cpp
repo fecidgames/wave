@@ -46,7 +46,11 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text title("Options", menuFont, 50);
 		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
 
+		sf::Text volume("Volume", menuFont, 30);
+		volume.setPosition(Window::WIDTH / 2 - 16 - volume.getGlobalBounds().width, 113);
+
 		texts.insert(texts.begin(), title);
+		texts.insert(texts.begin(), volume);
 	}
 }
 
@@ -76,6 +80,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 
 void MenuRenderer::setupButtons(STATE gameState) {
 	buttons.clear();
+	sliders.clear();
 
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
@@ -91,13 +96,20 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			break;
 
 		case STATE::STATE_MENU_SETTINGS:
+			Gui::Slider* sliderVol = new Gui::Slider(Window::WIDTH - Window::WIDTH / 2 + 16, 130, Window::WIDTH / 2 - 32, 16, 32, 6);
+
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
+			sliders.insert(sliders.begin(), sliderVol);
 	}
 }
 
 void MenuRenderer::render(sf::RenderWindow& window) {
 	for(Gui::Button* b : buttons)
 		b->render(window);
+
+	for(Gui::Slider* s : sliders)
+		s->render(window);
+
 
 	for(sf::Text t : texts)
 		window.draw(t);
@@ -191,6 +203,24 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 						######  ######  #####       ######  ######  #     #  #       ######	 #   ##  ######  #   ##     #     ######
 ===========================================================================================================================================================
 */
+
+Gui::Slider::Slider(int32_t x, int32_t y, int32_t length, int32_t blockWidth, int32_t blockHeight, int32_t id) : x(x), y(y), length(length), blockWidth(blockWidth), blockHeight(blockHeight), id(id) {
+	blockX = x;
+}
+
+void Gui::Slider::render(sf::RenderWindow& window) {
+	sf::RectangleShape block(sf::Vector2f(!hover ? blockWidth : blockWidth + 6, !hover ? blockHeight : blockHeight + 6));
+	block.setPosition(!hover ? blockX : blockX - 3, !hover ? y - blockHeight / 2 : y - blockHeight / 2 - 3);
+	block.setFillColor(sf::Color::White);
+	
+	sf::RectangleShape sliderLine(sf::Vector2f(length, 1));
+	sliderLine.setPosition(x, y);
+
+	window.draw(block);
+	window.draw(sliderLine);
+}
+
+//======================================================
 
 Gui::Button::Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id) : x(x), y(y), width(width), height(height), text(text), id(id) {
 

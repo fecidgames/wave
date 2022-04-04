@@ -13,6 +13,19 @@ void InputHandler::update(sf::Event* e) {
 				}
 			}
 
+			for(Gui::Slider* s : menuRenderer->getSliders()) {
+				if(mouseOverBlock(e->mouseButton.x, e->mouseButton.y, s)) {
+					s->mxr = e->mouseButton.x - s->getBlockX();
+					s->dragging = true;
+				}
+
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, s)) {
+					s->mxr = s->getBlockWidth() / 2;
+					s->setBlockX(e->mouseButton.x - s->mxr);
+					s->dragging = true;
+				}
+			}
+
 			break;
 
 		case sf::Event::MouseButtonReleased:
@@ -47,6 +60,10 @@ void InputHandler::update(sf::Event* e) {
 				}
 			}
 
+			for(Gui::Slider* s : menuRenderer->getSliders()) {
+				s->dragging = false;
+			}
+
 			break;
 
 		case sf::Event::MouseMoved:
@@ -56,6 +73,11 @@ void InputHandler::update(sf::Event* e) {
 				} else {
 					b->hover = false;
 				}
+			}
+
+			for(Gui::Slider* s : menuRenderer->getSliders()) {
+				if(s->dragging)
+					s->setBlockX(e->mouseMove.x - s->mxr);
 			}
 
 		default:
@@ -87,8 +109,24 @@ void InputHandler::tick() {
 }
 
 bool InputHandler::mouseOver(double mx, double my, Gui::Button* button) {
-	if((mx > button->getX()) && (mx < button->getX() + button->getWidth()))
-		if((my > button->getY()) && (my < button->getY() + button->getHeight()))
+	if((mx > button->getX()) && (mx < (button->getX() + button->getWidth())))
+		if((my > button->getY()) && (my < (button->getY() + button->getHeight())))
+			return true;
+
+	return false;
+}
+
+bool InputHandler::mouseOver(double mx, double my, Gui::Slider* slider) {
+	if((mx > slider->getX()) && (mx < (slider->getX() + slider->getLength())))
+		if((my > slider->getY() - slider->getBlockHeight() / 2) && (my < (slider->getY() + slider->getBlockHeight() / 2)))
+			return true;
+
+	return false;
+}
+
+bool InputHandler::mouseOverBlock(double mx, double my, Gui::Slider* slider) {
+	if((mx > slider->getBlockX()) && (mx < (slider->getBlockX() + slider->getBlockWidth())))
+		if((my > slider->getY() - slider->getBlockHeight() / 2) && (my < (slider->getY() + slider->getBlockHeight() / 2)))
 			return true;
 
 	return false;

@@ -60,7 +60,59 @@ namespace Gui {
 	};
 
 	class Slider {
-	
+	public:
+		bool hover = false;
+		bool dragging = false;
+
+		int32_t mxr;
+
+		Slider(int32_t x, int32_t y, int32_t length, int32_t blockWidth, int32_t blockHeight, int32_t id);
+
+		void render(sf::RenderWindow& window);
+
+		int32_t getId() {
+			return id;
+		}
+
+		bool getId(int32_t id) {
+			return id == this->id;
+		}
+
+		int32_t getX() {
+			return x;
+		}
+
+		int32_t getY() {
+			return y;
+		}
+
+		int32_t getLength() {
+			return length;
+		}
+
+		int32_t getBlockWidth() {
+			return blockWidth;
+		}
+
+		int32_t getBlockHeight() {
+			return blockHeight;
+		}
+
+		int32_t getBlockX() {
+			return blockX;
+		}
+
+		void setBlockX(int32_t blockX) {
+			if(blockX > (x + length - blockWidth))
+				this->blockX = x + length - blockWidth;
+			else if(blockX < x) 
+				this->blockX = x;
+			else
+				this->blockX = blockX;
+		}
+
+	private:
+		int32_t x, y, length, blockWidth, blockHeight, id, blockX = 0;
 	};
 }
 
@@ -78,6 +130,10 @@ public:
 		return buttons;
 	}
 
+	std::vector<Gui::Slider*> getSliders() {
+		return sliders;
+	}
+
 	void setup(STATE gameState);
 
 	HUD& getHud() {
@@ -86,6 +142,7 @@ public:
 
 private:
 	std::list<Gui::Button*> buttons;
+	std::vector<Gui::Slider*> sliders;
 	std::vector<sf::RectangleShape> rects;
 	std::list<sf::Text> texts;
 
