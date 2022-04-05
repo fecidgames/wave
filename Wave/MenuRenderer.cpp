@@ -47,10 +47,14 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
 
 		sf::Text volume("Volume", menuFont, 30);
-		volume.setPosition(Window::WIDTH / 2 - 16 - volume.getGlobalBounds().width, 113);
+		volume.setPosition(50, 113);
+
+		sf::Text hudScale("HUD size", menuFont, 30);
+		hudScale.setPosition(50, 170);
 
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), volume);
+		texts.insert(texts.begin(), hudScale);
 	}
 }
 
@@ -97,9 +101,11 @@ void MenuRenderer::setupButtons(STATE gameState) {
 
 		case STATE::STATE_MENU_SETTINGS:
 			Gui::Slider* sliderVol = new Gui::Slider(Window::WIDTH - Window::WIDTH / 2 + 16, 130, Window::WIDTH / 2 - 32, 16, 32, 6);
+			Gui::Slider* sliderGuiscl = new Gui::Slider(Window::WIDTH - Window::WIDTH / 2 + 16, 187, Window::WIDTH / 2 - 32, 16, 32, 6);
 
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
 			sliders.insert(sliders.begin(), sliderVol);
+			sliders.insert(sliders.begin(), sliderGuiscl);
 	}
 }
 
