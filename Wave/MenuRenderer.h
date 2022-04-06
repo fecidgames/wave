@@ -56,7 +56,38 @@ namespace Gui {
 	};
 
 	class Checkbox {
-	
+	public:
+		bool checked = false;
+
+		Checkbox(int32_t x, int32_t y, int32_t size, bool checked, int32_t id);
+
+		void render(sf::RenderWindow& window);
+		void updateTexture();
+
+		int32_t getId() {
+			return id;
+		}
+
+		bool getId(int32_t id) {
+			return id == this->id;
+		}
+
+		int32_t getX() {
+			return x;
+		}
+
+		int32_t getY() {
+			return y;
+		}
+
+		int32_t getSize() {
+			return size;
+		}
+
+
+	private:
+		int32_t x, y, size, id;
+		sf::Texture texture;
 	};
 
 	class Slider {
@@ -126,12 +157,16 @@ public:
 
 	GameState gameState;
 
-	std::list<Gui::Button*> getButtons() {
+	std::vector<Gui::Button*> getButtons() {
 		return buttons;
 	}
 
 	std::vector<Gui::Slider*> getSliders() {
 		return sliders;
+	}
+
+	std::vector<Gui::Checkbox*> getCheckboxes() {
+		return checkboxes;
 	}
 
 	void setup(STATE gameState);
@@ -141,8 +176,10 @@ public:
 	}
 
 private:
-	std::list<Gui::Button*> buttons;
+	std::vector<Gui::Button*> buttons;
 	std::vector<Gui::Slider*> sliders;
+	std::vector<Gui::Checkbox*> checkboxes;
+
 	std::vector<sf::RectangleShape> rects;
 	std::list<sf::Text> texts;
 

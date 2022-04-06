@@ -100,8 +100,8 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			break;
 
 		case STATE::STATE_MENU_SETTINGS:
-			Gui::Slider* sliderVol = new Gui::Slider(Window::WIDTH - Window::WIDTH / 2 + 16, 130, Window::WIDTH / 2 - 32, 16, 32, 6);
-			Gui::Slider* sliderGuiscl = new Gui::Slider(Window::WIDTH - Window::WIDTH / 2 + 16, 187, Window::WIDTH / 2 - 32, 16, 32, 6);
+			Gui::Slider* sliderVol = new Gui::Slider(300, 130, Window::WIDTH  - 300 - 16, 16, 32, 6);
+			Gui::Slider* sliderGuiscl = new Gui::Slider(300, 187, Window::WIDTH  - 300 - 16, 16, 32, 6);
 
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
 			sliders.insert(sliders.begin(), sliderVol);
@@ -210,8 +210,30 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 ===========================================================================================================================================================
 */
 
+Gui::Checkbox::Checkbox(int32_t x, int32_t y, int32_t size, bool checked, int32_t id) : x(x), y(y), size(size), checked(checked), id(id) {
+	updateTexture();
+}
+
+void Gui::Checkbox::updateTexture() {
+	if(checked)
+		if(!texture.loadFromFile("textures/checkbox_checked.png"))
+			throw std::exception("checkbox_checked.png not found!");
+	if(!checked)
+		if(!texture.loadFromFile("textures/checkbox_empty.png"))
+			throw std::exception("checkbox_empty.png");
+}
+
+void Gui::Checkbox::render(sf::RenderWindow& window) {
+	sf::Sprite spr(texture);
+	spr.setPosition(x, y);
+	spr.setScale(size, size);
+
+	window.draw(spr);
+}
+
 Gui::Slider::Slider(int32_t x, int32_t y, int32_t length, int32_t blockWidth, int32_t blockHeight, int32_t id) : x(x), y(y), length(length), blockWidth(blockWidth), blockHeight(blockHeight), id(id) {
 	blockX = x;
+	mxr = 0;
 }
 
 void Gui::Slider::render(sf::RenderWindow& window) {
