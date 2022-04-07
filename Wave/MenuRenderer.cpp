@@ -70,6 +70,9 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		texts.insert(texts.begin(), desc2);
 
 		rects.insert(rects.begin(), r1);
+
+		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 20, gamemode.getGlobalBounds().height + 6, true, 0));
+		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 20, gamemode.getGlobalBounds().height + 6, false, 0));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS) {
@@ -143,6 +146,7 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			Gui::Slider* sliderGuiscl = new Gui::Slider(310, 187, Window::WIDTH  - 300 - 16, 16, 32, 7);
 
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
+
 			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 57, 2, true, 8));
 			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 2 * 57, 2, false, 9));
 			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 3 * 57, 2, false, 10));
