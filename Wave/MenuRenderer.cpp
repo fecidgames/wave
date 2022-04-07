@@ -28,7 +28,11 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text title("Wave!", menuFont, 50);
 		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
 
+		sf::Text version("v1.1", menuFont, 15);
+		version.setPosition(5, Window::HEIGHT - 5 - version.getGlobalBounds().height);
+
 		texts.insert(texts.begin(), title);
+		texts.insert(texts.begin(), version);
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
@@ -38,6 +42,23 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		r1.setFillColor(sf::Color::Black);
 		r1.setOutlineColor(sf::Color::White);
 		r1.setOutlineThickness(1.0f);
+
+		sf::Text select("Select gamemode", menuFont, 35);
+		select.setPosition(Window::WIDTH / 4 - select.getGlobalBounds().width / 2, 10);
+
+		sf::Text gamemode(gameMode, menuFont, 21);
+		gamemode.setPosition(Window::WIDTH / 4 - gamemode.getGlobalBounds().width / 2, Window::HEIGHT / 2 - gamemode.getGlobalBounds().height / 2);
+
+		sf::Text desc1(descriptionr1, menuFont, 21);
+		desc1.setPosition(Window::WIDTH / 4 - desc1.getGlobalBounds().width / 2, (int32_t) (Window::HEIGHT / 2 - desc1.getGlobalBounds().height / 2 - 100));
+
+		sf::Text desc2(descriptionr2, menuFont, 21);
+		desc2.setPosition(Window::WIDTH / 4 - desc2.getGlobalBounds().width / 2, (int32_t) (Window::HEIGHT / 2 - desc2.getGlobalBounds().height / 2 - 100 + desc1.getGlobalBounds().height + 5));		
+
+		texts.insert(texts.begin(), select);
+		texts.insert(texts.begin(), gamemode);
+		texts.insert(texts.begin(), desc1);
+		texts.insert(texts.begin(), desc2);
 
 		rects.insert(rects.begin(), r1);
 	}
@@ -52,9 +73,21 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text hudScale("HUD size", menuFont, 30);
 		hudScale.setPosition(50, 170);
 
+		sf::Text vSync("vSync", menuFont, 30);
+		vSync.setPosition(50, 170 + 57);
+
+		sf::Text fullscreen("Fullscreen", menuFont, 30);
+		fullscreen.setPosition(50, 170 + 2 * 57);
+
+		sf::Text dm("Debug menu", menuFont, 30);
+		dm.setPosition(50, 170 + 3 * 57);
+
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), volume);
 		texts.insert(texts.begin(), hudScale);
+		texts.insert(texts.begin(), vSync);
+		texts.insert(texts.begin(), fullscreen);
+		texts.insert(texts.begin(), dm);
 	}
 }
 
@@ -85,6 +118,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 void MenuRenderer::setupButtons(STATE gameState) {
 	buttons.clear();
 	sliders.clear();
+	checkboxes.clear();
 
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
@@ -100,10 +134,14 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			break;
 
 		case STATE::STATE_MENU_SETTINGS:
-			Gui::Slider* sliderVol = new Gui::Slider(300, 130, Window::WIDTH  - 300 - 16, 16, 32, 6);
-			Gui::Slider* sliderGuiscl = new Gui::Slider(300, 187, Window::WIDTH  - 300 - 16, 16, 32, 6);
+			Gui::Slider* sliderVol = new Gui::Slider(310, 130, Window::WIDTH  - 300 - 16, 16, 32, 6);
+			Gui::Slider* sliderGuiscl = new Gui::Slider(310, 187, Window::WIDTH  - 300 - 16, 16, 32, 7);
 
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 57, 2, true, 8));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 2 * 57, 2, false, 9));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 3 * 57, 2, false, 10));
+
 			sliders.insert(sliders.begin(), sliderVol);
 			sliders.insert(sliders.begin(), sliderGuiscl);
 	}
@@ -115,6 +153,9 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 
 	for(Gui::Slider* s : sliders)
 		s->render(window);
+
+	for(Gui::Checkbox* c : checkboxes)
+		c->render(window);
 
 
 	for(sf::Text t : texts)
@@ -210,23 +251,21 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 ===========================================================================================================================================================
 */
 
-Gui::Checkbox::Checkbox(int32_t x, int32_t y, int32_t size, bool checked, int32_t id) : x(x), y(y), size(size), checked(checked), id(id) {
-	updateTexture();
-}
-
-void Gui::Checkbox::updateTexture() {
-	if(checked)
-		if(!texture.loadFromFile("textures/checkbox_checked.png"))
-			throw std::exception("checkbox_checked.png not found!");
-	if(!checked)
-		if(!texture.loadFromFile("textures/checkbox_empty.png"))
+Gui::Checkbox::Checkbox(int32_t x, int32_t y, double scale, bool checked, int32_t id) : x(x), y(y), scale(scale), checked(checked), id(id) {
+	if(!textureNotChecked.loadFromFile("textures/checkbox_empty.png"))
 			throw std::exception("checkbox_empty.png");
+
+	if(!textureChecked.loadFromFile("textures/checkbox_checked.png"))
+			throw std::exception("checkbox_checked.png not found!");
 }
 
 void Gui::Checkbox::render(sf::RenderWindow& window) {
-	sf::Sprite spr(texture);
-	spr.setPosition(x, y);
-	spr.setScale(size, size);
+	sf::Sprite spr(checked ? textureChecked : textureNotChecked);
+	spr.setScale(scale, scale);
+	spr.setPosition(x, y - spr.getGlobalBounds().height / 2 + 5);
+
+	width  = spr.getGlobalBounds().width;
+	height = spr.getGlobalBounds().height;
 
 	window.draw(spr);
 }

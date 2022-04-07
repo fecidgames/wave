@@ -57,12 +57,13 @@ namespace Gui {
 
 	class Checkbox {
 	public:
-		bool checked = false;
-
-		Checkbox(int32_t x, int32_t y, int32_t size, bool checked, int32_t id);
+		Checkbox(int32_t x, int32_t y, double scale, bool checked, int32_t id);
 
 		void render(sf::RenderWindow& window);
-		void updateTexture();
+
+		void click() {
+			checked = !checked;
+		}
 
 		int32_t getId() {
 			return id;
@@ -80,14 +81,25 @@ namespace Gui {
 			return y;
 		}
 
-		int32_t getSize() {
-			return size;
+		int32_t getWidth() {
+			return width;
+		}
+
+		int32_t getHeight() {
+			return height;
+		}
+
+		double getScale() {
+			return scale;
 		}
 
 
 	private:
-		int32_t x, y, size, id;
-		sf::Texture texture;
+		bool checked = false;
+		int32_t x, y, width = 0, height = 0, id;
+		double scale;
+		sf::Texture textureChecked;
+		sf::Texture textureNotChecked;
 	};
 
 	class Slider {
@@ -182,6 +194,11 @@ private:
 
 	std::vector<sf::RectangleShape> rects;
 	std::list<sf::Text> texts;
+
+	std::string gameMode = "Infinite";
+	std::string descriptionr1 = "Play until you die. Enemies";
+	std::string descriptionr2 = "will get harder over time.";
+	std::string personalBest = "00:00";
 
 	HUD& hud;
 

@@ -26,6 +26,11 @@ void InputHandler::update(sf::Event* e) {
 				}
 			}
 
+			for(Gui::Checkbox* c : menuRenderer->getCheckboxes()) {
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, c))
+					c->click();
+			}
+
 			break;
 
 		case sf::Event::MouseButtonReleased:
@@ -111,6 +116,14 @@ void InputHandler::tick() {
 bool InputHandler::mouseOver(double mx, double my, Gui::Button* button) {
 	if((mx > button->getX()) && (mx < (button->getX() + button->getWidth())))
 		if((my > button->getY()) && (my < (button->getY() + button->getHeight())))
+			return true;
+
+	return false;
+}
+
+bool InputHandler::mouseOver(double mx, double my, Gui::Checkbox* checkbox) {
+	if((mx > checkbox->getX()) && (mx < (checkbox->getX() + checkbox->getWidth())))
+		if((my > checkbox->getY()) && (my < (checkbox->getY() + checkbox->getHeight())))
 			return true;
 
 	return false;
