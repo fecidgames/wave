@@ -15,15 +15,24 @@ MenuRenderer::~MenuRenderer() {
 }
 
 void MenuRenderer::setup(STATE gameState) {
+	clearLists();
+
 	setupDrawables(gameState);
 	setupButtons(gameState);
 	setupEntities(gameState);
 }
 
-void MenuRenderer::setupDrawables(STATE gameState) {
+void MenuRenderer::clearLists() {
 	rects.clear();
 	texts.clear();
-	
+
+	buttons.clear();
+	sliders.clear();
+	checkboxes.clear();
+	arrows.clear();
+}
+
+void MenuRenderer::setupDrawables(STATE gameState) {
 	if(gameState == STATE::STATE_MENU_MAIN) {
 		sf::Text title("Wave!", menuFont, 50);
 		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
@@ -116,10 +125,6 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	buttons.clear();
-	sliders.clear();
-	checkboxes.clear();
-
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
 			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 130, 380, 64, "Gamemodes", 0));
@@ -156,6 +161,9 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 
 	for(Gui::Checkbox* c : checkboxes)
 		c->render(window);
+
+	for(Gui::Arrow* a : arrows)
+		a->render(window);
 
 
 	for(sf::Text t : texts)
@@ -269,6 +277,28 @@ void Gui::Checkbox::render(sf::RenderWindow& window) {
 
 	window.draw(spr);
 }
+
+//=======================================================
+
+Gui::Arrow::Arrow(int32_t x, int32_t y, int32_t width, int32_t height, bool inverted, int32_t id) : x(x), y(y), width(width), height(height), id(id), inverted(inverted) {
+
+}
+
+void Gui::Arrow::render(sf::RenderWindow& window) {
+	sf::ConvexShape triangle;
+	triangle.setPointCount(3);
+	triangle.setPoint(0, sf::Vector2f(x, y));
+	triangle.setPoint(1, sf::Vector2f(x, y + height));
+
+	if(!inverted)
+		triangle.setPoint(2, sf::Vector2f(x + width, y + height / 2));
+	if(inverted)
+		triangle.setPoint(2, sf::Vector2f(x - width, y + height / 2));
+
+	window.draw(triangle);
+}
+
+//=======================================================
 
 Gui::Slider::Slider(int32_t x, int32_t y, int32_t length, int32_t blockWidth, int32_t blockHeight, int32_t id) : x(x), y(y), length(length), blockWidth(blockWidth), blockHeight(blockHeight), id(id) {
 	blockX = x;

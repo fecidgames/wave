@@ -157,6 +157,45 @@ namespace Gui {
 	private:
 		int32_t x, y, length, blockWidth, blockHeight, id, blockX = 0;
 	};
+
+	class Arrow {
+	public:
+		Arrow(int32_t x, int32_t y, int32_t width, int32_t height, bool inverted, int32_t id);
+
+		void render(sf::RenderWindow& window);
+
+		int32_t getId() {
+			return id;
+		}
+
+		bool getId(int32_t id) {
+			return id == this->id;
+		}
+
+		int32_t getX() {
+			return x;
+		}
+
+		int32_t getY() {
+			return y;
+		}
+
+		int32_t getWidth() {
+			return width;
+		}
+
+		int32_t getHeight() {
+			return height;
+		}
+
+		bool isInverted() {
+			return inverted;
+		}
+
+	private:
+		int32_t x, y, width, height, id;
+		bool inverted;
+	};
 }
 
 class MenuRenderer {
@@ -181,6 +220,10 @@ public:
 		return checkboxes;
 	}
 
+	std::vector<Gui::Arrow*> getArrows() {
+		return arrows;
+	}
+
 	void setup(STATE gameState);
 
 	HUD& getHud() {
@@ -191,6 +234,7 @@ private:
 	std::vector<Gui::Button*> buttons;
 	std::vector<Gui::Slider*> sliders;
 	std::vector<Gui::Checkbox*> checkboxes;
+	std::vector<Gui::Arrow*> arrows;
 
 	std::vector<sf::RectangleShape> rects;
 	std::list<sf::Text> texts;
@@ -215,6 +259,8 @@ private:
 	void setupButtons(STATE gameState);
 	void setupDrawables(STATE gameState);
 	void setupEntities(STATE gameState);
+
+	void clearLists();
 
 	void playerPos(PlayerEntity* p);
 };
