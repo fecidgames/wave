@@ -6,7 +6,7 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 			if(entity->getId() == ID::Player)
 				secondPlayer = true;
 		
-		color = secondPlayer ? sf::Color(0xed6fe9) : sf::Color::White; //0xed6fe9 is pink
+		color = secondPlayer ? sf::Color(255, 145, 175, 255) : sf::Color::White; //2nd color is baker-miller pink
 	} else {
 		color = sf::Color::White;
 	}

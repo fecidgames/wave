@@ -26,9 +26,11 @@ void InputHandler::update(sf::Event* e) {
 				}
 			}
 
-			for(Gui::Checkbox* c : menuRenderer->getCheckboxes()) {
-				if(mouseOver(e->mouseButton.x, e->mouseButton.y, c))
-					c->click();
+			for(Gui::Arrow* a : menuRenderer->getArrows()) {
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, a)) {
+					menuRenderer->setGameMode((menuRenderer->getGameMode() == "Infinite") ? "Dual" : "Infinite");
+					menuRenderer->resetDrawables();
+				}
 			}
 
 			break;
@@ -61,6 +63,23 @@ void InputHandler::update(sf::Event* e) {
 						gameState.setGameState(STATE::STATE_GAME_INGAME);
 						menuRenderer->setup(STATE::STATE_GAME_INGAME);
 						menuRenderer->getHud().startTime();
+					}
+				}
+
+				for(Gui::Checkbox* c : menuRenderer->getCheckboxes()) {
+					if(mouseOver(e->mouseButton.x, e->mouseButton.y, c)) {
+						c->click();
+
+						if(c->getId() == 10) {
+							if(!c->isChecked())
+								for(int i = 0; i < entityHandler->entities.size(); i++)
+									if(entityHandler->entities.at(i)->getId() == ID::MenuParticle) {
+										entityHandler->entities.erase(entityHandler->entities.begin() + i);
+										i--;
+									}
+							if(c->isChecked())
+								entityHandler->addMenuParticles();
+						}
 					}
 				}
 			}
@@ -96,19 +115,36 @@ void InputHandler::tick() {
 			if(!p->isControllable())
 				return;
 
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-				p->setVelY(-4);
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-				p->setVelY(4);
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-				p->setVelY(0);
+			if(p->isPlayerOne()) {
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+					p->setVelY(-4);
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+					p->setVelY(4);
+				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+					p->setVelY(0);
 
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-				p->setVelX(-4);
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-				p->setVelX(4);
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-				p->setVelX(0);
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+					p->setVelX(-4);
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+					p->setVelX(4);
+				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+					p->setVelX(0);
+			}
+			if(!p->isPlayerOne()) {
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+					p->setVelY(-4);
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+					p->setVelY(4);
+				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+					p->setVelY(0);
+
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+					p->setVelX(-4);
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+					p->setVelX(4);
+				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+					p->setVelX(0);
+			}
 		}
 	}
 }
@@ -123,8 +159,22 @@ bool InputHandler::mouseOver(double mx, double my, Gui::Button* button) {
 
 bool InputHandler::mouseOver(double mx, double my, Gui::Checkbox* checkbox) {
 	if((mx > checkbox->getX()) && (mx < (checkbox->getX() + checkbox->getWidth())))
-		if((my > checkbox->getY()) && (my < (checkbox->getY() + checkbox->getHeight())))
+		if((my > checkbox->getY() - checkbox->getHeight() / 2 + 5) && (my < (checkbox->getY() - checkbox->getHeight() / 2 + 5 + checkbox->getHeight())))
 			return true;
+
+	return false;
+}
+
+bool InputHandler::mouseOver(double mx, double my, Gui::Arrow* arrow) {
+	if(!arrow->isInverted())
+		if((mx > arrow->getX()) && (mx < (arrow->getX() + arrow->getWidth())))
+			if((my > arrow->getY()) && (my < (arrow->getY() + arrow->getHeight())))
+				return true;
+
+	if(arrow->isInverted())
+		if((mx < arrow->getX()) && (mx > (arrow->getX() - arrow->getWidth())))
+			if((my > arrow->getY()) && (my < (arrow->getY() + arrow->getHeight())))
+				return true;
 
 	return false;
 }

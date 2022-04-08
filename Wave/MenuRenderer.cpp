@@ -22,6 +22,13 @@ void MenuRenderer::setup(STATE gameState) {
 	setupEntities(gameState);
 }
 
+void MenuRenderer::resetDrawables() {
+	clearLists();
+
+	setupDrawables(gameState.getGameState());
+	setupButtons(gameState.getGameState());
+}
+
 void MenuRenderer::clearLists() {
 	rects.clear();
 	texts.clear();
@@ -71,8 +78,8 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 		rects.insert(rects.begin(), r1);
 
-		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 20, gamemode.getGlobalBounds().height + 6, true, 0));
-		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 20, gamemode.getGlobalBounds().height + 6, false, 0));
+		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, true, 0));
+		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, false, 0));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS) {
@@ -91,14 +98,18 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text fullscreen("Fullscreen", menuFont, 30);
 		fullscreen.setPosition(50, 170 + 2 * 57);
 
+		sf::Text mp("Menu Particles", menuFont, 30);
+		mp.setPosition(50, 170 + 3 * 57);
+
 		sf::Text dm("Debug menu", menuFont, 30);
-		dm.setPosition(50, 170 + 3 * 57);
+		dm.setPosition(50, 170 + 4 * 57);
 
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), volume);
 		texts.insert(texts.begin(), hudScale);
 		texts.insert(texts.begin(), vSync);
 		texts.insert(texts.begin(), fullscreen);
+		texts.insert(texts.begin(), mp);
 		texts.insert(texts.begin(), dm);
 	}
 }
@@ -123,7 +134,13 @@ void MenuRenderer::setupEntities(STATE gameState) {
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
 		e.entities.clear();
-		e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));			
+		if(this->gameState.getGameMode() == MODE::MODE_INFINITE) {
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));	
+		}
+		if(this->gameState.getGameMode() == MODE::MODE_DUAL) {
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));	
+		}
 	}
 }
 
@@ -142,14 +159,15 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			break;
 
 		case STATE::STATE_MENU_SETTINGS:
-			Gui::Slider* sliderVol = new Gui::Slider(310, 130, Window::WIDTH  - 300 - 16, 16, 32, 6);
-			Gui::Slider* sliderGuiscl = new Gui::Slider(310, 187, Window::WIDTH  - 300 - 16, 16, 32, 7);
+			Gui::Slider* sliderVol = new Gui::Slider(410, 130, Window::WIDTH  - 410 - 16, 16, 32, 6);
+			Gui::Slider* sliderGuiscl = new Gui::Slider(410, 187, Window::WIDTH  - 410 - 16, 16, 32, 7);
 
 			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
 
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 57, 2, true, 8));
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 2 * 57, 2, false, 9));
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(310, 187 + 3 * 57, 2, false, 10));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, true, 8));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, false, 9));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, true, 10));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, false, 11));
 
 			sliders.insert(sliders.begin(), sliderVol);
 			sliders.insert(sliders.begin(), sliderGuiscl);
@@ -245,8 +263,6 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 		}
 	}
 }
-
-
 
 
 

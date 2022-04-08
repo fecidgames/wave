@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <iostream>
+#include <functional>
 
 #include "STATE.h"
 #include "EntityHandler.h"
@@ -65,6 +66,10 @@ namespace Gui {
 			checked = !checked;
 		}
 
+		bool isChecked() {
+			return checked;
+		}
+
 		int32_t getId() {
 			return id;
 		}
@@ -95,7 +100,7 @@ namespace Gui {
 
 
 	private:
-		bool checked = false;
+		bool checked = true;
 		int32_t x, y, width = 0, height = 0, id;
 		double scale;
 		sf::Texture textureChecked;
@@ -225,9 +230,23 @@ public:
 	}
 
 	void setup(STATE gameState);
+	void resetDrawables();
 
 	HUD& getHud() {
 		return hud;
+	}
+
+	std::string getGameMode() {
+		return gameMode;
+	}
+
+	void setGameMode(std::string gameMode) {
+		this->gameMode = gameMode;
+
+		gameState.setGameMode((gameMode == "Infinite") ? MODE::MODE_INFINITE : MODE::MODE_DUAL);
+
+		descriptionr1 = (gameMode == "Infinite") ? "Play until you die. Enemies" : (gameMode == "Dual") ? "Battle against each other." : "An error occurred!";
+		descriptionr2 = (gameMode == "Infinite") ? "will get harder over time." : (gameMode == "Dual") ? "Last one to die wins." : "";
 	}
 
 private:

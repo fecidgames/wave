@@ -15,6 +15,8 @@ public:
 	void render(sf::RenderWindow& w, bool afterGui);
 	void tick();
 
+	void addMenuParticles();
+
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;
 

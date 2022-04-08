@@ -56,6 +56,10 @@ public:
 		this-> y = y;
 	}
 
+	bool isPlayerOne() {
+		return !secondPlayer;
+	}
+
 	int32_t velX = 0, velY = 0;
 
 private:
