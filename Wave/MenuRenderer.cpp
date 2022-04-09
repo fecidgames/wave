@@ -145,12 +145,15 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
+	//LAST BUTTON ID: 8
+
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
 			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 130, 380, 64, "Gamemodes", 0));
 			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 210, 380, 64, "Options", 1));
 			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190 + 396, 130, 64, 64, "?", 2));
 			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH - 204, Window::HEIGHT - 80, (380 / 2), 64, "Quit", 3));
+			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 290, 380, 64, "Shop", 8));
 			break;
 		
 		case STATE::STATE_MENU_SELECT:

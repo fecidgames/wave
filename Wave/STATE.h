@@ -23,6 +23,7 @@ enum class STATE {
 	STATE_MENU_SELECT,
 	STATE_MENU_SETTINGS,
 	STATE_MENU_HELP,
+	STATE_MENU_SHOP,
 
 	STATE_GAME_INGAME,
 	STATE_GAME_PAUSED
@@ -33,6 +34,8 @@ class GameState {
 private:
 	STATE gameState = STATE::STATE_MENU_MAIN;
 	MODE gameMode = MODE::MODE_INFINITE;
+
+	STATE oldState = gameState;
 
 public:
 	STATE getGameState() {
@@ -52,6 +55,7 @@ public:
 	}
 
 	void setGameState(STATE state) {
+		oldState = gameState;
 		gameState = state;
 	}
 

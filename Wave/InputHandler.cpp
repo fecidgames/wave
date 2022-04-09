@@ -64,6 +64,10 @@ void InputHandler::update(sf::Event* e) {
 						menuRenderer->setup(STATE::STATE_GAME_INGAME);
 						menuRenderer->getHud().startTime();
 					}
+					if(b->getId(8)) {
+						gameState.setGameState(STATE::STATE_MENU_SHOP);
+						menuRenderer->setup(STATE::STATE_MENU_SHOP);
+					}
 				}
 
 				for(Gui::Checkbox* c : menuRenderer->getCheckboxes()) {
@@ -102,6 +106,18 @@ void InputHandler::update(sf::Event* e) {
 			for(Gui::Slider* s : menuRenderer->getSliders()) {
 				if(s->dragging)
 					s->setBlockX(e->mouseMove.x - s->mxr);
+			}
+
+		case sf::Event::KeyPressed:
+			if(e->key.code == sf::Keyboard::Escape) {
+				if(gameState.getGameState(STATE::STATE_MENU_MAIN)) {
+					//MAYBE A QUIT CONFIRMATION???
+					exit(EXIT_SUCCESS);
+				}
+				if(gameState.getGameState(STATE::STATE_MENU_SELECT) || gameState.getGameState(STATE::STATE_MENU_HELP) || gameState.getGameState(STATE::STATE_MENU_SETTINGS) || gameState.getGameState(STATE::STATE_MENU_SHOP)) {
+					gameState.setGameState(STATE::STATE_MENU_MAIN);
+					menuRenderer->setup(STATE::STATE_MENU_MAIN);
+				}
 			}
 
 		default:
