@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="BasicEnemy.cpp" />
     <ClCompile Include="EntityHandler.cpp" />
+    <ClCompile Include="FastEnemy.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="MenuParticleEntity.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="BasicEnemy.h" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="EntityHandler.h" />
+    <ClInclude Include="FastEnemy.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="MenuParticleEntity.h" />

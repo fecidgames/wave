@@ -3,6 +3,7 @@
 #include "MenuParticleEntity.h"
 #include "PlayerEntity.h"
 #include "BasicEnemy.h"
+#include "FastEnemy.h"
 #include "TrailEntity.h"
 
 class Wave;
@@ -25,6 +26,8 @@ public:
 
 private:
 	int32_t spawnTimer = 0;
+	int32_t overTime = 0;
+	int32_t msTime = 0;
 
 	void tickSpawner(int32_t time);
 
