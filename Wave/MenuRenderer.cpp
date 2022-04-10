@@ -62,7 +62,13 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text select("Select gamemode", menuFont, 35);
 		select.setPosition(Window::WIDTH / 4 - select.getGlobalBounds().width / 2, 10);
 
-		sf::Text gamemode(gameMode, menuFont, 21);
+		sf::Text gamemode("Infinite..", menuFont, 21);
+		gamemode.setPosition(Window::WIDTH / 4 - gamemode.getGlobalBounds().width / 2, Window::HEIGHT / 2 - gamemode.getGlobalBounds().height / 2);
+
+		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, true, 0));
+		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, false, 0));
+
+		gamemode.setString(gameMode);
 		gamemode.setPosition(Window::WIDTH / 4 - gamemode.getGlobalBounds().width / 2, Window::HEIGHT / 2 - gamemode.getGlobalBounds().height / 2);
 
 		sf::Text desc1(descriptionr1, menuFont, 21);
@@ -77,9 +83,6 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		texts.insert(texts.begin(), desc2);
 
 		rects.insert(rects.begin(), r1);
-
-		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, true, 0));
-		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, false, 0));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS) {

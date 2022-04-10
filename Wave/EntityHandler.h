@@ -20,5 +20,6 @@ public:
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;
 
+	int32_t spawnTimer = 0;
 };
 
