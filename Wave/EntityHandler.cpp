@@ -1,6 +1,7 @@
 #include "EntityHandler.h"
+#include "Wave.h"
 
-EntityHandler::EntityHandler() {
+EntityHandler::EntityHandler(Wave& wave) : wave(wave) {
 	std::srand(NULL);
 
 	addMenuParticles();
@@ -19,6 +20,14 @@ void EntityHandler::tick() {
 
 	for(auto const& t : trails) {
 		t.first->tick();
+	}
+
+	if(wave.getGameState().getGameState(STATE::STATE_GAME_INGAME)) {
+		spawnTimer++;
+
+		tickSpawner(spawnTimer);
+	} else {
+		spawnTimer = 0;
 	}
 }
 
@@ -45,4 +54,15 @@ void EntityHandler::addMenuParticles() {
 
 void EntityHandler::add(Entity* e) {
 	entities.insert(entities.begin(), e);
+}
+
+void EntityHandler::tickSpawner(int32_t time) {
+	uint32_t id = 28 + time;
+
+	if(time == 1) {
+		add(new BasicEnemy(std::rand()%(Window::WIDTH - 50), std::rand()%(Window::HEIGHT - 50), ID::BasicEnemy, id, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
+	}
+	if(time == 300) {
+		add(new BasicEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::BasicEnemy, id, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
+	}
 }

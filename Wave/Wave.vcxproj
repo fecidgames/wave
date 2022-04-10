@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BasicEnemy.cpp" />
     <ClCompile Include="EntityHandler.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="InputHandler.cpp" />
@@ -30,6 +31,7 @@
     <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicEnemy.h" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="EntityHandler.h" />
     <ClInclude Include="HUD.h" />

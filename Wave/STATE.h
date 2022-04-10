@@ -9,7 +9,14 @@ namespace Window {
 enum class ID {
 	Player,
 	Trail,
-	MenuParticle
+	MenuParticle,
+
+	BasicEnemy,
+	FastEnemy,
+	SmartEnemy,
+
+	MeteorShower,
+	MeteorShowerParticle
 };
 
 enum class MODE {

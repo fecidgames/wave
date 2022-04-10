@@ -1,6 +1,6 @@
 #include "Wave.h"
 
-Wave::Wave(sf::ContextSettings settings) : entityHandler(), window(sf::VideoMode(Window::WIDTH, Window::HEIGHT), "Wave! - Release 1.1", sf::Style::Close | sf::Style::Titlebar, settings), hud(window, entityHandler), menuRenderer(entityHandler, hud), inputHandler(menuRenderer, entityHandler) {
+Wave::Wave(sf::ContextSettings settings) : entityHandler(*this), window(sf::VideoMode(Window::WIDTH, Window::HEIGHT), "Wave! - Release 1.1", sf::Style::Close | sf::Style::Titlebar, settings), hud(window, entityHandler), menuRenderer(entityHandler, hud, state), inputHandler(menuRenderer, entityHandler) {
 	init();
 }
 
@@ -29,6 +29,10 @@ void Wave::render() {
 
 sf::RenderWindow* Wave::getWindow() {
 	return &window;
+}
+
+GameState& Wave::getGameState() {
+	return state;
 }
 
 void Wave::init() {

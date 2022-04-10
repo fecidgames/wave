@@ -15,6 +15,7 @@ public:
 	~Wave();
 
 	sf::RenderWindow* getWindow();
+	GameState& getGameState();
 
 private:
 	void init();

@@ -1,6 +1,6 @@
 #include "MenuRenderer.h"
 
-MenuRenderer::MenuRenderer(EntityHandler& e, HUD& hud) : e(e), hud(hud) {
+MenuRenderer::MenuRenderer(EntityHandler& e, HUD& hud, GameState& state) : e(e), hud(hud), gameState(state) {
 	if(!menuFont.loadFromFile("fonts/mainFont.ttf")) {
 		throw "[mainFont.ttf] could not be loaded";
 	}

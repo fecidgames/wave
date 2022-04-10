@@ -2,12 +2,15 @@
 
 #include "MenuParticleEntity.h"
 #include "PlayerEntity.h"
+#include "BasicEnemy.h"
 #include "TrailEntity.h"
+
+class Wave;
 
 class EntityHandler {
 
 public:
-	EntityHandler();
+	EntityHandler(Wave& wave);
 	~EntityHandler();
 
 	void add(Entity* e);
@@ -20,6 +23,11 @@ public:
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;
 
+private:
 	int32_t spawnTimer = 0;
+
+	void tickSpawner(int32_t time);
+
+	Wave& wave;
 };
 

@@ -206,12 +206,12 @@ namespace Gui {
 class MenuRenderer {
 
 public:
-	MenuRenderer(EntityHandler& e, HUD& hud);
+	MenuRenderer(EntityHandler& e, HUD& hud, GameState& state);
 	~MenuRenderer();
 
 	void render(sf::RenderWindow& window);
 
-	GameState gameState;
+	GameState& gameState;
 
 	std::vector<Gui::Button*> getButtons() {
 		return buttons;
