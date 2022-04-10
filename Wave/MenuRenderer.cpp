@@ -145,7 +145,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	//LAST BUTTON ID: 8
+	//LAST BUTTON ID: 9
 
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
@@ -174,6 +174,22 @@ void MenuRenderer::setupButtons(STATE gameState) {
 
 			sliders.insert(sliders.begin(), sliderVol);
 			sliders.insert(sliders.begin(), sliderGuiscl);
+	}
+}
+
+void MenuRenderer::exitConfirmation() {
+	exitConfirmationPopup = !exitConfirmationPopup;
+
+	if(exitConfirmationPopup) {
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "No", 9));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 10));
+	} else {
+		for(int i = 0; i < buttons.size(); i++) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10)) {
+				buttons.erase(buttons.begin() + i);
+				i--;
+			}
+		}
 	}
 }
 
@@ -217,6 +233,33 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 				}
 			}
 		}
+	}
+
+	//==========================================================//
+
+	if(exitConfirmationPopup) {
+		Gui::Button* ye = new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 10);
+
+		sf::RectangleShape r1;
+		r1.setFillColor(sf::Color::Black);
+		r1.setOutlineColor(sf::Color::White);
+		r1.setOutlineThickness(2);
+		r1.setPosition(sf::Vector2f((Window::WIDTH / 3) / 2, Window::HEIGHT / 4));
+		r1.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 3), ye->getY() + ye->getHeight() + 8 - r1.getPosition().y));
+
+		sf::Text title("Exit game?", menuFont, 40);
+		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, Window::HEIGHT / 4 + title.getGlobalBounds().height);
+
+		sf::Text msg("Are you sure you want to exit?", menuFont, 25);
+		msg.setPosition(Window::WIDTH / 2 - msg.getGlobalBounds().width / 2, Window::HEIGHT / 4 + 2 * title.getGlobalBounds().height + 35);
+
+		window.draw(r1);
+		window.draw(title);
+		window.draw(msg);
+
+		for(Gui::Button* b : buttons)
+			if(b->getId(9) || b->getId(10))
+				b->render(window);
 	}
 }
 

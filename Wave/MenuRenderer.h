@@ -231,9 +231,14 @@ public:
 
 	void setup(STATE gameState);
 	void resetDrawables();
+	void exitConfirmation();
 
 	HUD& getHud() {
 		return hud;
+	}
+
+	bool isExitUnconfirmed() {
+		return exitConfirmationPopup;
 	}
 
 	std::string getGameMode() {
@@ -270,6 +275,8 @@ private:
 	EntityHandler& e;
 
 	uint32_t time = 0;
+
+	bool exitConfirmationPopup = false;
 
 	bool isOdd(int n) {
 		return n % 2 == 0;

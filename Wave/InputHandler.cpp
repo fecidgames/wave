@@ -9,6 +9,17 @@ void InputHandler::update(sf::Event* e) {
 		case sf::Event::MouseButtonPressed:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
 				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
+					if(b->getId(9) || b->getId(10)) {
+						b->down = true;
+					}
+				}
+			}
+
+			if(menuRenderer->isExitUnconfirmed())
+				return;
+
+			for(Gui::Button* b : menuRenderer->getButtons()) {
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
 					b->down = true;
 				}
 			}
@@ -37,8 +48,20 @@ void InputHandler::update(sf::Event* e) {
 
 		case sf::Event::MouseButtonReleased:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
-				b->down = false;
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
+					if(b->getId(9))
+						menuRenderer->exitConfirmation();	
+					if(b->getId(10))
+						exit(EXIT_SUCCESS);
+				}
 
+				b->down = false;
+			}
+
+			if(menuRenderer->isExitUnconfirmed())
+					return;
+
+			for(Gui::Button* b : menuRenderer->getButtons()) {
 				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
 					if(b->getId(0)) {
 						gameState.setGameState(STATE::STATE_MENU_SELECT);
@@ -53,7 +76,8 @@ void InputHandler::update(sf::Event* e) {
 						menuRenderer->setup(STATE::STATE_MENU_HELP);
 					}
 					if(b->getId(3)) {
-						exit(EXIT_SUCCESS);
+						menuRenderer->exitConfirmation();
+						//exit(EXIT_SUCCESS);
 					}
 					if(b->getId(4)) {
 						gameState.setGameState(STATE::STATE_MENU_MAIN);
@@ -69,21 +93,21 @@ void InputHandler::update(sf::Event* e) {
 						menuRenderer->setup(STATE::STATE_MENU_SHOP);
 					}
 				}
+			}
 
-				for(Gui::Checkbox* c : menuRenderer->getCheckboxes()) {
-					if(mouseOver(e->mouseButton.x, e->mouseButton.y, c)) {
-						c->click();
+			for(Gui::Checkbox* c : menuRenderer->getCheckboxes()) {
+				if(mouseOver(e->mouseButton.x, e->mouseButton.y, c)) {
+					c->click();
 
-						if(c->getId() == 10) {
-							if(!c->isChecked())
-								for(int i = 0; i < entityHandler->entities.size(); i++)
-									if(entityHandler->entities.at(i)->getId() == ID::MenuParticle) {
-										entityHandler->entities.erase(entityHandler->entities.begin() + i);
-										i--;
-									}
-							if(c->isChecked())
-								entityHandler->addMenuParticles();
-						}
+					if(c->getId() == 10) {
+						if(!c->isChecked())
+							for(int i = 0; i < entityHandler->entities.size(); i++)
+								if(entityHandler->entities.at(i)->getId() == ID::MenuParticle) {
+									entityHandler->entities.erase(entityHandler->entities.begin() + i);
+									i--;
+								}
+						if(c->isChecked())
+							entityHandler->addMenuParticles();
 					}
 				}
 			}
@@ -97,7 +121,8 @@ void InputHandler::update(sf::Event* e) {
 		case sf::Event::MouseMoved:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
 				if(mouseOver(e->mouseMove.x, e->mouseMove.y, b)) {
-					b->hover = true;
+					if(!menuRenderer->isExitUnconfirmed() || b->getId(9) || b->getId(10))
+						b->hover = true;
 				} else {
 					b->hover = false;
 				}
@@ -110,10 +135,9 @@ void InputHandler::update(sf::Event* e) {
 
 		case sf::Event::KeyPressed:
 			if(e->key.code == sf::Keyboard::Escape) {
-				if(gameState.getGameState(STATE::STATE_MENU_MAIN)) {
-					//MAYBE A QUIT CONFIRMATION???
-					exit(EXIT_SUCCESS);
-				}
+				if(gameState.getGameState(STATE::STATE_MENU_MAIN))
+					menuRenderer->exitConfirmation();
+	
 				if(gameState.getGameState(STATE::STATE_MENU_SELECT) || gameState.getGameState(STATE::STATE_MENU_HELP) || gameState.getGameState(STATE::STATE_MENU_SETTINGS) || gameState.getGameState(STATE::STATE_MENU_SHOP)) {
 					gameState.setGameState(STATE::STATE_MENU_MAIN);
 					menuRenderer->setup(STATE::STATE_MENU_MAIN);
