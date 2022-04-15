@@ -157,31 +157,31 @@ void InputHandler::tick() {
 
 			if(p->isPlayerOne()) {
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-					p->setVelY(-4);
+					p->setVelY(-5);
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-					p->setVelY(4);
+					p->setVelY(5);
 				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 					p->setVelY(0);
 
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-					p->setVelX(-4);
+					p->setVelX(-5);
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-					p->setVelX(4);
+					p->setVelX(5);
 				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 					p->setVelX(0);
 			}
 			if(!p->isPlayerOne()) {
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-					p->setVelY(-4);
+					p->setVelY(-5);
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-					p->setVelY(4);
+					p->setVelY(5);
 				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 					p->setVelY(0);
 
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-					p->setVelX(-4);
+					p->setVelX(-5);
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-					p->setVelX(4);
+					p->setVelX(5);
 				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 					p->setVelX(0);
 			}

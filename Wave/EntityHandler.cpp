@@ -56,6 +56,25 @@ void EntityHandler::add(Entity* e) {
 	entities.insert(entities.begin(), e);
 }
 
+void EntityHandler::die(PlayerEntity* player) {
+	bool playerLeft = true;
+	for(int i = 0; i < entities.size(); i++) {
+		if(entities.at(i)->getId() == ID::Player) {
+			if(((PlayerEntity*) entities.at(i)) == player) {
+				entities.erase(entities.begin() + i);
+				playerLeft = false;
+			} else {
+				playerLeft = true;
+			}
+		}
+	}
+
+	if(!playerLeft) { //On GameOver
+		wave.getHud().stopTime();
+		wave.getMenuRenderer().gameEnd();
+	}
+}
+
 void EntityHandler::tickSpawner(int32_t time) {
 	uint32_t id = 28 + time;
 

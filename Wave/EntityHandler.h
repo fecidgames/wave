@@ -7,6 +7,7 @@
 #include "TrailEntity.h"
 
 class Wave;
+class PlayerEntity;
 
 class EntityHandler {
 
@@ -20,6 +21,8 @@ public:
 	void tick();
 
 	void addMenuParticles();
+
+	void die(PlayerEntity* player);
 
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;

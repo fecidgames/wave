@@ -16,8 +16,21 @@ public:
 	void startTime();
 	void stopTime();
 
+	void setMaxHealth(int32_t v) {
+		cMaxHealth = v;
+	}
+
+	int32_t getMaxHealth() {
+		return cMaxHealth;
+	}
+
+	Timer& getTimer() {
+		return timer;
+	}
+
 private:
 	sf::RenderWindow& window;
+	sf::Font mainFont;
 
 	EntityHandler& e;
 	Timer timer{};
@@ -28,6 +41,9 @@ private:
 	void renderPauseAccess();
 
 	bool showMilliseconds = false;
+	
+	const double dMaxHealth = 100;
+	double cMaxHealth = dMaxHealth;
 
 	std::string formatTime(int ms) {
 		int seconds = ms / 1000;

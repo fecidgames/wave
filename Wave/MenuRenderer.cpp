@@ -138,11 +138,11 @@ void MenuRenderer::setupEntities(STATE gameState) {
 	if(gameState == STATE::STATE_GAME_INGAME) {
 		e.entities.clear();
 		if(this->gameState.getGameMode() == MODE::MODE_INFINITE) {
-			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
 		}
 		if(this->gameState.getGameMode() == MODE::MODE_DUAL) {
-			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));	
-			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
 		}
 	}
 }
@@ -178,6 +178,10 @@ void MenuRenderer::setupButtons(STATE gameState) {
 			sliders.insert(sliders.begin(), sliderVol);
 			sliders.insert(sliders.begin(), sliderGuiscl);
 	}
+}
+
+void MenuRenderer::gameEnd() {
+
 }
 
 void MenuRenderer::exitConfirmation() {

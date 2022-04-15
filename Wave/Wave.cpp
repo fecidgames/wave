@@ -35,6 +35,14 @@ GameState& Wave::getGameState() {
 	return state;
 }
 
+HUD& Wave::getHud() {
+	return hud;
+}
+
+MenuRenderer& Wave::getMenuRenderer() {
+	return menuRenderer;
+}
+
 void Wave::init() {
 	auto ico = sf::Image();
 	ico.loadFromFile("textures/wave.png");
@@ -45,11 +53,11 @@ void Wave::init() {
 }
 
 void Wave::loop() {
-	sf::Clock clock0;
-	sf::Clock clock1;
-	sf::Clock clock2;
-	sf::Time dt = clock0.restart();
-	sf::Time t = clock1.restart();
+	sf::Clock clock_0;
+	sf::Clock clock_1;
+	sf::Clock clock_2;
+	sf::Time dt = clock_0.restart();
+	sf::Time t = clock_1.restart();
 
 	int32_t fps = 0;
 	double_t lastTime = dt.asMilliseconds() * 1000;
@@ -66,7 +74,7 @@ void Wave::loop() {
 			inputHandler.update(&e);
 		}
 
-		double_t now = clock2.getElapsedTime().asMilliseconds() * 1000;
+		double_t now = clock_2.getElapsedTime().asMilliseconds() * 1000;
 		delta += (now - lastTime) / ms;
 		lastTime = now;
 
@@ -79,11 +87,11 @@ void Wave::loop() {
 			fps++;
 			render();
 		}
-		if(clock1.restart().asMilliseconds() - timer > 1000) {
+		if(clock_1.restart().asMilliseconds() - timer > 1000) {
 			timer += 1000;
 			fps = 0;
 		}
 
-		dt = clock0.restart();
+		dt = clock_0.restart();
 	}
 }

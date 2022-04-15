@@ -232,6 +232,7 @@ public:
 	void setup(STATE gameState);
 	void resetDrawables();
 	void exitConfirmation();
+	void gameEnd();
 
 	HUD& getHud() {
 		return hud;

@@ -7,10 +7,14 @@ class EntityHandler;
 class PlayerEntity : public Entity {
 public:
 	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable);
+	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health);
+
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
 	virtual sf::RectangleShape getBounds();
+
+	void collision();
 
 	virtual uint32_t getUid() {
 		return uid;
@@ -60,11 +64,21 @@ public:
 		return !secondPlayer;
 	}
 
+	double getHealth() {
+		return health;
+	}
+
+	void setHealth(double v) {
+		health = v;
+	}
+
 	int32_t velX = 0, velY = 0;
 
 private:
 	int32_t x;
 	int32_t y;
+
+	double health;
 
 	ID id;
 	uint32_t uid;

@@ -16,6 +16,8 @@ public:
 
 	sf::RenderWindow* getWindow();
 	GameState& getGameState();
+	HUD& getHud();
+	MenuRenderer& getMenuRenderer();
 
 private:
 	void init();
