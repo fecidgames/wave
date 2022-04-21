@@ -15,6 +15,8 @@ public:
 	void render();
 	void startTime();
 	void stopTime();
+	void pauseTime();
+	void resumeTime();
 
 	void setMaxHealth(int32_t v) {
 		cMaxHealth = v;

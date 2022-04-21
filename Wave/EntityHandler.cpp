@@ -14,6 +14,9 @@ EntityHandler::~EntityHandler() {
 }
 
 void EntityHandler::tick() {
+	if(wave.getMenuRenderer().isGamePaused())
+		return;
+
 	for(Entity* e : entities) {
 		e->tick();
 	}

@@ -142,6 +142,9 @@ void InputHandler::update(sf::Event* e) {
 					gameState.setGameState(STATE::STATE_MENU_MAIN);
 					menuRenderer->setup(STATE::STATE_MENU_MAIN);
 				}
+
+				if(gameState.getGameState(STATE::STATE_GAME_INGAME))
+					menuRenderer->pauseGame();
 			}
 
 		default:

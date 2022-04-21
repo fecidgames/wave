@@ -180,6 +180,16 @@ void MenuRenderer::setupButtons(STATE gameState) {
 	}
 }
 
+void MenuRenderer::pauseGame() {
+	gamePaused = !gamePaused;
+
+	if(gamePaused) {
+		hud.pauseTime();
+	} else {
+		hud.resumeTime();
+	}
+}
+
 void MenuRenderer::gameEnd() {
 
 }
@@ -267,6 +277,17 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 		for(Gui::Button* b : buttons)
 			if(b->getId(9) || b->getId(10))
 				b->render(window);
+	}
+
+	if(gamePaused) {
+		sf::RectangleShape pauseBackground;
+		pauseBackground.setFillColor(sf::Color::Black);
+		pauseBackground.setOutlineColor(sf::Color::White);
+		pauseBackground.setOutlineThickness(2);
+		pauseBackground.setPosition(sf::Vector2f((Window::WIDTH / 4) / 2, Window::HEIGHT / 5));
+		pauseBackground.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 4), 3 * (Window::HEIGHT / 5)));
+
+		window.draw(pauseBackground);
 	}
 }
 

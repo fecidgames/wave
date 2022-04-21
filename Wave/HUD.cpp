@@ -18,6 +18,14 @@ void HUD::stopTime() {
 	timer.stop();
 }
 
+void HUD::pauseTime() {
+	timer.pause();
+}
+
+void HUD::resumeTime() {
+	timer.resume();
+}
+
 void HUD::render() {
 	for(Entity* e : e.entities) {
 		if(e->getId() == ID::Player) {

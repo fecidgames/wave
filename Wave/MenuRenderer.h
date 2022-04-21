@@ -233,6 +233,7 @@ public:
 	void resetDrawables();
 	void exitConfirmation();
 	void gameEnd();
+	void pauseGame();
 
 	HUD& getHud() {
 		return hud;
@@ -244,6 +245,10 @@ public:
 
 	std::string getGameMode() {
 		return gameMode;
+	}
+
+	bool isGamePaused() {
+		return gamePaused;
 	}
 
 	void setGameMode(std::string gameMode) {
@@ -278,6 +283,7 @@ private:
 	uint32_t time = 0;
 
 	bool exitConfirmationPopup = false;
+	bool gamePaused = false;
 
 	bool isOdd(int n) {
 		return n % 2 == 0;
