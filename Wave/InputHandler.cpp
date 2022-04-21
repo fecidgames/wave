@@ -49,10 +49,21 @@ void InputHandler::update(sf::Event* e) {
 		case sf::Event::MouseButtonReleased:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
 				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
-					if(b->getId(9))
-						menuRenderer->exitConfirmation();	
-					if(b->getId(10))
-						exit(EXIT_SUCCESS);
+					if(gameState.getGameState(STATE::STATE_MENU_MAIN)) {
+						if(b->getId(9))
+							menuRenderer->exitConfirmation();	
+						if(b->getId(10))
+							exit(EXIT_SUCCESS);
+					}
+					if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
+						if(b->getId(9))
+							menuRenderer->pauseGame();
+						if(b->getId(10)) {
+							menuRenderer->pauseGame();
+							gameState.setGameState(STATE::STATE_MENU_MAIN);
+							menuRenderer->setup(STATE::STATE_MENU_MAIN);
+						}
+					}
 				}
 
 				b->down = false;

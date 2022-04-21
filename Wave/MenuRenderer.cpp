@@ -15,6 +15,8 @@ MenuRenderer::~MenuRenderer() {
 }
 
 void MenuRenderer::setup(STATE gameState) {
+	time = 0; //Resets time for player AI
+
 	clearLists();
 
 	setupDrawables(gameState);
@@ -85,6 +87,21 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		rects.insert(rects.begin(), r1);
 	}
 
+	if(gameState == STATE::STATE_GAME_INGAME) {
+		sf::Text pause("[ESC] Pause", menuFont, 22);
+		pause.setPosition(8, Window::HEIGHT - 8 - pause.getGlobalBounds().height);
+		pause.setOutlineColor(sf::Color::Black);
+		pause.setOutlineThickness(2.0f);
+
+		sf::Text shop("[TAB] Shop", menuFont, 22);
+		shop.setPosition(Window::WIDTH - shop.getGlobalBounds().width - 8, Window::HEIGHT - 8 - shop.getGlobalBounds().height);
+		shop.setOutlineColor(sf::Color::Black);
+		shop.setOutlineThickness(2.0f);
+
+		texts.insert(texts.begin(), pause);
+		texts.insert(texts.begin(), shop);
+	}
+
 	if(gameState == STATE::STATE_MENU_SETTINGS) {
 		sf::Text title("Options", menuFont, 50);
 		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
@@ -118,13 +135,28 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 }
 
 void MenuRenderer::setupEntities(STATE gameState) {
-	time = 0;
-
 	for(int i = 0; i < e.entities.size(); ++i) {
 		if(e.entities.at(i)->renderOverGui() && e.entities.at(i)->getId() == ID::MenuParticle || e.entities.at(i)->getId() == ID::Player) {
 			e.entities.erase(e.entities.begin() + i);
 			i--;
 		}
+	}
+
+	if(gameState != STATE::STATE_GAME_INGAME) {
+		for(int i = 0; i < e.entities.size(); ++i) {
+			if(e.entities.at(i)->getId() == ID::BasicEnemy || e.entities.at(i)->getId() == ID::FastEnemy || e.entities.at(i)->getId() == ID::SmartEnemy) {
+				e.entities.erase(e.entities.begin() + i);
+				i--;
+			}
+		}
+	}
+
+	if(gameState == STATE::STATE_MENU_MAIN) {
+		for(int i = 0; i < e.entities.size(); ++i) {
+			if(e.entities.at(i)->getId() == ID::MenuParticle)
+				return;
+		}
+		e.addMenuParticles();
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
@@ -148,7 +180,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	//LAST BUTTON ID: 9
+	//LAST BUTTON ID: 10
 
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
@@ -185,8 +217,18 @@ void MenuRenderer::pauseGame() {
 
 	if(gamePaused) {
 		hud.pauseTime();
+
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 4) / 2 + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 64 - 8, (Window::WIDTH - (Window::WIDTH / 4)) / 2 - 16, 64, "Continue", 9));
+		buttons.insert(buttons.begin(), new Gui::Button(((Window::WIDTH / 4) / 2) + (Window::WIDTH - (Window::WIDTH / 4)) - ((Window::WIDTH - (Window::WIDTH / 4)) / 2) + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 64 - 8, (Window::WIDTH - (Window::WIDTH / 4)) / 2 - 16, 64, "Back to menu", 10));
 	} else {
 		hud.resumeTime();
+
+		for(int i = 0; i < buttons.size(); i++) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10)) {
+				buttons.erase(buttons.begin() + i);
+				i--;
+			}
+		}
 	}
 }
 
@@ -198,7 +240,7 @@ void MenuRenderer::exitConfirmation() {
 	exitConfirmationPopup = !exitConfirmationPopup;
 
 	if(exitConfirmationPopup) {
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "No", 9));
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 + 8, Window::HEIGHT / 2, ((Window::WIDTH - (Window::WIDTH / 3)) / 2) - 16, 64, "No", 9));
 		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 10));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
@@ -288,6 +330,10 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 		pauseBackground.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 4), 3 * (Window::HEIGHT / 5)));
 
 		window.draw(pauseBackground);
+
+		for(Gui::Button* b : buttons)
+			if(b->getId(9) || b->getId(10))
+				b->render(window);
 	}
 }
 

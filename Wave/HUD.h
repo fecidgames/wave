@@ -37,7 +37,7 @@ private:
 	EntityHandler& e;
 	Timer timer{};
 
-	void renderHealth(PlayerEntity* player);
+	void renderHealth(std::vector<Entity*>* entities);
 	void renderTimer();
 	void renderShopAccess();
 	void renderPauseAccess();
