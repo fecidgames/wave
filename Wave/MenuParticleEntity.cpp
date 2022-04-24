@@ -9,8 +9,8 @@ MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid
 	velX = std::rand()%(8);
 	velY = std::rand()%(8);
 
-	velX = (velX < 2) ? 2 : velX;
-	velY = (velY < 2) ? 2 : velY;
+	velX = (velX < 2) ? -5 : velX;
+	velY = (velY < 2) ? -6 : velY;
 }
 
 void MenuParticleEntity::render(sf::RenderWindow& w) {
@@ -24,12 +24,10 @@ void MenuParticleEntity::tick() {
 
 	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((velX > 0) ? (x + 1) : (x - 1), (velY > 0) ? (y + 1) : (y - 1), id, uid, 10, color, e), this));
 
-	if((x >= horizontalBounds.y - 30) || (x <= horizontalBounds.x)) {
+	if((x >= horizontalBounds.y - 30) || (x <= horizontalBounds.x))
 		setVelX(-getVelX());
-	}
-	if((y >= verticalBounds.y - 30) || (y <= verticalBounds.x)) {
+	if((y >= verticalBounds.y - 30) || (y <= verticalBounds.x))
 		setVelY(-getVelY());
-	}
 }
 
 sf::RectangleShape MenuParticleEntity::getBounds() {

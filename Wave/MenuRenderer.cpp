@@ -1,6 +1,7 @@
 #include "MenuRenderer.h"
+#include "Wave.h"
 
-MenuRenderer::MenuRenderer(EntityHandler& e, HUD& hud, GameState& state) : e(e), hud(hud), gameState(state) {
+MenuRenderer::MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state) : e(e), hud(hud), gameState(state), wave(wave) {
 	if(!menuFont.loadFromFile("fonts/mainFont.ttf")) {
 		throw "[mainFont.ttf] could not be loaded";
 	}
@@ -9,9 +10,17 @@ MenuRenderer::MenuRenderer(EntityHandler& e, HUD& hud, GameState& state) : e(e),
 }
 
 MenuRenderer::~MenuRenderer() {
-	for(Gui::Button* b : buttons) {
+	for(Gui::Button* b : buttons)
 		delete b;
-	}
+	
+	for(Gui::Checkbox* c : checkboxes)
+		delete c;
+
+	for(Gui::Slider* s : sliders)
+		delete s;
+
+	for(Gui::Arrow* a : arrows)
+		delete a;
 }
 
 void MenuRenderer::setup(STATE gameState) {
@@ -156,7 +165,9 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			if(e.entities.at(i)->getId() == ID::MenuParticle)
 				return;
 		}
-		e.addMenuParticles();
+
+		if(wave.isMenuParticlesEnabled())
+			e.addMenuParticles();
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
@@ -180,7 +191,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	//LAST BUTTON ID: 10
+	//LAST BUTTON ID: 11
 
 	switch(gameState) {
 		case STATE::STATE_MENU_MAIN:
@@ -204,7 +215,7 @@ void MenuRenderer::setupButtons(STATE gameState) {
 
 			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, true, 8));
 			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, false, 9));
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, true, 10));
+			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));
 			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, false, 11));
 
 			sliders.insert(sliders.begin(), sliderVol);
@@ -220,11 +231,12 @@ void MenuRenderer::pauseGame() {
 
 		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 4) / 2 + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 64 - 8, (Window::WIDTH - (Window::WIDTH / 4)) / 2 - 16, 64, "Continue", 9));
 		buttons.insert(buttons.begin(), new Gui::Button(((Window::WIDTH / 4) / 2) + (Window::WIDTH - (Window::WIDTH / 4)) - ((Window::WIDTH - (Window::WIDTH / 4)) / 2) + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 64 - 8, (Window::WIDTH - (Window::WIDTH / 4)) / 2 - 16, 64, "Back to menu", 10));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 4) / 2 + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 2 * 64 - 16, (Window::WIDTH - (Window::WIDTH / 4)) - 16, 64, "Settings", 11));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10)) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(11)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -329,10 +341,14 @@ void MenuRenderer::render(sf::RenderWindow& window) {
 		pauseBackground.setPosition(sf::Vector2f((Window::WIDTH / 4) / 2, Window::HEIGHT / 5));
 		pauseBackground.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 4), 3 * (Window::HEIGHT / 5)));
 
+		sf::Text title("Game paused", menuFont, 40);
+		title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
+
 		window.draw(pauseBackground);
+		window.draw(title);
 
 		for(Gui::Button* b : buttons)
-			if(b->getId(9) || b->getId(10))
+			if(b->getId(9) || b->getId(10) || b->getId(11))
 				b->render(window);
 	}
 }

@@ -203,10 +203,12 @@ namespace Gui {
 	};
 }
 
+class Wave;
+
 class MenuRenderer {
 
 public:
-	MenuRenderer(EntityHandler& e, HUD& hud, GameState& state);
+	MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state);
 	~MenuRenderer();
 
 	void render(sf::RenderWindow& window);
@@ -279,6 +281,8 @@ private:
 	sf::Font menuFont;
 
 	EntityHandler& e;
+
+	Wave& wave;
 
 	uint32_t time = 0;
 

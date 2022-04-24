@@ -19,11 +19,21 @@ public:
 	HUD& getHud();
 	MenuRenderer& getMenuRenderer();
 
+	void setMenuParticlesEnabled(bool enabled) {
+		setting_menuParticlesEnabled = enabled;
+	}
+
+	bool isMenuParticlesEnabled() {
+		return setting_menuParticlesEnabled;
+	}
+
 private:
 	void init();
 	void render();
 	void tick();
 	void loop();
+
+	bool setting_menuParticlesEnabled = 1;
 
 	MenuRenderer menuRenderer;
 	InputHandler inputHandler;

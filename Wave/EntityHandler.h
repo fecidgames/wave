@@ -27,6 +27,10 @@ public:
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;
 
+	Wave& getWaveAccess() {
+		return wave;	
+	}
+
 private:
 	int32_t spawnTimer = 0;
 	int32_t overTime = 0;

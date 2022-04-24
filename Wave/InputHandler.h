@@ -3,10 +3,13 @@
 #include "MenuRenderer.h"
 #include "EntityHandler.h"
 
+class EntityHandler;
+class Wave;
+
 class InputHandler {
 
 public:
-	InputHandler(MenuRenderer& menuRenderer, EntityHandler& entityHandler);
+	InputHandler(Wave& wave, MenuRenderer& menuRenderer, EntityHandler& entityHandler);
 
 	void update(sf::Event* e);
 
@@ -22,6 +25,8 @@ public:
 private:
 	MenuRenderer* menuRenderer;
 	EntityHandler* entityHandler;
+
+	Wave& wave;
 
 	GameState& gameState;
 

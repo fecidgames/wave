@@ -1,7 +1,8 @@
 #include "InputHandler.h"
+#include "Wave.h"
 
-InputHandler::InputHandler(MenuRenderer& menuRenderer, EntityHandler& entityHandler) : menuRenderer(&menuRenderer), entityHandler(&entityHandler), gameState(menuRenderer.gameState) {
-
+InputHandler::InputHandler(Wave& wave, MenuRenderer& menuRenderer, EntityHandler& entityHandler) : menuRenderer(&menuRenderer), entityHandler(&entityHandler), gameState(menuRenderer.gameState), wave(wave) {
+	
 }
 
 void InputHandler::update(sf::Event* e) {
@@ -63,6 +64,9 @@ void InputHandler::update(sf::Event* e) {
 							gameState.setGameState(STATE::STATE_MENU_MAIN);
 							menuRenderer->setup(STATE::STATE_MENU_MAIN);
 						}
+						if(b->getId(11)) {
+						
+						}
 					}
 				}
 
@@ -111,14 +115,18 @@ void InputHandler::update(sf::Event* e) {
 					c->click();
 
 					if(c->getId() == 10) {
-						if(!c->isChecked())
+						if(!c->isChecked()) {
+							wave.setMenuParticlesEnabled(false);
 							for(int i = 0; i < entityHandler->entities.size(); i++)
 								if(entityHandler->entities.at(i)->getId() == ID::MenuParticle) {
 									entityHandler->entities.erase(entityHandler->entities.begin() + i);
 									i--;
 								}
-						if(c->isChecked())
+						}
+						if(c->isChecked()) {
+							wave.setMenuParticlesEnabled(true);
 							entityHandler->addMenuParticles();
+						}
 					}
 				}
 			}
