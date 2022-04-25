@@ -4,7 +4,8 @@
 EntityHandler::EntityHandler(Wave& wave) : wave(wave) {
 	std::srand(NULL);
 
-	addMenuParticles();
+	if(wave.isMenuParticlesEnabled())
+		addMenuParticles();
 }
 
 EntityHandler::~EntityHandler() {
@@ -60,35 +61,38 @@ void EntityHandler::add(Entity* e) {
 }
 
 void EntityHandler::die(PlayerEntity* player) {
-	bool playerLeft = true;
+	bool shouldEnd = false;
+
 	for(int i = 0; i < entities.size(); i++) {
 		if(entities.at(i)->getId() == ID::Player) {
-			if(((PlayerEntity*) entities.at(i)) == player) {
-				entities.erase(entities.begin() + i);
-				playerLeft = false;
-			} else {
-				playerLeft = true;
+			PlayerEntity* p = (PlayerEntity*) entities.at(i);
+			if(p == player) {
+				dpCount++;
+				p->setAlive(false);
 			}
 		}
 	}
 
-	if(!playerLeft) { //On GameOver
+	shouldEnd = wave.getGameState().getGameMode(MODE::MODE_INFINITE) ? dpCount >= 1 : dpCount >= 2;
+
+	if(shouldEnd) { //On GameOver
+		dpCount = 0; //Reset dead players count
 		wave.getHud().stopTime();
 		wave.getMenuRenderer().gameEnd();
 	}
 }
 
 void EntityHandler::tickSpawner(int32_t time) {
-	uint32_t id = 28 + time;
+	uint32_t uid = 28 + time;
 
 	if(time == 1) {
-		add(new BasicEnemy(std::rand()%(Window::WIDTH - 50), std::rand()%(Window::HEIGHT - 50), ID::BasicEnemy, id, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
+		add(new BasicEnemy(std::rand()%(Window::WIDTH - 50), std::rand()%(Window::HEIGHT - 50), ID::BasicEnemy, uid, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
 	}
 	if(time == 300) {
-		add(new BasicEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::BasicEnemy, id, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
+		add(new BasicEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::BasicEnemy, uid, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
 	}
 	if(time == 600) {
-		add(new BasicEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::BasicEnemy, id, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
-		add(new FastEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::FastEnemy, id + 1, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
+		add(new BasicEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::BasicEnemy, uid, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
+		add(new FastEnemy(std::rand()%(Window::WIDTH - 150), std::rand()%(Window::HEIGHT - 30), ID::FastEnemy, uid + 1, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this));
 	}
 }

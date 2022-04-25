@@ -36,6 +36,8 @@ private:
 	int32_t overTime = 0;
 	int32_t msTime = 0;
 
+	int32_t dpCount = 0; //Dead players
+
 	void tickSpawner(int32_t time);
 
 	Wave& wave;

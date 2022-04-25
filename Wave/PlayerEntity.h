@@ -72,6 +72,18 @@ public:
 		health = v;
 	}
 
+	void setAlive(bool v) {
+		alive = v;
+	}
+
+	bool isAlive() {
+		return alive;
+	}
+
+	bool isDead() {
+		return !alive;
+	}
+
 	int32_t velX = 0, velY = 0;
 
 private:
@@ -93,6 +105,8 @@ private:
 	bool overGui = false;
 	bool controllable = true;
 	bool secondPlayer = false;
+
+	bool alive = true;
 
 	EntityHandler& e;
 };

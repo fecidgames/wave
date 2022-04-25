@@ -27,11 +27,13 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 }
 
 void PlayerEntity::render(sf::RenderWindow& w) {
-	r.setSize(sf::Vector2f(32, 32));
-	r.setPosition(x, y);
-	r.setFillColor(color);
+	if(alive) {
+		r.setSize(sf::Vector2f(32, 32));
+		r.setPosition(x, y);
+		r.setFillColor(color);
 
-	w.draw(r);
+		w.draw(r);
+	}
 }
 
 void PlayerEntity::tick() {

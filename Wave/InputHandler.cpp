@@ -157,7 +157,7 @@ void InputHandler::update(sf::Event* e) {
 				if(gameState.getGameState(STATE::STATE_MENU_MAIN))
 					menuRenderer->exitConfirmation();
 	
-				if(gameState.getGameState(STATE::STATE_MENU_SELECT) || gameState.getGameState(STATE::STATE_MENU_HELP) || gameState.getGameState(STATE::STATE_MENU_SETTINGS) || gameState.getGameState(STATE::STATE_MENU_SHOP)) {
+				if(gameState.getGameState(STATE::STATE_MENU_SELECT) || gameState.getGameState(STATE::STATE_MENU_GAMEOVER) || gameState.getGameState(STATE::STATE_MENU_HELP) || gameState.getGameState(STATE::STATE_MENU_SETTINGS) || gameState.getGameState(STATE::STATE_MENU_SHOP)) {
 					gameState.setGameState(STATE::STATE_MENU_MAIN);
 					menuRenderer->setup(STATE::STATE_MENU_MAIN);
 				}
@@ -176,6 +176,12 @@ void InputHandler::tick() {
 		if(PlayerEntity* p = dynamic_cast<PlayerEntity*>(e)) {
 			if(!p->isControllable())
 				return;
+
+			if(p->isDead()) {
+				p->setVelX(0);
+				p->setVelY(0);
+				return;
+			}
 
 			if(p->isPlayerOne()) {
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))

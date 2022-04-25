@@ -49,20 +49,22 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		}
 	}
 
-	double healthFactorP1 = player1->getHealth() / cMaxHealth;
-
 	sf::RectangleShape healthRedBorderedP1;
 	sf::RectangleShape healthGreenUnborderedP1;
 
-	healthRedBorderedP1.setPosition(sf::Vector2f(10, 10));
-	healthRedBorderedP1.setSize(sf::Vector2f(Window::WIDTH / 3, 64));
-	healthRedBorderedP1.setFillColor(sf::Color::Red);
-	healthRedBorderedP1.setOutlineColor(sf::Color::White);
-	healthRedBorderedP1.setOutlineThickness(3);
+	if(player1 != nullptr) {
+		double healthFactorP1 = player1->getHealth() / cMaxHealth;
 
-	healthGreenUnborderedP1.setPosition(sf::Vector2f(10, 10));
-	healthGreenUnborderedP1.setSize(sf::Vector2f((Window::WIDTH / 3) * healthFactorP1, 64));
-	healthGreenUnborderedP1.setFillColor(sf::Color::Green);
+		healthRedBorderedP1.setPosition(sf::Vector2f(10, 10));
+		healthRedBorderedP1.setSize(sf::Vector2f(Window::WIDTH / 3, 64));
+		healthRedBorderedP1.setFillColor(sf::Color::Red);
+		healthRedBorderedP1.setOutlineColor(sf::Color::White);
+		healthRedBorderedP1.setOutlineThickness(3);
+
+		healthGreenUnborderedP1.setPosition(sf::Vector2f(10, 10));
+		healthGreenUnborderedP1.setSize(sf::Vector2f((Window::WIDTH / 3) * healthFactorP1, 64));
+		healthGreenUnborderedP1.setFillColor(sf::Color::Green);
+	}
 
 	if(player2 != nullptr) {
 		if(player2->getBounds().getGlobalBounds().intersects(healthRedBorderedP1.getGlobalBounds())) {
@@ -73,17 +75,20 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		}
 	}
 
-	if(player1->getBounds().getGlobalBounds().intersects(healthRedBorderedP1.getGlobalBounds())) {
-		healthGreenUnborderedP1.setFillColor(sf::Color(healthGreenUnborderedP1.getFillColor().r, healthGreenUnborderedP1.getFillColor().g, healthGreenUnborderedP1.getFillColor().b, healthGreenUnborderedP1.getFillColor().a / 2));
-		healthGreenUnborderedP1.setOutlineColor(sf::Color(healthGreenUnborderedP1.getOutlineColor().r, healthGreenUnborderedP1.getOutlineColor().g, healthGreenUnborderedP1.getOutlineColor().b, healthGreenUnborderedP1.getOutlineColor().a / 2));
-		healthRedBorderedP1.setFillColor(sf::Color(healthRedBorderedP1.getFillColor().r, healthRedBorderedP1.getFillColor().g, healthRedBorderedP1.getFillColor().b, healthRedBorderedP1.getFillColor().a / 2));
-		healthRedBorderedP1.setOutlineColor(sf::Color(healthRedBorderedP1.getOutlineColor().r, healthRedBorderedP1.getOutlineColor().g, healthRedBorderedP1.getOutlineColor().b, healthRedBorderedP1.getOutlineColor().a / 2));
+	if(player1 != nullptr) {
+		if(player1->getBounds().getGlobalBounds().intersects(healthRedBorderedP1.getGlobalBounds())) {
+			healthGreenUnborderedP1.setFillColor(sf::Color(healthGreenUnborderedP1.getFillColor().r, healthGreenUnborderedP1.getFillColor().g, healthGreenUnborderedP1.getFillColor().b, healthGreenUnborderedP1.getFillColor().a / 2));
+			healthGreenUnborderedP1.setOutlineColor(sf::Color(healthGreenUnborderedP1.getOutlineColor().r, healthGreenUnborderedP1.getOutlineColor().g, healthGreenUnborderedP1.getOutlineColor().b, healthGreenUnborderedP1.getOutlineColor().a / 2));
+			healthRedBorderedP1.setFillColor(sf::Color(healthRedBorderedP1.getFillColor().r, healthRedBorderedP1.getFillColor().g, healthRedBorderedP1.getFillColor().b, healthRedBorderedP1.getFillColor().a / 2));
+			healthRedBorderedP1.setOutlineColor(sf::Color(healthRedBorderedP1.getOutlineColor().r, healthRedBorderedP1.getOutlineColor().g, healthRedBorderedP1.getOutlineColor().b, healthRedBorderedP1.getOutlineColor().a / 2));
+		}
 	}
 
 	window.draw(healthRedBorderedP1);
 
-	if(player1->getHealth() > 1)
-		window.draw(healthGreenUnborderedP1);
+	if(player1 != nullptr)
+		if(player1->getHealth() > 1)
+			window.draw(healthGreenUnborderedP1);
 
 	if(player2 != nullptr) {
 		sf::Text playerMarkerP1("P1 [White]", mainFont, 22);
@@ -109,11 +114,13 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		healthGreenUnborderedP2.setSize(sf::Vector2f((Window::WIDTH / 3) * healthFactorP2, 64));
 		healthGreenUnborderedP2.setFillColor(sf::Color::Green);
 
-		if(player1->getBounds().getGlobalBounds().intersects(healthRedBorderedP2.getGlobalBounds()) || player2->getBounds().getGlobalBounds().intersects(healthRedBorderedP2.getGlobalBounds())) {
-			healthGreenUnborderedP2.setFillColor(sf::Color(healthGreenUnborderedP2.getFillColor().r, healthGreenUnborderedP2.getFillColor().g, healthGreenUnborderedP2.getFillColor().b, healthGreenUnborderedP2.getFillColor().a / 2));
-			healthGreenUnborderedP2.setOutlineColor(sf::Color(healthGreenUnborderedP2.getOutlineColor().r, healthGreenUnborderedP2.getOutlineColor().g, healthGreenUnborderedP2.getOutlineColor().b, healthGreenUnborderedP2.getOutlineColor().a / 2));
-			healthRedBorderedP2.setFillColor(sf::Color(healthRedBorderedP2.getFillColor().r, healthRedBorderedP2.getFillColor().g, healthRedBorderedP2.getFillColor().b, healthRedBorderedP2.getFillColor().a / 2));
-			healthRedBorderedP2.setOutlineColor(sf::Color(healthRedBorderedP2.getOutlineColor().r, healthRedBorderedP2.getOutlineColor().g, healthRedBorderedP2.getOutlineColor().b, healthRedBorderedP2.getOutlineColor().a / 2));
+		if(player1 != nullptr) {
+			if(player1->getBounds().getGlobalBounds().intersects(healthRedBorderedP2.getGlobalBounds()) || player2->getBounds().getGlobalBounds().intersects(healthRedBorderedP2.getGlobalBounds())) {
+				healthGreenUnborderedP2.setFillColor(sf::Color(healthGreenUnborderedP2.getFillColor().r, healthGreenUnborderedP2.getFillColor().g, healthGreenUnborderedP2.getFillColor().b, healthGreenUnborderedP2.getFillColor().a / 2));
+				healthGreenUnborderedP2.setOutlineColor(sf::Color(healthGreenUnborderedP2.getOutlineColor().r, healthGreenUnborderedP2.getOutlineColor().g, healthGreenUnborderedP2.getOutlineColor().b, healthGreenUnborderedP2.getOutlineColor().a / 2));
+				healthRedBorderedP2.setFillColor(sf::Color(healthRedBorderedP2.getFillColor().r, healthRedBorderedP2.getFillColor().g, healthRedBorderedP2.getFillColor().b, healthRedBorderedP2.getFillColor().a / 2));
+				healthRedBorderedP2.setOutlineColor(sf::Color(healthRedBorderedP2.getOutlineColor().r, healthRedBorderedP2.getOutlineColor().g, healthRedBorderedP2.getOutlineColor().b, healthRedBorderedP2.getOutlineColor().a / 2));
+			}
 		}
 
 		window.draw(healthRedBorderedP2);

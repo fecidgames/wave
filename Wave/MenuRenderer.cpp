@@ -245,7 +245,15 @@ void MenuRenderer::pauseGame() {
 }
 
 void MenuRenderer::gameEnd() {
+	for(int32_t i = 0; i < e.entities.size(); i++) {
+		if(e.entities.at(i)->getId() == ID::Player) {
+			e.entities.erase(e.entities.begin() + i);
+			i--;
+		}
+	}
 
+	gameState.setGameState(STATE::STATE_MENU_GAMEOVER);
+	setup(STATE::STATE_MENU_GAMEOVER);
 }
 
 void MenuRenderer::exitConfirmation() {
