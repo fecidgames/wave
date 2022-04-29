@@ -141,6 +141,28 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		texts.insert(texts.begin(), mp);
 		texts.insert(texts.begin(), dm);
 	}
+
+	if(gameState == STATE::STATE_MENU_GAMEOVER) {
+		sf::Text title("Game over", menuFont, 50);
+		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
+
+		sf::Text winner("Winner: " + winningPlayer, menuFont, 30);
+		winner.setPosition(8, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
+
+		sf::Text playTimeInf("Time: " + pTime, menuFont, 30);
+		sf::Text playTimeDua("Time: " + pTime, menuFont, 30);
+		playTimeInf.setPosition(Window::WIDTH / 2 - playTimeDua.getGlobalBounds().width / 2, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
+		playTimeDua.setPosition(Window::WIDTH - playTimeInf.getGlobalBounds().width - 8, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
+
+		texts.insert(texts.begin(), title);
+
+		if(!wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
+			texts.insert(texts.begin(), playTimeDua);
+			texts.insert(texts.begin(), winner);
+		} else {
+			texts.insert(texts.begin(), playTimeInf);
+		}
+	}
 }
 
 void MenuRenderer::setupEntities(STATE gameState) {
@@ -188,38 +210,66 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
 		}
 	}
+
+	if(gameState == STATE::STATE_MENU_GAMEOVER) {
+	
+	}
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
 	//LAST BUTTON ID: 11
 
-	switch(gameState) {
-		case STATE::STATE_MENU_MAIN:
-			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 130, 380, 64, "Gamemodes", 0));
-			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 210, 380, 64, "Options", 1));
-			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190 + 396, 130, 64, 64, "?", 2));
-			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH - 204, Window::HEIGHT - 80, (380 / 2), 64, "Quit", 3));
-			buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 290, 380, 64, "Shop", 8));
-			break;
+	if(gameState == STATE::STATE_MENU_MAIN) {
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 130, 380, 64, "Gamemodes", 0));
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 210, 380, 64, "Options", 1));
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190 + 396, 130, 64, 64, "?", 2));
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH - 204, Window::HEIGHT - 80, (380 / 2), 64, "Quit", 3));
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 290, 380, 64, "Shop", 8));
+	}
+
+	if(gameState == STATE::STATE_MENU_SELECT) {
+		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
+		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 280, (Window::WIDTH / 2) - 32, 64, "Play gamemode", 5));
+	}
+
+	if(gameState == STATE::STATE_MENU_SETTINGS) {
+		Gui::Slider* sliderVol = new Gui::Slider(410, 130, Window::WIDTH  - 410 - 16, 16, 32, 6);
+		Gui::Slider* sliderGuiscl = new Gui::Slider(410, 187, Window::WIDTH  - 410 - 16, 16, 32, 7);
+
+		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
+
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, true, 8));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, false, 9));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, false, 11));
+
+		sliders.insert(sliders.begin(), sliderVol);
+		sliders.insert(sliders.begin(), sliderGuiscl);
+	}
+	
+	if(gameState == STATE::STATE_MENU_GAMEOVER) {
 		
-		case STATE::STATE_MENU_SELECT:
-			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
-			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 280, (Window::WIDTH / 2) - 32, 64, "Play gamemode", 5));
-			break;
+	}
+}
 
-		case STATE::STATE_MENU_SETTINGS:
-			Gui::Slider* sliderVol = new Gui::Slider(410, 130, Window::WIDTH  - 410 - 16, 16, 32, 6);
-			Gui::Slider* sliderGuiscl = new Gui::Slider(410, 187, Window::WIDTH  - 410 - 16, 16, 32, 7);
+void MenuRenderer::pauseGame(bool paused) {
+	gamePaused = paused;
 
-			buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
+	if(gamePaused) {
+		hud.pauseTime();
 
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, true, 8));
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, false, 9));
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));
-			checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, false, 11));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 4) / 2 + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 64 - 8, (Window::WIDTH - (Window::WIDTH / 4)) / 2 - 16, 64, "Continue", 9));
+		buttons.insert(buttons.begin(), new Gui::Button(((Window::WIDTH / 4) / 2) + (Window::WIDTH - (Window::WIDTH / 4)) - ((Window::WIDTH - (Window::WIDTH / 4)) / 2) + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 64 - 8, (Window::WIDTH - (Window::WIDTH / 4)) / 2 - 16, 64, "Back to menu", 10));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 4) / 2 + 8, Window::HEIGHT / 5 + 3 * (Window::HEIGHT / 5) - 2 * 64 - 16, (Window::WIDTH - (Window::WIDTH / 4)) - 16, 64, "Settings", 11));
+	} else {
+		hud.resumeTime();
 
-			sliders.insert(sliders.begin(), sliderVol);
-			sliders.insert(sliders.begin(), sliderGuiscl);
+		for(int i = 0; i < buttons.size(); i++) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(11)) {
+				buttons.erase(buttons.begin() + i);
+				i--;
+			}
+		}
 	}
 }
 
@@ -260,11 +310,11 @@ void MenuRenderer::exitConfirmation() {
 	exitConfirmationPopup = !exitConfirmationPopup;
 
 	if(exitConfirmationPopup) {
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 + 8, Window::HEIGHT / 2, ((Window::WIDTH - (Window::WIDTH / 3)) / 2) - 16, 64, "No", 9));
-		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 10));
+		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 + 8, Window::HEIGHT / 2, ((Window::WIDTH - (Window::WIDTH / 3)) / 2) - 16, 64, "No", 90));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 100));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10)) {
+			if(buttons.at(i)->getId(90) || buttons.at(i)->getId(100)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -272,92 +322,96 @@ void MenuRenderer::exitConfirmation() {
 	}
 }
 
-void MenuRenderer::render(sf::RenderWindow& window) {
-	for(Gui::Button* b : buttons)
-		b->render(window);
+void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
+	if(!onTop) {
+		for(Gui::Button* b : buttons)
+			b->render(window);
 
-	for(Gui::Slider* s : sliders)
-		s->render(window);
+		for(Gui::Slider* s : sliders)
+			s->render(window);
 
-	for(Gui::Checkbox* c : checkboxes)
-		c->render(window);
+		for(Gui::Checkbox* c : checkboxes)
+			c->render(window);
 
-	for(Gui::Arrow* a : arrows)
-		a->render(window);
+		for(Gui::Arrow* a : arrows)
+			a->render(window);
 
 
-	for(sf::Text t : texts)
-		window.draw(t);
+		for(sf::Text t : texts)
+			window.draw(t);
 
-	for(sf::RectangleShape r : rects)
-		window.draw(r);
+		for(sf::RectangleShape r : rects)
+			window.draw(r);
 
-	//======================================================//
+		//======================================================//
 
-	if(gameState.getGameState(STATE::STATE_GAME_INGAME))
-		hud.render();
+		if(gameState.getGameState(STATE::STATE_GAME_INGAME))
+			hud.render();
 
-	if(gameState.getGameState(STATE::STATE_MENU_SELECT)) {
-		for(int i = 0; i < e.entities.size(); i++) {
-			if(e.entities.at(i)->getId() == ID::Player) {
+		if(gameState.getGameState(STATE::STATE_MENU_SELECT)) {
+			for(int i = 0; i < e.entities.size(); i++) {
+				if(e.entities.at(i)->getId() == ID::Player) {
 
-				PlayerEntity* p = (PlayerEntity*) e.entities.at(i);
-				if(!p->isControllable()) {
-					if(time < 1)
-						p->setVelX(5);
+					PlayerEntity* p = (PlayerEntity*) e.entities.at(i);
+					if(!p->isControllable()) {
+						if(time < 1)
+							p->setVelX(5);
 
-					time++;
-					std::srand(time);
-					playerPos(p);
+						time++;
+						std::srand(time);
+						playerPos(p);
+					}
 				}
 			}
 		}
+
+		//==========================================================//
+
+		if(gamePaused) {
+			sf::RectangleShape pauseBackground;
+			pauseBackground.setFillColor(sf::Color::Black);
+			pauseBackground.setOutlineColor(sf::Color::White);
+			pauseBackground.setOutlineThickness(2);
+			pauseBackground.setPosition(sf::Vector2f((Window::WIDTH / 4) / 2, Window::HEIGHT / 5));
+			pauseBackground.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 4), 3 * (Window::HEIGHT / 5)));
+
+			sf::Text title("Game paused", menuFont, 40);
+			title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
+
+			window.draw(pauseBackground);
+			window.draw(title);
+
+			for(Gui::Button* b : buttons)
+				if(b->getId(9) || b->getId(10) || b->getId(11))
+					b->render(window);
+		}
 	}
 
-	//==========================================================//
+	if(onTop) {
+		if(exitConfirmationPopup) {
+			Gui::Button* ye = new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 10);
 
-	if(exitConfirmationPopup) {
-		Gui::Button* ye = new Gui::Button((Window::WIDTH / 3) / 2 + 8, Window::HEIGHT / 2, (Window::WIDTH - (Window::WIDTH / 3)) / 2 - 16, 64, "Yes", 10);
+			sf::RectangleShape r1;
+			r1.setFillColor(sf::Color::Black);
+			r1.setOutlineColor(sf::Color::White);
+			r1.setOutlineThickness(2);
+			r1.setPosition(sf::Vector2f((Window::WIDTH / 3) / 2, Window::HEIGHT / 4));
+			r1.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 3), ye->getY() + ye->getHeight() + 8 - r1.getPosition().y));
 
-		sf::RectangleShape r1;
-		r1.setFillColor(sf::Color::Black);
-		r1.setOutlineColor(sf::Color::White);
-		r1.setOutlineThickness(2);
-		r1.setPosition(sf::Vector2f((Window::WIDTH / 3) / 2, Window::HEIGHT / 4));
-		r1.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 3), ye->getY() + ye->getHeight() + 8 - r1.getPosition().y));
+			sf::Text title("Exit game?", menuFont, 40);
+			title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, Window::HEIGHT / 4 + title.getGlobalBounds().height);
 
-		sf::Text title("Exit game?", menuFont, 40);
-		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, Window::HEIGHT / 4 + title.getGlobalBounds().height);
+			sf::Text msg("Are you sure you want to exit?", menuFont, 25);
+			msg.setPosition(Window::WIDTH / 2 - msg.getGlobalBounds().width / 2, Window::HEIGHT / 4 + 2 * title.getGlobalBounds().height + 35);
 
-		sf::Text msg("Are you sure you want to exit?", menuFont, 25);
-		msg.setPosition(Window::WIDTH / 2 - msg.getGlobalBounds().width / 2, Window::HEIGHT / 4 + 2 * title.getGlobalBounds().height + 35);
+			window.draw(r1);
+			window.draw(title);
+			window.draw(msg);
 
-		window.draw(r1);
-		window.draw(title);
-		window.draw(msg);
-
-		for(Gui::Button* b : buttons)
-			if(b->getId(9) || b->getId(10))
-				b->render(window);
-	}
-
-	if(gamePaused) {
-		sf::RectangleShape pauseBackground;
-		pauseBackground.setFillColor(sf::Color::Black);
-		pauseBackground.setOutlineColor(sf::Color::White);
-		pauseBackground.setOutlineThickness(2);
-		pauseBackground.setPosition(sf::Vector2f((Window::WIDTH / 4) / 2, Window::HEIGHT / 5));
-		pauseBackground.setSize(sf::Vector2f(Window::WIDTH - (Window::WIDTH / 4), 3 * (Window::HEIGHT / 5)));
-
-		sf::Text title("Game paused", menuFont, 40);
-		title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
-
-		window.draw(pauseBackground);
-		window.draw(title);
-
-		for(Gui::Button* b : buttons)
-			if(b->getId(9) || b->getId(10) || b->getId(11))
-				b->render(window);
+			for(Gui::Button* b : buttons)
+				if(b->getId(90) || b->getId(100))
+					b->render(window);
+		}
 	}
 }
 

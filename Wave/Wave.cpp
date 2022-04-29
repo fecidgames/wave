@@ -20,9 +20,11 @@ void Wave::render() {
 
 	entityHandler.render(window, false);
 
-	menuRenderer.render(window);
+	menuRenderer.render(window, false);
 
 	entityHandler.render(window, true);
+
+	menuRenderer.render(window, true);
 
 	window.display();
 }
@@ -67,8 +69,13 @@ void Wave::loop() {
 	while(window.isOpen()) {
 		sf::Event e;
 		while(window.pollEvent(e)) {
-			if(e.type == e.Closed) {
-				window.close();
+			if(e.type == sf::Event::Closed) {
+				if(!menuRenderer.isExitUnconfirmed()) {
+					menuRenderer.exitConfirmation();
+
+					if(getGameState().getGameState(STATE::STATE_GAME_INGAME))
+						menuRenderer.pauseGame(true);
+				}
 			}
 
 			inputHandler.update(&e);

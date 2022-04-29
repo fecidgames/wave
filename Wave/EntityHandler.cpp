@@ -62,6 +62,7 @@ void EntityHandler::add(Entity* e) {
 
 void EntityHandler::die(PlayerEntity* player) {
 	bool shouldEnd = false;
+	bool p1Died = false;
 
 	for(int i = 0; i < entities.size(); i++) {
 		if(entities.at(i)->getId() == ID::Player) {
@@ -69,15 +70,20 @@ void EntityHandler::die(PlayerEntity* player) {
 			if(p == player) {
 				dpCount++;
 				p->setAlive(false);
+				p1Died = p->isPlayerOne();
 			}
 		}
 	}
 
 	shouldEnd = wave.getGameState().getGameMode(MODE::MODE_INFINITE) ? dpCount >= 1 : dpCount >= 2;
 
+	if(wave.getGameState().getGameMode(MODE::MODE_DUAL) && !shouldEnd)
+		wave.getMenuRenderer().setWinningPlayer(p1Died ? "Player 2" : "Player 1");
+
 	if(shouldEnd) { //On GameOver
 		dpCount = 0; //Reset dead players count
 		wave.getHud().stopTime();
+		wave.getMenuRenderer().sendTime(wave.getHud().getTimer().getElapsedMilliseconds(), !wave.getGameState().getGameMode(MODE::MODE_INFINITE));
 		wave.getMenuRenderer().gameEnd();
 	}
 }

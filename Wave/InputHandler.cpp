@@ -13,6 +13,9 @@ void InputHandler::update(sf::Event* e) {
 					if(b->getId(9) || b->getId(10)) {
 						b->down = true;
 					}
+					if(b->getId(90) || b->getId(100)) {
+						b->down = true;
+					}
 				}
 			}
 
@@ -50,13 +53,11 @@ void InputHandler::update(sf::Event* e) {
 		case sf::Event::MouseButtonReleased:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
 				if(mouseOver(e->mouseButton.x, e->mouseButton.y, b)) {
-					if(gameState.getGameState(STATE::STATE_MENU_MAIN)) {
-						if(b->getId(9))
-							menuRenderer->exitConfirmation();	
-						if(b->getId(10))
-							exit(EXIT_SUCCESS);
-					}
-					if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
+					if(b->getId(90))
+						menuRenderer->exitConfirmation();	
+					if(b->getId(100))
+						exit(EXIT_SUCCESS);
+					if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isExitUnconfirmed()) {
 						if(b->getId(9))
 							menuRenderer->pauseGame();
 						if(b->getId(10)) {
@@ -140,7 +141,7 @@ void InputHandler::update(sf::Event* e) {
 		case sf::Event::MouseMoved:
 			for(Gui::Button* b : menuRenderer->getButtons()) {
 				if(mouseOver(e->mouseMove.x, e->mouseMove.y, b)) {
-					if(!menuRenderer->isExitUnconfirmed() || b->getId(9) || b->getId(10))
+					if(!menuRenderer->isExitUnconfirmed() || b->getId(90) || b->getId(100))
 						b->hover = true;
 				} else {
 					b->hover = false;

@@ -30,23 +30,6 @@ public:
 		return timer;
 	}
 
-private:
-	sf::RenderWindow& window;
-	sf::Font mainFont;
-
-	EntityHandler& e;
-	Timer timer{};
-
-	void renderHealth(std::vector<Entity*>* entities);
-	void renderTimer();
-	void renderShopAccess();
-	void renderPauseAccess();
-
-	bool showMilliseconds = false;
-	
-	const double dMaxHealth = 100;
-	double cMaxHealth = dMaxHealth;
-
 	std::string formatTime(int ms) {
 		int seconds = ms / 1000;
 		ms %= 1000;
@@ -76,5 +59,21 @@ private:
 		return ret;
 	}
 
+private:
+	sf::RenderWindow& window;
+	sf::Font mainFont;
+
+	EntityHandler& e;
+	Timer timer{};
+
+	void renderHealth(std::vector<Entity*>* entities);
+	void renderTimer();
+	void renderShopAccess();
+	void renderPauseAccess();
+	
+	const double dMaxHealth = 100;
+	double cMaxHealth = dMaxHealth;
+
+	bool showMilliseconds = false;
 };
 

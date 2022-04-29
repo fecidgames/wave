@@ -211,7 +211,7 @@ public:
 	MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state);
 	~MenuRenderer();
 
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window, bool onTop);
 
 	GameState& gameState;
 
@@ -236,6 +236,7 @@ public:
 	void exitConfirmation();
 	void gameEnd();
 	void pauseGame();
+	void pauseGame(bool paused);
 
 	HUD& getHud() {
 		return hud;
@@ -262,6 +263,21 @@ public:
 		descriptionr2 = (gameMode == "Infinite") ? "will get harder over time." : (gameMode == "Dual") ? "Last one to die wins." : "";
 	}
 
+	void setWinningPlayer(std::string winner) {
+		winningPlayer = winner;
+	}
+
+	void sendTime(int32_t ms, bool dual) {
+		pTime = hud.formatTime(ms);
+
+		//Check and set best time here accordingly
+		if(dual) {
+			//dualBest check & set
+		} else {
+			//personalBest check & set
+		}
+	}
+
 private:
 	std::vector<Gui::Button*> buttons;
 	std::vector<Gui::Slider*> sliders;
@@ -274,7 +290,10 @@ private:
 	std::string gameMode = "Infinite";
 	std::string descriptionr1 = "Play until you die. Enemies";
 	std::string descriptionr2 = "will get harder over time.";
-	std::string personalBest = "00:00";
+	std::string personalBest = "00:00"; //Only infinite
+	std::string dualBest = "00:00"; //Only dual
+	std::string winningPlayer = "Player 1";
+	std::string pTime = "00:00";
 
 	HUD& hud;
 
