@@ -56,6 +56,14 @@ void EntityHandler::addMenuParticles() {
 		add(new MenuParticleEntity(std::rand()%(Window::WIDTH - 50), std::rand()%(Window::HEIGHT - 50), ID::MenuParticle, i, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this, false));
 }
 
+void EntityHandler::removeMenuParticles() {
+	for(int i = 0; i < entities.size(); i++)
+		if(entities.at(i)->getId() == ID::MenuParticle) {
+			entities.erase(entities.begin() + i);
+			i--;
+		}
+}
+
 void EntityHandler::add(Entity* e) {
 	entities.insert(entities.begin(), e);
 }

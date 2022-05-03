@@ -21,6 +21,7 @@ public:
 	void tick();
 
 	void addMenuParticles();
+	void removeMenuParticles();
 
 	void die(PlayerEntity* player);
 

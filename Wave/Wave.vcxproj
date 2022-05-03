@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="BasicEnemy.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Checkbox.cpp" />
     <ClCompile Include="EntityHandler.cpp" />
     <ClCompile Include="FastEnemy.cpp" />
     <ClCompile Include="HUD.cpp" />
@@ -27,12 +30,16 @@
     <ClCompile Include="MenuParticleEntity.cpp" />
     <ClCompile Include="MenuRenderer.cpp" />
     <ClCompile Include="PlayerEntity.cpp" />
+    <ClCompile Include="Slider.cpp" />
     <ClCompile Include="Start.cpp" />
     <ClCompile Include="TrailEntity.cpp" />
     <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arrow.h" />
     <ClInclude Include="BasicEnemy.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Checkbox.h" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="EntityHandler.h" />
     <ClInclude Include="FastEnemy.h" />
@@ -43,6 +50,7 @@
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="STATE.h" />
     <ClInclude Include="Timer.hpp" />
     <ClInclude Include="TrailEntity.h" />

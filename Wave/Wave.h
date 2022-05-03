@@ -20,11 +20,19 @@ public:
 	MenuRenderer& getMenuRenderer();
 
 	void setMenuParticlesEnabled(bool enabled) {
-		setting_menuParticlesEnabled = enabled;
+		setting_menuParticles = enabled;
 	}
 
 	bool isMenuParticlesEnabled() {
-		return setting_menuParticlesEnabled;
+		return setting_menuParticles;
+	}
+
+	void setDebugMenuEnabled(bool enabled) {
+		setting_debugMenu = enabled;
+	}
+
+	bool isDebugMenuEnabled() {
+		return setting_debugMenu;
 	}
 
 private:
@@ -33,7 +41,13 @@ private:
 	void tick();
 	void loop();
 
-	bool setting_menuParticlesEnabled = 1;
+	int32_t setting_volume = 0; //0 is off, dont pause song when volume is 0
+	int32_t setting_hudSize = 0; //0 is default. This is a hud size multiplier
+
+	bool setting_vSync = 1;
+	bool setting_fullscreen = 0;
+	bool setting_menuParticles = 1;
+	bool setting_debugMenu = 0;
 
 	MenuRenderer menuRenderer;
 	InputHandler inputHandler;

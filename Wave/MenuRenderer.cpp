@@ -240,8 +240,8 @@ void MenuRenderer::setupButtons(STATE gameState) {
 
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, true, 8));
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, false, 9));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, false, 11));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
 
 		sliders.insert(sliders.begin(), sliderVol);
 		sliders.insert(sliders.begin(), sliderGuiscl);
@@ -415,6 +415,24 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 	}
 }
 
+void MenuRenderer::renderDebugMenuOverlay(sf::RenderWindow& window) {
+	sf::Text enabledNotify("Debug menu enabled", menuFont, 14);
+	enabledNotify.setFillColor(sf::Color::White);
+	enabledNotify.setOutlineColor(sf::Color::Black);
+	enabledNotify.setOutlineThickness(2.0f);
+	enabledNotify.setPosition(10, 10);
+
+	window.draw(enabledNotify);
+
+	if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
+		if(gameState.getGameMode(MODE::MODE_INFINITE)) {
+			for(int i = 0; i < e.entities.size(); i++) {
+				
+			}
+		}
+	}
+}
+
 void MenuRenderer::playerPos(PlayerEntity* p) {
 	if(p->getVelX() > 0) {
 		if(p->getBounds().getPosition().x > (Window::WIDTH - 16) - std::rand()%130 + 20) {
@@ -460,103 +478,4 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 			}
 		}
 	}
-}
-
-
-
-
-
-
-/*
-===========================================================================================================================================================
-						######  #    #  #####       ######  ######  ##   ##  ######  ######  #    #  ######  #    #  #######  ######
-						#       #    #    #         #       #    #  # # # #  #    #	 #    #	 ##   #  #		 ##   #     #     #
-						#   ##  #    #    #         #       #    #  #  #  #  ######	 #    #	 # #  #  ####	 # #  #     #     ######
-						#    #  #    #    #         #       #    #  #     #  #       #    #	 #  # #  #		 #  # #     #          #
-						######  ######  #####       ######  ######  #     #  #       ######	 #   ##  ######  #   ##     #     ######
-===========================================================================================================================================================
-*/
-
-Gui::Checkbox::Checkbox(int32_t x, int32_t y, double scale, bool checked, int32_t id) : x(x), y(y), scale(scale), checked(checked), id(id) {
-	if(!textureNotChecked.loadFromFile("textures/checkbox_empty.png"))
-			throw std::exception("checkbox_empty.png");
-
-	if(!textureChecked.loadFromFile("textures/checkbox_checked.png"))
-			throw std::exception("checkbox_checked.png not found!");
-}
-
-void Gui::Checkbox::render(sf::RenderWindow& window) {
-	sf::Sprite spr(checked ? textureChecked : textureNotChecked);
-	spr.setScale(scale, scale);
-	spr.setPosition(x, y - spr.getGlobalBounds().height / 2 + 5);
-
-	width  = spr.getGlobalBounds().width;
-	height = spr.getGlobalBounds().height;
-
-	window.draw(spr);
-}
-
-//=======================================================
-
-Gui::Arrow::Arrow(int32_t x, int32_t y, int32_t width, int32_t height, bool inverted, int32_t id) : x(x), y(y), width(width), height(height), id(id), inverted(inverted) {
-
-}
-
-void Gui::Arrow::render(sf::RenderWindow& window) {
-	sf::ConvexShape triangle;
-	triangle.setPointCount(3);
-	triangle.setPoint(0, sf::Vector2f(x, y));
-	triangle.setPoint(1, sf::Vector2f(x, y + height));
-
-	if(!inverted)
-		triangle.setPoint(2, sf::Vector2f(x + width, y + height / 2));
-	if(inverted)
-		triangle.setPoint(2, sf::Vector2f(x - width, y + height / 2));
-
-	window.draw(triangle);
-}
-
-//=======================================================
-
-Gui::Slider::Slider(int32_t x, int32_t y, int32_t length, int32_t blockWidth, int32_t blockHeight, int32_t id) : x(x), y(y), length(length), blockWidth(blockWidth), blockHeight(blockHeight), id(id) {
-	blockX = x;
-	mxr = 0;
-}
-
-void Gui::Slider::render(sf::RenderWindow& window) {
-	sf::RectangleShape block(sf::Vector2f(!hover ? blockWidth : blockWidth + 6, !hover ? blockHeight : blockHeight + 6));
-	block.setPosition(!hover ? blockX : blockX - 3, !hover ? y - blockHeight / 2 : y - blockHeight / 2 - 3);
-	block.setFillColor(sf::Color::White);
-	
-	sf::RectangleShape sliderLine(sf::Vector2f(length, 1));
-	sliderLine.setPosition(x, y);
-
-	window.draw(block);
-	window.draw(sliderLine);
-}
-
-//======================================================
-
-Gui::Button::Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id) : x(x), y(y), width(width), height(height), text(text), id(id) {
-
-}
-
-void Gui::Button::render(sf::RenderWindow& window) {
-	sf::RectangleShape btnShape(sf::Vector2f(!hover ? width : width + 6, !hover ? height : height + 6));
-	btnShape.setPosition(!hover ? x : x - 3, !hover ? y : y - 3);
-	btnShape.setOutlineThickness(1.0f);
-	btnShape.setFillColor(!down ? sf::Color::Black : sf::Color::White);
-	btnShape.setOutlineColor(sf::Color::White);
-
-	sf::Font f;
-	f.loadFromFile("fonts/mainFont.ttf");
-
-	sf::Text btnText(text, f, 35);
-	while(btnText.getGlobalBounds().width > btnShape.getGlobalBounds().width)
-		btnText.setCharacterSize(btnText.getCharacterSize() - 2.5);
-
-	btnText.setPosition((int) (x + (width / 2) - btnText.getGlobalBounds().width / 2), (int) (y + (height / 2) - btnText.getGlobalBounds().height / 2 ) - 3);
-	
-	window.draw(btnShape);
-	window.draw(btnText);
 }

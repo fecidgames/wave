@@ -93,7 +93,7 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 	if(player2 != nullptr) {
 		sf::Text playerMarkerP1("P1 [White]", mainFont, 22);
 		playerMarkerP1.setPosition(13, 13);
-		playerMarkerP1.setFillColor(sf::Color::White);
+		playerMarkerP1.setFillColor(player1->getColor());
 		playerMarkerP1.setOutlineColor(sf::Color::Black);
 		playerMarkerP1.setOutlineThickness(2.0f);
 
@@ -130,7 +130,7 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 
 		sf::Text playerMarkerP2("P2 [Pink]", mainFont, 22);
 		playerMarkerP2.setPosition(Window::WIDTH - playerMarkerP2.getGlobalBounds().width - 13, 13);
-		playerMarkerP2.setFillColor(sf::Color::White);
+		playerMarkerP2.setFillColor(player2->getColor());
 		playerMarkerP2.setOutlineColor(sf::Color::Black);
 		playerMarkerP2.setOutlineThickness(2.0f);
 

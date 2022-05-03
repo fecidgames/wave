@@ -19,12 +19,13 @@ void Wave::render() {
 	window.clear(sf::Color(startupFadeCol, startupFadeCol, startupFadeCol));
 
 	entityHandler.render(window, false);
-
 	menuRenderer.render(window, false);
 
 	entityHandler.render(window, true);
-
 	menuRenderer.render(window, true);
+
+	if(setting_debugMenu)
+		menuRenderer.renderDebugMenuOverlay(window); //This must always be on top
 
 	window.display();
 }

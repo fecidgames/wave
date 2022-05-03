@@ -5,204 +5,15 @@
 #include <iostream>
 #include <functional>
 
-#include "STATE.h"
 #include "EntityHandler.h"
 #include "HUD.h"
 
+#include "Arrow.h"
+#include "Button.h"
+#include "Checkbox.h"
+#include "Slider.h"
+
 class EntityHandler;
-
-namespace Gui {
-	class Button {
-	public:
-		bool down = false;
-		bool hover = false;
-
-		Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id);
-
-		void render(sf::RenderWindow& window);
-
-		int32_t getId() {
-			return id;
-		}
-
-		bool getId(int32_t id) {
-			return id == this->id;
-		}
-
-		float_t getX() {
-			return x;
-		}
-
-		float_t getY() {
-			return y;
-		}
-
-		float_t getWidth() {
-			return width;
-		}
-
-		float_t getHeight() {
-			return height;
-		}
-
-		std::string getText() {
-			return text;
-		}
-
-	private:
-		float_t x, y;
-		float_t width, height;
-		std::string text;
-		int32_t id;
-	};
-
-	class Checkbox {
-	public:
-		Checkbox(int32_t x, int32_t y, double scale, bool checked, int32_t id);
-
-		void render(sf::RenderWindow& window);
-
-		void click() {
-			checked = !checked;
-		}
-
-		bool isChecked() {
-			return checked;
-		}
-
-		int32_t getId() {
-			return id;
-		}
-
-		bool getId(int32_t id) {
-			return id == this->id;
-		}
-
-		int32_t getX() {
-			return x;
-		}
-
-		int32_t getY() {
-			return y;
-		}
-
-		int32_t getWidth() {
-			return width;
-		}
-
-		int32_t getHeight() {
-			return height;
-		}
-
-		double getScale() {
-			return scale;
-		}
-
-
-	private:
-		bool checked = true;
-		int32_t x, y, width = 0, height = 0, id;
-		double scale;
-		sf::Texture textureChecked;
-		sf::Texture textureNotChecked;
-	};
-
-	class Slider {
-	public:
-		bool hover = false;
-		bool dragging = false;
-
-		int32_t mxr;
-
-		Slider(int32_t x, int32_t y, int32_t length, int32_t blockWidth, int32_t blockHeight, int32_t id);
-
-		void render(sf::RenderWindow& window);
-
-		int32_t getId() {
-			return id;
-		}
-
-		bool getId(int32_t id) {
-			return id == this->id;
-		}
-
-		int32_t getX() {
-			return x;
-		}
-
-		int32_t getY() {
-			return y;
-		}
-
-		int32_t getLength() {
-			return length;
-		}
-
-		int32_t getBlockWidth() {
-			return blockWidth;
-		}
-
-		int32_t getBlockHeight() {
-			return blockHeight;
-		}
-
-		int32_t getBlockX() {
-			return blockX;
-		}
-
-		void setBlockX(int32_t blockX) {
-			if(blockX > (x + length - blockWidth))
-				this->blockX = x + length - blockWidth;
-			else if(blockX < x) 
-				this->blockX = x;
-			else
-				this->blockX = blockX;
-		}
-
-	private:
-		int32_t x, y, length, blockWidth, blockHeight, id, blockX = 0;
-	};
-
-	class Arrow {
-	public:
-		Arrow(int32_t x, int32_t y, int32_t width, int32_t height, bool inverted, int32_t id);
-
-		void render(sf::RenderWindow& window);
-
-		int32_t getId() {
-			return id;
-		}
-
-		bool getId(int32_t id) {
-			return id == this->id;
-		}
-
-		int32_t getX() {
-			return x;
-		}
-
-		int32_t getY() {
-			return y;
-		}
-
-		int32_t getWidth() {
-			return width;
-		}
-
-		int32_t getHeight() {
-			return height;
-		}
-
-		bool isInverted() {
-			return inverted;
-		}
-
-	private:
-		int32_t x, y, width, height, id;
-		bool inverted;
-	};
-}
-
 class Wave;
 
 class MenuRenderer {
@@ -277,6 +88,8 @@ public:
 			//personalBest check & set
 		}
 	}
+
+	void renderDebugMenuOverlay(sf::RenderWindow& window);
 
 private:
 	std::vector<Gui::Button*> buttons;

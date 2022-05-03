@@ -14,13 +14,17 @@ public:
 	void update(sf::Event* e);
 
 	bool mouseOver(double mx, double my, double x, double y, double width, double height);
-	bool mouseOver(double mx, double my, Gui::Button* button);
-	bool mouseOver(double mx, double my, Gui::Slider* button);
-	bool mouseOver(double mx, double my, Gui::Checkbox* button);
-	bool mouseOver(double mx, double my, Gui::Arrow* button);
-	bool mouseOverBlock(double mx, double my, Gui::Slider* slider);
+
+	bool mouseOver(sf::Event::MouseMoveEvent mb, Gui::Button* button);
+	bool mouseOver(sf::Event::MouseButtonEvent mb, Gui::Button* button);
+	bool mouseOver(sf::Event::MouseButtonEvent mb, Gui::Slider* slider);
+	bool mouseOver(sf::Event::MouseButtonEvent mb, Gui::Checkbox* checkbox);
+	bool mouseOver(sf::Event::MouseButtonEvent mb, Gui::Arrow* arrow);
+	bool mouseOverBlock(sf::Event::MouseButtonEvent mb, Gui::Slider* slider);
 
 	void tick();
+
+	bool type(sf::Event* e, sf::Event::EventType type);
 
 private:
 	MenuRenderer* menuRenderer;
