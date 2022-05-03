@@ -3,6 +3,8 @@
 #include <chrono>
 #include <sys/timeb.h>
 #include <ctime>
+#include <fstream>
+#include <sstream>
 
 #include "InputHandler.h"
 #include "EntityHandler.h"
@@ -11,7 +13,7 @@
 class Wave {
 
 public:
-	Wave(sf::ContextSettings settings);
+	Wave();
 	~Wave();
 
 	sf::RenderWindow* getWindow();
@@ -19,35 +21,43 @@ public:
 	HUD& getHud();
 	MenuRenderer& getMenuRenderer();
 
-	void setMenuParticlesEnabled(bool enabled) {
-		setting_menuParticles = enabled;
-	}
+	void setVolume(int32_t volume);
+	int32_t getVolume();
 
-	bool isMenuParticlesEnabled() {
-		return setting_menuParticles;
-	}
+	void setHudSize(int32_t hudSize);
+	int32_t getHudSize();
 
-	void setDebugMenuEnabled(bool enabled) {
-		setting_debugMenu = enabled;
-	}
+	void setVSyncEnabled(bool enabled);
+	bool isVSyncEnabled();
 
-	bool isDebugMenuEnabled() {
-		return setting_debugMenu;
-	}
+	void setFullscreenEnabled(bool enabled);
+	bool isFullscreenEnabled();
+
+	void setMenuParticlesEnabled(bool enabled);
+	bool isMenuParticlesEnabled();
+
+	void setDebugMenuEnabled(bool enabled);
+	bool isDebugMenuEnabled();
+
+	void loadSettings();
+	void saveSettings();
+
+	void stop();
 
 private:
 	void init();
 	void render();
 	void tick();
 	void loop();
+	void renderwin();
 
-	int32_t setting_volume = 0; //0 is off, dont pause song when volume is 0
-	int32_t setting_hudSize = 0; //0 is default. This is a hud size multiplier
+	uint32_t setting_volume = 100; //0 is off, dont pause song when volume is 0
+	uint32_t setting_hudSize = 0; //0 is default. This is a hud size multiplier
 
-	bool setting_vSync = 1;
-	bool setting_fullscreen = 0;
-	bool setting_menuParticles = 1;
-	bool setting_debugMenu = 0;
+	bool setting_vSync = true;
+	bool setting_fullscreen = false;
+	bool setting_menuParticles = true;
+	bool setting_debugMenu = false;
 
 	MenuRenderer menuRenderer;
 	InputHandler inputHandler;

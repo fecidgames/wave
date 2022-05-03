@@ -2,16 +2,20 @@
 #include "Wave.h"
 
 EntityHandler::EntityHandler(Wave& wave) : wave(wave) {
-	std::srand(NULL);
-
-	if(wave.isMenuParticlesEnabled())
-		addMenuParticles();
+	
 }
 
 EntityHandler::~EntityHandler() {
 	for(Entity* e : entities) {
 		delete e;
 	}
+}
+
+void EntityHandler::setup() {
+	std::srand(NULL);
+
+	if(wave.isMenuParticlesEnabled())
+		addMenuParticles();
 }
 
 void EntityHandler::tick() {

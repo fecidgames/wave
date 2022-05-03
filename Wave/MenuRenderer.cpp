@@ -238,8 +238,8 @@ void MenuRenderer::setupButtons(STATE gameState) {
 
 		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
 
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, true, 8));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, false, 9));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, wave.isVSyncEnabled(), 8));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, wave.isFullscreenEnabled(), 9));
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
 

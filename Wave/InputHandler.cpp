@@ -56,7 +56,7 @@ void InputHandler::update(sf::Event* e) {
 				if(button->getId(90))
 					menuRenderer->exitConfirmation();
 				if(button->getId(100))
-					exit(EXIT_SUCCESS);
+					wave.stop();
 
 				if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isExitUnconfirmed()) {
 					if(button->getId(9))
@@ -120,6 +120,18 @@ void InputHandler::update(sf::Event* e) {
 			if(mouseOver(e->mouseButton, checkbox)) {
 				checkbox->click();
 
+				if(checkbox->getId(8)) { //vSync is handled in the wave class ;)
+					if(checkbox->isChecked()) 
+						wave.setVSyncEnabled(true);
+					if(!checkbox->isChecked())
+						wave.setVSyncEnabled(false);
+				}
+				if(checkbox->getId(9)) {
+					if(checkbox->isChecked())
+						wave.setFullscreenEnabled(true);
+					if(!checkbox->isChecked())
+						wave.setFullscreenEnabled(false);
+				}
 				if(checkbox->getId(10)) {
 					if(checkbox->isChecked()) {
 						wave.setMenuParticlesEnabled(true);

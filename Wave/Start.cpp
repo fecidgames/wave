@@ -1,9 +1,6 @@
 #include "Wave.h"
 
 int main() {
-	sf::ContextSettings settings;
-	settings.antialiasingLevel = 6.0;
-
-	Wave wave(settings);
+	Wave wave{};
 	return 0;
 }

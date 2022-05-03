@@ -15,6 +15,8 @@ public:
 	EntityHandler(Wave& wave);
 	~EntityHandler();
 
+	void setup();
+
 	void add(Entity* e);
 
 	void render(sf::RenderWindow& w, bool afterGui);
