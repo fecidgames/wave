@@ -44,7 +44,7 @@ public:
 
 	void stop();
 
-	int32_t& getScale() {
+	double& getScale() {
 		return scale;
 	}
 
@@ -72,6 +72,6 @@ private:
 
 	sf::RenderWindow window;
 
-	int32_t scale = 1;
+	double scale = 1;
 };
 

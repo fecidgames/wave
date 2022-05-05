@@ -6,8 +6,8 @@ class EntityHandler;
 
 class PlayerEntity : public Entity {
 public:
-	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable);
-	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health);
+	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, double scale);
+	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health, double scale);
 
 
 	virtual void render(sf::RenderWindow& w);
@@ -93,6 +93,7 @@ private:
 	int32_t y;
 
 	double health;
+	double scale;
 
 	ID id;
 	uint32_t uid;

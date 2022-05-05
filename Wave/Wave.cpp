@@ -54,10 +54,6 @@ void Wave::init() {
 	menuRenderer.setup(STATE::STATE_MENU_MAIN);
 
 	loop();
-
-	for(sf::VideoMode mode : sf::VideoMode::getFullscreenModes()) {
-		std::cout << mode.isValid() << std::endl;
-	}
 }
 
 void Wave::renderwin() {

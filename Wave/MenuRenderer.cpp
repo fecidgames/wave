@@ -63,29 +63,31 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
 		sf::RectangleShape r1;
-		r1.setPosition(Window::WIDTH / 2 + 16, 16);
-		r1.setSize(sf::Vector2f((Window::WIDTH / 2 - 32), (Window::HEIGHT - 32)));
+		r1.setPosition(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), 16 * wave.getScale());
+		r1.setSize(sf::Vector2f((wave.getWindow()->getSize().x / 2 - (32 * wave.getScale())), (wave.getWindow()->getSize().y - (32 * wave.getScale()))));
 		r1.setFillColor(sf::Color::Black);
 		r1.setOutlineColor(sf::Color::White);
 		r1.setOutlineThickness(1.0f);
 
-		sf::Text select("Select gamemode", menuFont, 35);
-		select.setPosition(Window::WIDTH / 4 - select.getGlobalBounds().width / 2, 10);
+		double fontMultiplier = (wave.getScale() > 1.6) ? 1.6 : wave.getScale();
 
-		sf::Text gamemode("Infinite..", menuFont, 21);
-		gamemode.setPosition(Window::WIDTH / 4 - gamemode.getGlobalBounds().width / 2, Window::HEIGHT / 2 - gamemode.getGlobalBounds().height / 2);
+		sf::Text select("Select gamemode", menuFont, 35 * fontMultiplier);
+		select.setPosition(wave.getWindow()->getSize().x / 4 - select.getGlobalBounds().width / 2, 10);
+
+		sf::Text gamemode("Infinite..", menuFont, 21 * fontMultiplier);
+		gamemode.setPosition(wave.getWindow()->getSize().x / 4 - gamemode.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - gamemode.getGlobalBounds().height / 2);
 
 		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, true, 0));
 		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, false, 0));
 
 		gamemode.setString(gameMode);
-		gamemode.setPosition(Window::WIDTH / 4 - gamemode.getGlobalBounds().width / 2, Window::HEIGHT / 2 - gamemode.getGlobalBounds().height / 2);
+		gamemode.setPosition(wave.getWindow()->getSize().x / 4 - gamemode.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - gamemode.getGlobalBounds().height / 2);
 
-		sf::Text desc1(descriptionr1, menuFont, 21);
-		desc1.setPosition(Window::WIDTH / 4 - desc1.getGlobalBounds().width / 2, (int32_t) (Window::HEIGHT / 2 - desc1.getGlobalBounds().height / 2 - 100));
+		sf::Text desc1(descriptionr1, menuFont, 21 * fontMultiplier);
+		desc1.setPosition(wave.getWindow()->getSize().x / 4 - desc1.getGlobalBounds().width / 2, (int32_t) (wave.getWindow()->getSize().y / 2 - desc1.getGlobalBounds().height / 2 - 100));
 
-		sf::Text desc2(descriptionr2, menuFont, 21);
-		desc2.setPosition(Window::WIDTH / 4 - desc2.getGlobalBounds().width / 2, (int32_t) (Window::HEIGHT / 2 - desc2.getGlobalBounds().height / 2 - 100 + desc1.getGlobalBounds().height + 5));		
+		sf::Text desc2(descriptionr2, menuFont, 21 * fontMultiplier);
+		desc2.setPosition(wave.getWindow()->getSize().x / 4 - desc2.getGlobalBounds().width / 2, (int32_t) (wave.getWindow()->getSize().y / 2 - desc2.getGlobalBounds().height / 2 - 100 + desc1.getGlobalBounds().height + 5));		
 
 		texts.insert(texts.begin(), select);
 		texts.insert(texts.begin(), gamemode);
@@ -114,23 +116,25 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text title("Options", menuFont, 50);
 		title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, 40);
 
+		double xOffset = 50.0 * wave.getScale();
+
 		sf::Text volume("Volume", menuFont, 30);
-		volume.setPosition(50, 113);
+		volume.setPosition(xOffset, 113);
 
 		sf::Text hudScale("HUD size", menuFont, 30);
-		hudScale.setPosition(50, 170);
+		hudScale.setPosition(xOffset, 170);
 
 		sf::Text vSync("vSync", menuFont, 30);
-		vSync.setPosition(50, 170 + 57);
+		vSync.setPosition(xOffset, 170 + 57);
 
 		sf::Text fullscreen("Fullscreen", menuFont, 30);
-		fullscreen.setPosition(50, 170 + 2 * 57);
+		fullscreen.setPosition(xOffset, 170 + 2 * 57);
 
 		sf::Text mp("Menu Particles", menuFont, 30);
-		mp.setPosition(50, 170 + 3 * 57);
+		mp.setPosition(xOffset, 170 + 3 * 57);
 
 		sf::Text dm("Debug menu", menuFont, 30);
-		dm.setPosition(50, 170 + 4 * 57);
+		dm.setPosition(xOffset, 170 + 4 * 57);
 
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), volume);
@@ -139,6 +143,19 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		texts.insert(texts.begin(), fullscreen);
 		texts.insert(texts.begin(), mp);
 		texts.insert(texts.begin(), dm);
+
+
+		double cbOffset = mp.getPosition().x + (double) mp.getGlobalBounds().width + (20.0 * wave.getScale());
+
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 57, 2, wave.isVSyncEnabled(), 8));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isFullscreenEnabled(), 9));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 4 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
+
+		double blockSizeMultiplier = (wave.getScale() > 1.7) ? 1.7 : wave.getScale();
+
+		sliders.insert(sliders.begin(), new Gui::Slider(cbOffset, 130, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 6));
+		sliders.insert(sliders.begin(), new Gui::Slider(cbOffset, 187, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 7));
 	}
 
 	if(gameState == STATE::STATE_MENU_GAMEOVER) {
@@ -192,21 +209,68 @@ void MenuRenderer::setupEntities(STATE gameState) {
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
-		e.add(new MenuParticleEntity(Window::WIDTH / 2 + 50, 50, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
-		e.add(new MenuParticleEntity(Window::WIDTH / 2 + Window::WIDTH / 2 - 62, Window::HEIGHT / 2, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
-		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 3, Window::HEIGHT - Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
-		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 4, Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
-		e.add(new PlayerEntity(Window::WIDTH - Window::WIDTH / 4 - 16, Window::HEIGHT / 2 - 16, ID::Player, 18, sf::Vector2i(Window::WIDTH / 2 + 16, Window::WIDTH - 16), sf::Vector2i(16, Window::HEIGHT - 16), e, true, false));
+		e.add(new MenuParticleEntity(
+			wave.getWindow()->getSize().x / 2 + 50, 50, 
+			ID::MenuParticle, 16, 
+
+			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
+			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
+			
+			e, true, wave.getScale())
+		);
+		
+		e.add(new MenuParticleEntity(
+			wave.getWindow()->getSize().x / 3 + wave.getWindow()->getSize().x / 2 - 62, 
+			wave.getWindow()->getSize().y / 2, 
+			ID::MenuParticle, 16, 
+			
+			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
+			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
+			
+			e, true, wave.getScale())
+		);
+		
+		e.add(new MenuParticleEntity(
+			wave.getWindow()->getSize().x - wave.getWindow()->getSize().x / 3, 
+			wave.getWindow()->getSize().y - wave.getWindow()->getSize().y / 4, 
+			ID::MenuParticle, 16, 
+			
+			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
+			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
+			
+			e, true, wave.getScale())
+		);
+		
+		e.add(new MenuParticleEntity(
+			wave.getWindow()->getSize().x - wave.getWindow()->getSize().x / 4, 
+			wave.getWindow()->getSize().y / 4, 
+			ID::MenuParticle, 16, 
+			
+			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
+			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
+			
+			e, true, wave.getScale())
+		);
+		
+		e.add(new PlayerEntity(
+			wave.getWindow()->getSize().x - wave.getWindow()->getSize().x / 4 - 16, 
+			wave.getWindow()->getSize().y / 2 - 16, 
+			ID::Player, 18, 
+			
+			sf::Vector2i(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())),
+			sf::Vector2i(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
+			
+			e, true, false, wave.getScale()));
 	}
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
 		e.entities.clear();
 		if(this->gameState.getGameMode() == MODE::MODE_INFINITE) {
-			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth(), wave.getScale()));	
 		}
 		if(this->gameState.getGameMode() == MODE::MODE_DUAL) {
-			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
-			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth()));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth(), wave.getScale()));	
+			e.add(new PlayerEntity(Window::WIDTH / 2 - 16, Window::HEIGHT / 2 - 16, ID::Player, 17, sf::Vector2i(0, Window::WIDTH), sf::Vector2i(0, Window::HEIGHT), e, false, true, hud.getMaxHealth(), wave.getScale()));	
 		}
 	}
 
@@ -219,31 +283,20 @@ void MenuRenderer::setupButtons(STATE gameState) {
 	//LAST BUTTON ID: 11
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
-		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190) * wave.getScale(), 130 * wave.getScale(), 380, 64, "Gamemodes", 0));
-		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190) * wave.getScale(), 210 * wave.getScale(), 380, 64, "Options", 1));
-		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190 + 396) * wave.getScale(), 130 * wave.getScale(), 64, 64, "?", 2));
-		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH - 204) * wave.getScale(), Window::HEIGHT - 80 * wave.getScale(), (380 / 2), 64, "Quit", 3));
-		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190) * wave.getScale(), 290 * wave.getScale(), 380, 64, "Shop", 8));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", 0));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", 1));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", 2));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", 3));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", 8));
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
-		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
-		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 280, (Window::WIDTH / 2) - 32, 64, "Play gamemode", 5));
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", 5));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS) {
-		Gui::Slider* sliderVol = new Gui::Slider(410, 130, Window::WIDTH  - 410 - 16, 16, 32, 6);
-		Gui::Slider* sliderGuiscl = new Gui::Slider(410, 187, Window::WIDTH  - 410 - 16, 16, 32, 7);
-
-		buttons.insert(buttons.begin(), new Gui::Button(16, Window::HEIGHT - 80, (380 / 2), 64, "Back", 4));
-
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 57, 2, wave.isVSyncEnabled(), 8));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 2 * 57, 2, wave.isFullscreenEnabled(), 9));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(410, 187 + 4 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
-
-		sliders.insert(sliders.begin(), sliderVol);
-		sliders.insert(sliders.begin(), sliderGuiscl);
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
 	}
 	
 	if(gameState == STATE::STATE_MENU_GAMEOVER) {
@@ -432,9 +485,13 @@ void MenuRenderer::renderDebugMenuOverlay(sf::RenderWindow& window) {
 	}
 }
 
+/*		r1.setPosition(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), 16 * wave.getScale());
+		r1.setSize(sf::Vector2f((wave.getWindow()->getSize().x / 2 - (32 * wave.getScale())), (wave.getWindow()->getSize().y - (32 * wave.getScale()))));
+		*/
+
 void MenuRenderer::playerPos(PlayerEntity* p) {
 	if(p->getVelX() > 0) {
-		if(p->getBounds().getPosition().x > (Window::WIDTH - 16) - std::rand()%130 + 20) {
+		if(p->getBounds().getPosition().x > (wave.getWindow()->getSize().x / 2 + (16 * wave.getScale())) + (wave.getWindow()->getSize().x / 2 - (32 * wave.getScale())) - p->getBounds().getGlobalBounds().width * 2.0) {
 			if(isOdd(time)) {
 				p->setVelY(5);
 				p->setVelX(0);
@@ -445,7 +502,7 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 		}
 	} 
 	if(p->getVelX() < 0) {
-		if(p->getBounds().getPosition().x < (Window::WIDTH / 2 + 16) + std::rand()%130 - 20) {
+		if(p->getBounds().getPosition().x < (wave.getWindow()->getSize().x / 2 + (16 * wave.getScale())) + p->getBounds().getGlobalBounds().width * 2.0) {
 			if(isOdd(time)) {
 				p->setVelY(5);
 				p->setVelX(0);
@@ -456,7 +513,7 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 		}
 	}
 	if(p->getVelY() > 0) {
-		if(p->getBounds().getPosition().y > (Window::HEIGHT - 16) - std::rand()%130 + 20) {
+		if(p->getBounds().getPosition().y > (16 * wave.getScale()) + (wave.getWindow()->getSize().y - (32 * wave.getScale())) - p->getBounds().getGlobalBounds().height * 2.0) {
 			if(isOdd(time)) {
 				p->setVelY(0);
 				p->setVelX(-5);
@@ -467,7 +524,7 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 		}
 	} 
 	if(p->getVelY() < 0) {
-		if(p->getBounds().getPosition().y < (16) + std::rand()%130 - 20) {
+		if(p->getBounds().getPosition().y < 16 * wave.getScale() + p->getBounds().getGlobalBounds().height * 2.0) {
 			if(isOdd(time)) {
 				p->setVelY(0);
 				p->setVelX(-5);
