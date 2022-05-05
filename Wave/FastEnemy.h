@@ -64,6 +64,8 @@ public:
 		this-> y = y;
 	}
 
+	virtual void update();
+
 private:
 	int32_t x, y;
 	int32_t velX = 5, velY = -5;

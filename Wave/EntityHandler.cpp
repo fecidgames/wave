@@ -14,6 +14,8 @@ EntityHandler::~EntityHandler() {
 void EntityHandler::setup() {
 	std::srand(NULL);
 
+	hasBeenSetup = true;
+
 	if(wave.isMenuParticlesEnabled())
 		addMenuParticles();
 }
@@ -39,6 +41,12 @@ void EntityHandler::tick() {
 	}
 }
 
+void EntityHandler::update() {
+	for(Entity* entity : entities) {
+		entity->update();
+	}
+}
+
 void EntityHandler::render(sf::RenderWindow& w, bool afterGui) {
 	for(Entity* e : entities) {
 		if(!afterGui && !e->renderOverGui())
@@ -57,7 +65,7 @@ void EntityHandler::render(sf::RenderWindow& w, bool afterGui) {
 
 void EntityHandler::addMenuParticles() {
 	for(int32_t i = 0; i < 15; i++)
-		add(new MenuParticleEntity(std::rand()%(Window::WIDTH - 50), std::rand()%(Window::HEIGHT - 50), ID::MenuParticle, i, sf::Vector2f(0, Window::WIDTH), sf::Vector2f(0, Window::HEIGHT), *this, false));
+		add(new MenuParticleEntity(std::rand()%(wave.getWindow()->getSize().x - 100), std::rand()%(wave.getWindow()->getSize().y - 50), ID::MenuParticle, i, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, false, wave.getScale()));
 }
 
 void EntityHandler::removeMenuParticles() {

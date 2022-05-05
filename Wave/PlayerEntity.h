@@ -84,6 +84,8 @@ public:
 		return !alive;
 	}
 
+	virtual void update();
+
 	int32_t velX = 0, velY = 0;
 
 private:

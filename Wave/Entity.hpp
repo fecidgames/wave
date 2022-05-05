@@ -25,4 +25,6 @@ public:
 
 	virtual bool renderOverGui() = 0;
 
+	virtual void update() = 0;
+
 };

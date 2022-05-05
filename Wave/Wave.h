@@ -44,6 +44,10 @@ public:
 
 	void stop();
 
+	int32_t& getScale() {
+		return scale;
+	}
+
 private:
 	void init();
 	void render();
@@ -67,5 +71,7 @@ private:
 	GameState state;
 
 	sf::RenderWindow window;
+
+	int32_t scale = 1;
 };
 

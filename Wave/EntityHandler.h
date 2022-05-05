@@ -25,6 +25,8 @@ public:
 	void addMenuParticles();
 	void removeMenuParticles();
 
+	void update();
+
 	void die(PlayerEntity* player);
 
 	std::vector<Entity*> entities;
@@ -34,12 +36,18 @@ public:
 		return wave;	
 	}
 
+	bool isSetup() {
+		return hasBeenSetup;
+	}
+
 private:
 	int32_t spawnTimer = 0;
 	int32_t overTime = 0;
 	int32_t msTime = 0;
 
 	int32_t dpCount = 0; //Dead players
+
+	bool hasBeenSetup = false;
 
 	void tickSpawner(int32_t time);
 

@@ -2,11 +2,7 @@
 #include "Wave.h"
 
 MenuRenderer::MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state) : e(e), hud(hud), gameState(state), wave(wave) {
-	if(!menuFont.loadFromFile("fonts/mainFont.ttf")) {
-		throw "[mainFont.ttf] could not be loaded";
-	}
-
-	setup(STATE::STATE_MENU_MAIN);
+	
 }
 
 MenuRenderer::~MenuRenderer() {
@@ -24,6 +20,9 @@ MenuRenderer::~MenuRenderer() {
 }
 
 void MenuRenderer::setup(STATE gameState) {
+	if(!menuFont.loadFromFile("fonts/mainFont.ttf"))
+		throw "[mainFont.ttf] could not be loaded";
+
 	time = 0; //Resets time for player AI
 
 	clearLists();
@@ -53,10 +52,10 @@ void MenuRenderer::clearLists() {
 void MenuRenderer::setupDrawables(STATE gameState) {
 	if(gameState == STATE::STATE_MENU_MAIN) {
 		sf::Text title("Wave!", menuFont, 50);
-		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
+		title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, 40);
 
-		sf::Text version("v1.1", menuFont, 15);
-		version.setPosition(5, Window::HEIGHT - 5 - version.getGlobalBounds().height);
+		sf::Text version("v1.1", menuFont, (uint32_t) (15 * wave.getScale()));
+		version.setPosition(5, wave.getWindow()->getSize().y - 5 - version.getGlobalBounds().height);
 
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), version);
@@ -113,7 +112,7 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 	if(gameState == STATE::STATE_MENU_SETTINGS) {
 		sf::Text title("Options", menuFont, 50);
-		title.setPosition(Window::WIDTH / 2 - title.getGlobalBounds().width / 2, 40);
+		title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, 40);
 
 		sf::Text volume("Volume", menuFont, 30);
 		volume.setPosition(50, 113);
@@ -193,10 +192,10 @@ void MenuRenderer::setupEntities(STATE gameState) {
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
-		e.add(new MenuParticleEntity(Window::WIDTH / 2 + 50, 50, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
-		e.add(new MenuParticleEntity(Window::WIDTH / 2 + Window::WIDTH / 2 - 62, Window::HEIGHT / 2, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
-		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 3, Window::HEIGHT - Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
-		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 4, Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true));
+		e.add(new MenuParticleEntity(Window::WIDTH / 2 + 50, 50, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
+		e.add(new MenuParticleEntity(Window::WIDTH / 2 + Window::WIDTH / 2 - 62, Window::HEIGHT / 2, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
+		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 3, Window::HEIGHT - Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
+		e.add(new MenuParticleEntity(Window::WIDTH - Window::WIDTH / 4, Window::HEIGHT / 4, ID::MenuParticle, 16, sf::Vector2f(Window::WIDTH / 2 + 16, Window::WIDTH / 2 + 16 + Window::WIDTH / 2 - 32), sf::Vector2f(16, Window::HEIGHT - 16), e, true, wave.getScale()));
 		e.add(new PlayerEntity(Window::WIDTH - Window::WIDTH / 4 - 16, Window::HEIGHT / 2 - 16, ID::Player, 18, sf::Vector2i(Window::WIDTH / 2 + 16, Window::WIDTH - 16), sf::Vector2i(16, Window::HEIGHT - 16), e, true, false));
 	}
 
@@ -220,11 +219,11 @@ void MenuRenderer::setupButtons(STATE gameState) {
 	//LAST BUTTON ID: 11
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 130, 380, 64, "Gamemodes", 0));
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 210, 380, 64, "Options", 1));
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190 + 396, 130, 64, 64, "?", 2));
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH - 204, Window::HEIGHT - 80, (380 / 2), 64, "Quit", 3));
-		buttons.insert(buttons.begin(), new Gui::Button(Window::WIDTH / 2 - 190, 290, 380, 64, "Shop", 8));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190) * wave.getScale(), 130 * wave.getScale(), 380, 64, "Gamemodes", 0));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190) * wave.getScale(), 210 * wave.getScale(), 380, 64, "Options", 1));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190 + 396) * wave.getScale(), 130 * wave.getScale(), 64, 64, "?", 2));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH - 204) * wave.getScale(), Window::HEIGHT - 80 * wave.getScale(), (380 / 2), 64, "Quit", 3));
+		buttons.insert(buttons.begin(), new Gui::Button((Window::WIDTH / 2 - 190) * wave.getScale(), 290 * wave.getScale(), 380, 64, "Shop", 8));
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {

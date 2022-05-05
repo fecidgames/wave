@@ -24,7 +24,7 @@ void BasicEnemy::tick() {
 	x = r.getPosition().x;
 	y = r.getPosition().y;
 
-	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((velX > 0) ? (x + 1) : (x - 1), (velY > 0) ? (y + 1) : (y - 1), id, uid, 10, sf::Color::Red, e), this));
+	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((velX > 0) ? (x + 1) : (x - 1), (velY > 0) ? (y + 1) : (y - 1), id, uid, 10, sf::Color::Red, e, 1), this));
 
 	if((x >= horizontalBounds.y - 30) || (x <= horizontalBounds.x)) {
 		setVelX(-getVelX());
@@ -36,4 +36,8 @@ void BasicEnemy::tick() {
 
 sf::RectangleShape BasicEnemy::getBounds() {
 	return r;
+}
+
+void BasicEnemy::update() {
+	
 }

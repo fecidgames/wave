@@ -51,6 +51,7 @@ void Wave::init() {
 	renderwin(); //Window stuff
 
 	entityHandler.setup();
+	menuRenderer.setup(STATE::STATE_MENU_MAIN);
 
 	loop();
 
@@ -60,25 +61,6 @@ void Wave::init() {
 }
 
 void Wave::renderwin() {
-	if(setting_fullscreen) {
-		if(sf::VideoMode::getDesktopMode().width > sf::VideoMode::getDesktopMode().height) {
-			Window::SCALE = sf::VideoMode::getDesktopMode().width / 1080;
-		} else {
-			Window::SCALE = sf::VideoMode::getDesktopMode().height / 720;
-		}
-
-		Window::WIDTH *= Window::SCALE;
-		Window::HEIGHT *= Window::SCALE;
-	} else {
-		Window::WIDTH  = 1080;
-		Window::HEIGHT = 720;
-		Window::SCALE = 1;
-	}
-
-	std::cout << Window::SCALE << std::endl;
-	std::cout << Window::WIDTH << std::endl;
-	std::cout << Window::HEIGHT << std::endl;
-
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 6.0;
 
@@ -87,6 +69,25 @@ void Wave::renderwin() {
 	else
 		window.create(sf::VideoMode((uint32_t) (Window::WIDTH), (uint32_t) (Window::HEIGHT)), "Wave! - Release 1.1", sf::Style::Close | sf::Style::Titlebar, settings);
 
+	if(setting_fullscreen) {
+		if(window.getSize().x > window.getSize().y) {
+			scale = window.getSize().x / 1080;
+		} else {
+			scale = window.getSize().y / 720;
+		}
+	} else {
+		scale = 1;
+	}
+
+	std::cout << "Scale:  " << scale << std::endl;
+	std::cout << "Width:  " << window.getSize().x << std::endl;
+	std::cout << "Height: " << window.getSize().y << std::endl;
+
+	if(entityHandler.isSetup()) {
+		entityHandler.removeMenuParticles();
+		entityHandler.addMenuParticles();
+	}
+
 	window.setFramerateLimit(120);
 	
 	auto ico = sf::Image();
@@ -94,6 +95,11 @@ void Wave::renderwin() {
 
 	window.setIcon(ico.getSize().x, ico.getSize().y, ico.getPixelsPtr());
 	window.setVerticalSyncEnabled(true);
+
+	entityHandler.update();
+
+	if(entityHandler.isSetup())
+		menuRenderer.setup(getGameState().getGameState());
 }
 
 void Wave::loop() {

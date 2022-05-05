@@ -6,7 +6,7 @@ class EntityHandler;
 
 class MenuParticleEntity : public Entity { 
 public:
-	MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui);
+	MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, int32_t& scale);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -64,6 +64,8 @@ public:
 		this-> y = y;
 	}
 
+	virtual void update();
+
 private:
 	int32_t x, y;
 	int32_t velX, velY;
@@ -73,6 +75,8 @@ private:
 
 	sf::RectangleShape r;
 	sf::Color color;
+
+	int32_t& scale;
 	
 	sf::Vector2f horizontalBounds;
 	sf::Vector2f verticalBounds;

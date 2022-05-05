@@ -50,7 +50,7 @@ void PlayerEntity::tick() {
 		setY(verticalBounds.x);
 
 	if(!(velX == 0 && velY == 0))
-		e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity(x, y, id, uid, 25.5f, color, e), this));
+		e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity(x, y, id, uid, 25.5f, color, e, 1), this));
 
 	if(controllable && health > 1)
 		collision();
@@ -76,4 +76,8 @@ void PlayerEntity::collision() {
 
 sf::RectangleShape PlayerEntity::getBounds() {
 	return r;
+}
+
+void PlayerEntity::update() {
+
 }
