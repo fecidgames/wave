@@ -13,6 +13,19 @@ MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid
 	velY = (velY < 2) ? -6 : velY;
 }
 
+MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, sf::Color color) : scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(color) {
+	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
+	r.setPosition(sf::Vector2f(x, y));
+	r.setFillColor(color);
+	
+	int32_t rand = std::rand()%(6);
+	velX = std::rand()%(8);
+	velY = std::rand()%(8);
+
+	velX = (velX < 3) ? -5 : velX;
+	velY = (velY < 2) ? -6 : velY;
+}
+
 void MenuParticleEntity::render(sf::RenderWindow& w) {
 	w.draw(r);
 }
@@ -36,6 +49,4 @@ sf::RectangleShape MenuParticleEntity::getBounds() {
 
 void MenuParticleEntity::update() {
 	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
-	r.setPosition(sf::Vector2f(x, y));
-	r.setFillColor(color);
 }

@@ -24,8 +24,8 @@ public:
 	void setVolume(int32_t volume);
 	int32_t getVolume();
 
-	void setHudSize(int32_t hudSize);
-	int32_t getHudSize();
+	void setGuiSize(int32_t hudSize);
+	int32_t getGuiSize();
 
 	void setVSyncEnabled(bool enabled);
 	bool isVSyncEnabled();
@@ -48,6 +48,10 @@ public:
 		return scale;
 	}
 
+	uint32_t fps() {
+		return framesPerSecond;
+	}
+
 private:
 	void init();
 	void render();
@@ -56,7 +60,7 @@ private:
 	void renderwin();
 
 	uint32_t setting_volume = 100; //0 is off, dont pause song when volume is 0
-	uint32_t setting_hudSize = 0; //0 is default. This is a hud size multiplier
+	uint32_t setting_guiSize = 0; //0 is default. This is a gui & hud size multiplier
 
 	bool setting_vSync = true;
 	bool setting_fullscreen = false;
@@ -67,6 +71,8 @@ private:
 	InputHandler inputHandler;
 	EntityHandler entityHandler;
 	HUD hud;
+
+	uint32_t framesPerSecond = 0;
 
 	GameState state;
 

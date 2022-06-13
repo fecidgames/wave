@@ -6,7 +6,7 @@ class EntityHandler;
 
 class FastEnemy : public Entity {
 public:
-	FastEnemy(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e);
+	FastEnemy(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, double scale);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -71,6 +71,8 @@ private:
 	int32_t velX = 5, velY = -5;
 	ID id;
 	uint32_t uid;
+
+	double scale = 1.0;
 
 	sf::RectangleShape r;
 	

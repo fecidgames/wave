@@ -23,6 +23,7 @@ public:
 	void tick();
 
 	void addMenuParticles();
+	void addMenuParticlesWithPreviousColor();
 	void removeMenuParticles();
 
 	void update();
@@ -46,6 +47,8 @@ private:
 	int32_t msTime = 0;
 
 	int32_t dpCount = 0; //Dead players
+
+	std::vector<sf::Color> colors;
 
 	bool hasBeenSetup = false;
 

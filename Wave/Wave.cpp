@@ -67,24 +67,22 @@ void Wave::renderwin() {
 
 	if(setting_fullscreen) {
 		if(window.getSize().x > window.getSize().y) {
-			scale = window.getSize().x / 1080;
+			scale = window.getSize().x / 1080.0;
 		} else {
-			scale = window.getSize().y / 720;
+			scale = window.getSize().y / 720.0;
 		}
 	} else {
-		scale = 1;
+		scale = 1.0;
 	}
 
-	std::cout << "Scale:  " << scale << std::endl;
+	std::cout << "Scale:  " << std::to_string(scale) << std::endl;
 	std::cout << "Width:  " << window.getSize().x << std::endl;
 	std::cout << "Height: " << window.getSize().y << std::endl;
 
 	if(entityHandler.isSetup()) {
 		entityHandler.removeMenuParticles();
-		entityHandler.addMenuParticles();
+		entityHandler.addMenuParticlesWithPreviousColor();
 	}
-
-	window.setFramerateLimit(120);
 	
 	auto ico = sf::Image();
 	ico.loadFromFile("textures/wave.png");
@@ -100,16 +98,16 @@ void Wave::renderwin() {
 
 void Wave::loop() {
 	sf::Clock clock_0;
-	sf::Clock clock_1;
 	sf::Clock clock_2;
-	sf::Time dt = clock_0.restart();
-	sf::Time t = clock_1.restart();
+	sf::Clock clock_3;
 
-	int32_t fps = 0;
+	sf::Time dt = clock_0.restart();
+	sf::Time prevTime = clock_3.getElapsedTime();
+	sf::Time currentTime;
+
 	double_t lastTime = dt.asMilliseconds() * 1000;
 	double_t ms = 1000000000.0 / 60.0;
 	double_t delta = 0.0;
-	int32_t timer = t.asMilliseconds();
 	while(window.isOpen()) {
 		sf::Event e;
 		while(window.pollEvent(e)) {
@@ -134,14 +132,11 @@ void Wave::loop() {
 			delta -= .0007;
 		}
 
-		if(window.isOpen()) {
-			fps++;
-			render();
-		}
-		if(clock_1.restart().asMilliseconds() - timer > 1000) {
-			timer += 1000;
-			fps = 0;
-		}
+		render();
+
+		currentTime = clock_3.getElapsedTime();
+		framesPerSecond = floor((uint32_t) (1.0f / (currentTime.asSeconds() - prevTime.asSeconds())));
+		prevTime = currentTime;
 
 		dt = clock_0.restart();
 	}
@@ -179,7 +174,7 @@ void Wave::loadSettings() {
 		if(setting == "0")
 			setting_volume = std::stoi(value);
 		if(setting == "1")
-			setting_hudSize = std::stoi(value);
+			setting_guiSize = std::stoi(value);
 		if(setting == "2")
 			setting_vSync = (value == "y") ? true : false;
 		if(setting == "3")
@@ -198,7 +193,7 @@ void Wave::saveSettings() {
 	std::string content;
 	content.append("0:" + std::to_string(setting_volume));
 	content.append("#");
-	content.append("1:" + std::to_string(setting_hudSize));
+	content.append("1:" + std::to_string(setting_guiSize));
 	content.append("#");
 	content.append("2:");
 	content.append((setting_vSync == true) ? "y" : "n");
@@ -223,12 +218,12 @@ int32_t Wave::getVolume() {
 	return setting_volume;
 }
 
-void Wave::setHudSize(int32_t hudSize) {
-	setting_hudSize = hudSize;
+void Wave::setGuiSize(int32_t hudSize) {
+	setting_guiSize = hudSize;
 }
 
-int32_t Wave::getHudSize() {
-	return setting_hudSize;
+int32_t Wave::getGuiSize() {
+	return setting_guiSize;
 }
 
 void Wave::setVSyncEnabled(bool enabled) {
@@ -260,6 +255,7 @@ bool Wave::isMenuParticlesEnabled() {
 
 void Wave::setDebugMenuEnabled(bool enabled) {
 	setting_debugMenu = enabled;
+	menuRenderer.setupDebugMenu(enabled);
 }
 
 bool Wave::isDebugMenuEnabled() {

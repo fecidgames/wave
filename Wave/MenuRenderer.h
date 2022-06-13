@@ -48,6 +48,7 @@ public:
 	void gameEnd();
 	void pauseGame();
 	void pauseGame(bool paused);
+	void setupDebugMenu(bool enabled);
 
 	HUD& getHud() {
 		return hud;

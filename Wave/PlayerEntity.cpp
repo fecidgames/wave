@@ -40,12 +40,12 @@ void PlayerEntity::tick() {
 	x += velX * scale;
 	y += velY * scale;
 
-	if(x >= horizontalBounds.y - 30)
-		setX(horizontalBounds.y - 30);
+	if(x >= horizontalBounds.y - 32 * scale)
+		setX(horizontalBounds.y - 32 * scale);
 	if(x <= horizontalBounds.x)
 		setX(horizontalBounds.x);
-	if(y >= verticalBounds.y - 30)
-		setY(verticalBounds.y - 30);
+	if(y >= verticalBounds.y - 32 * scale)
+		setY(verticalBounds.y - 32 * scale);
 	if(y <= verticalBounds.x)
 		setY(verticalBounds.x);
 

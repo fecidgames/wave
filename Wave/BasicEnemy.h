@@ -6,7 +6,7 @@ class EntityHandler;
 
 class BasicEnemy : public Entity {
 public:
-	BasicEnemy(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e);
+	BasicEnemy(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, double scale);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -73,6 +73,8 @@ private:
 	uint32_t uid;
 
 	sf::RectangleShape r;
+
+	double scale = 1;
 	
 	sf::Vector2f horizontalBounds;
 	sf::Vector2f verticalBounds;

@@ -28,10 +28,7 @@ void HUD::resumeTime() {
 
 void HUD::render() {
 	renderHealth(&e.entities);
-
 	renderTimer();
-	renderShopAccess();
-	renderPauseAccess();
 }
 
 void HUD::renderHealth(std::vector<Entity*>* entities) {
@@ -56,13 +53,13 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		double healthFactorP1 = player1->getHealth() / cMaxHealth;
 
 		healthRedBorderedP1.setPosition(sf::Vector2f(10, 10));
-		healthRedBorderedP1.setSize(sf::Vector2f(Window::WIDTH / 3, 64));
+		healthRedBorderedP1.setSize(sf::Vector2f(1080 / 3, 64));
 		healthRedBorderedP1.setFillColor(sf::Color::Red);
 		healthRedBorderedP1.setOutlineColor(sf::Color::White);
 		healthRedBorderedP1.setOutlineThickness(3);
 
 		healthGreenUnborderedP1.setPosition(sf::Vector2f(10, 10));
-		healthGreenUnborderedP1.setSize(sf::Vector2f((Window::WIDTH / 3) * healthFactorP1, 64));
+		healthGreenUnborderedP1.setSize(sf::Vector2f((1080 / 3) * healthFactorP1, 64));
 		healthGreenUnborderedP1.setFillColor(sf::Color::Green);
 	}
 
@@ -104,14 +101,14 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		sf::RectangleShape healthRedBorderedP2;
 		sf::RectangleShape healthGreenUnborderedP2;
 
-		healthRedBorderedP2.setPosition(sf::Vector2f(Window::WIDTH - Window::WIDTH / 3 - 10, 10));
-		healthRedBorderedP2.setSize(sf::Vector2f(Window::WIDTH / 3, 64));
+		healthRedBorderedP2.setPosition(sf::Vector2f(window.getSize().x - 1080 / 3 - 10, 10));
+		healthRedBorderedP2.setSize(sf::Vector2f(1080 / 3, 64));
 		healthRedBorderedP2.setFillColor(sf::Color::Red);
 		healthRedBorderedP2.setOutlineColor(sf::Color::White);
 		healthRedBorderedP2.setOutlineThickness(3);
 
-		healthGreenUnborderedP2.setPosition(sf::Vector2f(Window::WIDTH - Window::WIDTH / 3 - 10, 10));
-		healthGreenUnborderedP2.setSize(sf::Vector2f((Window::WIDTH / 3) * healthFactorP2, 64));
+		healthGreenUnborderedP2.setPosition(sf::Vector2f(window.getSize().x - 1080 / 3 - 10, 10));
+		healthGreenUnborderedP2.setSize(sf::Vector2f((1080 / 3) * healthFactorP2, 64));
 		healthGreenUnborderedP2.setFillColor(sf::Color::Green);
 
 		if(player1 != nullptr) {
@@ -129,7 +126,7 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 			window.draw(healthGreenUnborderedP2);
 
 		sf::Text playerMarkerP2("P2 [Pink]", mainFont, 22);
-		playerMarkerP2.setPosition(Window::WIDTH - playerMarkerP2.getGlobalBounds().width - 13, 13);
+		playerMarkerP2.setPosition(window.getSize().x - playerMarkerP2.getGlobalBounds().width - 13, 13);
 		playerMarkerP2.setFillColor(player2->getColor());
 		playerMarkerP2.setOutlineColor(sf::Color::Black);
 		playerMarkerP2.setOutlineThickness(2.0f);
@@ -143,17 +140,9 @@ void HUD::renderTimer() {
 
 	
 	sf::Text timeText(time, mainFont, 30);
-	timeText.setPosition((int32_t) (Window::WIDTH / 2 - timeText.getGlobalBounds().width / 2), 5);
+	timeText.setPosition((int32_t) (window.getSize().x / 2 - timeText.getGlobalBounds().width / 2), 5);
 	timeText.setOutlineColor(sf::Color::Black);
 	timeText.setOutlineThickness(2.0f);
 
 	window.draw(timeText);
-}
-
-void HUD::renderShopAccess() {
-
-}
-
-void HUD::renderPauseAccess() {
-
 }

@@ -2,7 +2,7 @@
 
 Gui::Checkbox::Checkbox(int32_t x, int32_t y, double scale, bool checked, int32_t id) : x(x), y(y), scale(scale), checked(checked), id(id) {
 	if(!textureNotChecked.loadFromFile("textures/checkbox_empty.png"))
-			throw std::exception("checkbox_empty.png");
+			throw std::exception("checkbox_empty.png not found!");
 
 	if(!textureChecked.loadFromFile("textures/checkbox_checked.png"))
 			throw std::exception("checkbox_checked.png not found!");

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 namespace Window {
 	static uint32_t WIDTH = 1080;
@@ -43,8 +44,6 @@ private:
 	STATE gameState = STATE::STATE_MENU_MAIN;
 	MODE gameMode = MODE::MODE_INFINITE;
 
-	STATE oldState = gameState;
-
 public:
 	STATE getGameState() {
 		return gameState;
@@ -63,7 +62,6 @@ public:
 	}
 
 	void setGameState(STATE state) {
-		oldState = gameState;
 		gameState = state;
 	}
 

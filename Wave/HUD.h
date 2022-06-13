@@ -68,8 +68,6 @@ private:
 
 	void renderHealth(std::vector<Entity*>* entities);
 	void renderTimer();
-	void renderShopAccess();
-	void renderPauseAccess();
 	
 	const double dMaxHealth = 100;
 	double cMaxHealth = dMaxHealth;

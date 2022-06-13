@@ -6,7 +6,7 @@ class EntityHandler;
 
 class TrailEntity : public Entity {
 public:
-	TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, int32_t life, sf::Color c, EntityHandler& e, int32_t scale);
+	TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, int32_t life, sf::Color c, EntityHandler& e, double scale);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -73,7 +73,7 @@ private:
 	ID id;
 	uint32_t uid;
 	uint32_t alpha = 255;
-	int32_t scale;
+	double scale;
 	bool overGui;
 
 	sf::Color c;

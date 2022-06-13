@@ -11,8 +11,10 @@ void InputHandler::update(sf::Event* e) {
 			if(mouseOver(e->mouseButton, button)) {
 
 				//These are the buttons that should still be pressable, even when the rest is paused
-				if(button->getId(9) || button->getId(10) || button->getId(90) || button->getId(100))
+				if(button->getId(9) || button->getId(10) || button->getId(90) || button->getId(100)) {
 					button->press();
+					break;
+				}
 			}
 		}
 
@@ -53,19 +55,28 @@ void InputHandler::update(sf::Event* e) {
 		//We'll look through the unpausable buttons first
 		for(Gui::Button* button : menuRenderer->getButtons()) {
 			if(mouseOver(e->mouseButton, button)) {
-				if(button->getId(90))
+				if(button->getId(90)) {
 					menuRenderer->exitConfirmation();
+					button->release();
+					return;
+				}
 				if(button->getId(100))
 					wave.stop();
 
 				if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isExitUnconfirmed()) {
-					if(button->getId(9))
+					if(button->getId(9)) {
 						menuRenderer->pauseGame();
+						button->release();
+						return;
+					}
 					if(button->getId(10)) {
 						menuRenderer->pauseGame();
 
 						gameState.setGameState(STATE::STATE_MENU_MAIN);
 						menuRenderer->setup(STATE::STATE_MENU_MAIN);
+
+						button->release();
+						return;
 					}
 				}
 			}
@@ -112,6 +123,14 @@ void InputHandler::update(sf::Event* e) {
 					gameState.setGameState(STATE::STATE_MENU_SHOP);
 					menuRenderer->setup(STATE::STATE_MENU_SHOP);
 				}
+				if(button->getId(11)) {
+					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
+					menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
+				}
+				if(button->getId(40)) {
+					if(gameState.getGameState(STATE::STATE_GAME_INGAME))
+						menuRenderer->gameEnd();
+				}
 			}
 		}
 
@@ -143,10 +162,12 @@ void InputHandler::update(sf::Event* e) {
 					}
 				}
 				if(checkbox->getId(11)) {
-					if(checkbox->isChecked())
+					if(checkbox->isChecked()) {
 						wave.setDebugMenuEnabled(true);
-					if(!checkbox->isChecked())
+					}
+					if(!checkbox->isChecked()) {
 						wave.setDebugMenuEnabled(false);
+					}
 				}
 			}
 		}
@@ -178,6 +199,11 @@ void InputHandler::update(sf::Event* e) {
 		if(e->key.code == sf::Keyboard::Escape) {
 			if(gameState.getGameState(STATE::STATE_MENU_MAIN))
 				menuRenderer->exitConfirmation();
+
+			if(gameState.getGameState(STATE::STATE_MENU_SETTINGS)) {
+				gameState.setGameState(STATE::STATE_GAME_INGAME);
+				return;
+			}
 	
 			if(gameState.getGameState(STATE::STATE_MENU_SELECT) || gameState.getGameState(STATE::STATE_MENU_GAMEOVER) || gameState.getGameState(STATE::STATE_MENU_HELP) || gameState.getGameState(STATE::STATE_MENU_SETTINGS) || gameState.getGameState(STATE::STATE_MENU_SHOP)) {
 				gameState.setGameState(STATE::STATE_MENU_MAIN);
@@ -186,6 +212,12 @@ void InputHandler::update(sf::Event* e) {
 
 			if(gameState.getGameState(STATE::STATE_GAME_INGAME))
 				menuRenderer->pauseGame();
+		}
+
+		if(e->key.code == sf::Keyboard::F4) {
+			wave.setDebugMenuEnabled(!wave.isDebugMenuEnabled());
+			if(gameState.getGameState(STATE::STATE_MENU_SETTINGS))
+				menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
 		}
 	}
 }
