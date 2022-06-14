@@ -7,16 +7,16 @@ MenuRenderer::MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& st
 
 MenuRenderer::~MenuRenderer() {
 	for(Gui::Button* b : buttons)
-		delete b;
+		delete &b;
 	
 	for(Gui::Checkbox* c : checkboxes)
-		delete c;
+		delete &c;
 
 	for(Gui::Slider* s : sliders)
-		delete s;
+		delete &s;
 
 	for(Gui::Arrow* a : arrows)
-		delete a;
+		delete &a;
 }
 
 void MenuRenderer::setup(STATE gameState) {
@@ -50,34 +50,25 @@ void MenuRenderer::clearLists() {
 }
 
 void MenuRenderer::setupDrawables(STATE gameState) {
-	if(gameState == STATE::STATE_MENU_MAIN) {
-		sf::Text title("Wave!", menuFont, 50);
-		title.setOutlineColor(sf::Color::Black);
-		title.setOutlineThickness(2.0f);
-		title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, 40);
+	double fontMultiplier = (wave.getScale() > 1.6) ? 1.6 : wave.getScale();
 
+	if(gameState == STATE::STATE_MENU_MAIN) {
 		sf::Text version("v1.1", menuFont, (uint32_t) (15 * wave.getScale()));
 		version.setPosition(5, wave.getWindow()->getSize().y - 5 - version.getGlobalBounds().height);
 
-		texts.insert(texts.begin(), title);
-		texts.insert(texts.begin(), version);
+		texts.insert(texts.begin(), createCenteredTextX(40, "Wave!", 50));
+		texts.insert(texts.begin(), createText(5, wave.getWindow()->getSize().y - 20, "v1.1", (uint32_t) (15 * wave.getScale())));
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
-		sf::RectangleShape r1;
-		r1.setPosition(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), 16 * wave.getScale());
-		r1.setSize(sf::Vector2f((wave.getWindow()->getSize().x / 2 - (32 * wave.getScale())), (wave.getWindow()->getSize().y - (32 * wave.getScale()))));
-		r1.setFillColor(sf::Color::Black);
-		r1.setOutlineColor(sf::Color::White);
-		r1.setOutlineThickness(1.0f);
+		sf::RectangleShape previewField;
+		previewField.setPosition(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), 16 * wave.getScale());
+		previewField.setSize(sf::Vector2f((wave.getWindow()->getSize().x / 2 - (32 * wave.getScale())), (wave.getWindow()->getSize().y - (32 * wave.getScale()))));
+		previewField.setFillColor(sf::Color::Black);
+		previewField.setOutlineColor(sf::Color::White);
+		previewField.setOutlineThickness(1.0f);
 
-		double fontMultiplier = (wave.getScale() > 1.6) ? 1.6 : wave.getScale();
-
-		sf::Text select("Select gamemode", menuFont, 35 * fontMultiplier);
-		select.setPosition(wave.getWindow()->getSize().x / 4 - select.getGlobalBounds().width / 2, 10);
-
-		sf::Text gamemode("Infinite..", menuFont, 21 * fontMultiplier);
-		gamemode.setPosition(wave.getWindow()->getSize().x / 4 - gamemode.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - gamemode.getGlobalBounds().height / 2);
+		sf::Text gamemode = createCenteredTextXY("Infinite.", 21 * fontMultiplier, 0);
 
 		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x - 10, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, true, 0));
 		arrows.insert(arrows.begin(), new Gui::Arrow(gamemode.getPosition().x + 10 + gamemode.getGlobalBounds().width, gamemode.getPosition().y, 30, gamemode.getGlobalBounds().height + 6, false, 0));
@@ -85,32 +76,26 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		gamemode.setString(gameMode);
 		gamemode.setPosition(wave.getWindow()->getSize().x / 4 - gamemode.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - gamemode.getGlobalBounds().height / 2);
 
-		sf::Text desc1(descriptionr1, menuFont, 21 * fontMultiplier);
-		desc1.setPosition(wave.getWindow()->getSize().x / 4 - desc1.getGlobalBounds().width / 2, (int32_t) (wave.getWindow()->getSize().y / 2 - desc1.getGlobalBounds().height / 2 - 100));
+		sf::Text desc1 = createText(descriptionr1, 21 * fontMultiplier);
+		sf::Text desc2 = createText(descriptionr2, 21 * fontMultiplier);
 
-		sf::Text desc2(descriptionr2, menuFont, 21 * fontMultiplier);
+		desc1.setPosition(wave.getWindow()->getSize().x / 4 - desc1.getGlobalBounds().width / 2, (int32_t) (wave.getWindow()->getSize().y / 2 - desc1.getGlobalBounds().height / 2 - 100));
 		desc2.setPosition(wave.getWindow()->getSize().x / 4 - desc2.getGlobalBounds().width / 2, (int32_t) (wave.getWindow()->getSize().y / 2 - desc2.getGlobalBounds().height / 2 - 100 + desc1.getGlobalBounds().height + 5));		
 
-		texts.insert(texts.begin(), select);
+		texts.insert(texts.begin(), createCenteredTextX(10, "Select gamemode", 35 * fontMultiplier, 0));
 		texts.insert(texts.begin(), gamemode);
 		texts.insert(texts.begin(), desc1);
 		texts.insert(texts.begin(), desc2);
 
-		rects.insert(rects.begin(), r1);
+		rects.insert(rects.begin(), previewField);
 	}
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
-		double fontMultiplier = (wave.getScale() > 1.4) ? 1.4 : wave.getScale();
+		sf::Text pause = createText("[ESC] Pause", 22 * fontMultiplier);
+		sf::Text shop = createText("[TAB] Shop", 22 * fontMultiplier);
 
-		sf::Text pause("[ESC] Pause", menuFont, 22 * fontMultiplier);
 		pause.setPosition(8, wave.getWindow()->getSize().y - 8 - pause.getGlobalBounds().height);
-		pause.setOutlineColor(sf::Color::Black);
-		pause.setOutlineThickness(2.0f);
-
-		sf::Text shop("[TAB] Shop", menuFont, 22 * fontMultiplier);
 		shop.setPosition(wave.getWindow()->getSize().x - shop.getGlobalBounds().width - 8, wave.getWindow()->getSize().y - 8 - shop.getGlobalBounds().height);
-		shop.setOutlineColor(sf::Color::Black);
-		shop.setOutlineThickness(2.0f);
 
 		texts.insert(texts.begin(), pause);
 		texts.insert(texts.begin(), shop);
@@ -312,13 +297,11 @@ void MenuRenderer::setupButtons(STATE gameState) {
 		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", 5));
 	}
 
-	if(gameState == STATE::STATE_MENU_SETTINGS) {
+	if(gameState == STATE::STATE_MENU_SETTINGS)
 		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
-	}
 	
-	if(gameState == STATE::STATE_MENU_GAMEOVER) {
-		
-	}
+	if(gameState == STATE::STATE_MENU_GAMEOVER)
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Menu", 4));
 }
 
 void MenuRenderer::setupDebugMenu(bool enabled) {
@@ -490,11 +473,12 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 			r1.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
 			r1.setSize(sf::Vector2f(720, ye->getY() + ye->getHeight() + 8 - r1.getPosition().y));
 
-			sf::Text title("Exit game?", menuFont, 40);
-			title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
+			delete ye;
 
-			sf::Text msg("Are you sure you want to exit?", menuFont, 25);
-			msg.setPosition(wave.getWindow()->getSize().x / 2 - msg.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + 2 * title.getGlobalBounds().height + 35);
+			sf::Text title = createText("Exit game?", 40);
+			title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
+			
+			sf::Text msg = createCenteredTextX(wave.getWindow()->getSize().y / 4 + 2 * title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
 
 			window.draw(r1);
 			window.draw(title);
@@ -508,25 +492,16 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 }
 
 void MenuRenderer::renderDebugMenuOverlay(sf::RenderWindow& window) {
-	sf::Text enabledNotify("Debug menu:", menuFont, 16);
-	enabledNotify.setFillColor(sf::Color::White);
-	enabledNotify.setOutlineColor(sf::Color::Black);
-	enabledNotify.setOutlineThickness(2.0f);
-	enabledNotify.setPosition(10, 10);
-
-	sf::Text fps("FPS: " + std::to_string(wave.fps()), menuFont, 14);
-	fps.setFillColor(sf::Color::White);
-	fps.setOutlineColor(sf::Color::Black);
-	fps.setOutlineThickness(2.0f);
-	fps.setPosition(10, 15 + enabledNotify.getGlobalBounds().height);
+	sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
+	sf::Text fps = createText(10, enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
 
 	window.draw(enabledNotify);
 	window.draw(fps);
 
 	if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
-		if(gameState.getGameMode(MODE::MODE_INFINITE)) {
+		if(gameState.getGameMode(MODE::MODE_INFINITE) || gameState.getGameMode(MODE::MODE_DUAL)) {
 			for(int i = 0; i < e.entities.size(); i++) {
-				
+				// list all entities in game
 			}
 		}
 	}
@@ -577,4 +552,102 @@ void MenuRenderer::playerPos(PlayerEntity* p) {
 			}
 		}
 	}
+}
+
+sf::Text MenuRenderer::createText(double x, double y, std::string text, int size) {
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+	sfText.setPosition(x, y);
+
+	return sfText;
+}
+
+sf::Text MenuRenderer::createCenteredTextX(double y, std::string text, int size) {
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+	sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, y);
+
+	return sfText;
+}
+
+sf::Text MenuRenderer::createCenteredTextX(double y, std::string text, int size, int half) {
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+
+	if(half == 0)
+		sfText.setPosition(wave.getWindow()->getSize().x / 4 - sfText.getGlobalBounds().width / 2, y);
+	if(half == 1)
+		sfText.setPosition(wave.getWindow()->getSize().x / 4 + wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, y);
+	if(!(half == 0) && !(half == 1)) {
+		std::cout << "Error: Centered text half was neither 0 nor 1, centering it instead.\n";
+		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, y);
+	}
+
+	return sfText;
+}
+
+sf::Text MenuRenderer::createCenteredTextY(double x, std::string text, int size) {
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+	sfText.setPosition(x, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+
+	return sfText;
+}
+
+sf::Text MenuRenderer::createCenteredTextY(double x, std::string text, int size, int half) {  //0 is top, 1 is bottom
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+
+	if(half == 0)
+		sfText.setPosition(x, wave.getWindow()->getSize().y / 4 - sfText.getGlobalBounds().height / 2);
+	if(half == 1)
+		sfText.setPosition(x, wave.getWindow()->getSize().y / 4 + wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	if(!(half == 0) && !(half == 1)) {
+		std::cout << "Error: Centered text half was neither 0 nor 1, centering it instead.\n";
+		sfText.setPosition(x, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	}
+
+	return sfText;
+}
+
+sf::Text MenuRenderer::createCenteredTextXY(std::string text, int size) {
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+	sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	return sfText;
+}
+
+sf::Text MenuRenderer::createCenteredTextXY(std::string text, int size, int side) { // 0 is left center, 1 is right center, 2 is bottom center, 3 is top center
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+
+	if(side == 0)
+		sfText.setPosition(wave.getWindow()->getSize().x / 4 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	else if(side == 1)
+		sfText.setPosition(wave.getWindow()->getSize().x / 4 + wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	else if(side == 2)
+		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	else if(side == 3)
+		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 - sfText.getGlobalBounds().height / 2);
+	else {
+		std::cout << "Error: Text side modifier invalid, centering it instead.\n";
+		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
+	}
+
+	return sfText;
+}
+
+sf::Text MenuRenderer::createText(std::string text, int size) {
+	sf::Text sfText(text, menuFont, size);
+	sfText.setOutlineColor(sf::Color::Black);
+	sfText.setOutlineThickness(2.0f);
+	
+	return sfText;
 }

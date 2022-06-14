@@ -42,11 +42,25 @@ class GameState {
 	
 private:
 	STATE gameState = STATE::STATE_MENU_MAIN;
+	STATE lastState = gameState;
+
 	MODE gameMode = MODE::MODE_INFINITE;
 
 public:
 	STATE getGameState() {
 		return gameState;
+	}
+
+	void revertGameState() {
+		setGameState(lastState);
+	}
+
+	STATE getLastState() {
+		return lastState;
+	}
+
+	bool getLastState(STATE lastState) {
+		return lastState == this->lastState;
 	}
 
 	bool getGameState(STATE gameState) {
@@ -62,6 +76,7 @@ public:
 	}
 
 	void setGameState(STATE state) {
+		lastState = gameState;
 		gameState = state;
 	}
 

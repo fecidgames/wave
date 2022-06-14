@@ -201,7 +201,11 @@ void InputHandler::update(sf::Event* e) {
 				menuRenderer->exitConfirmation();
 
 			if(gameState.getGameState(STATE::STATE_MENU_SETTINGS)) {
-				gameState.setGameState(STATE::STATE_GAME_INGAME);
+				if(gameState.getLastState(STATE::STATE_MENU_MAIN)) {
+					gameState.revertGameState();
+					menuRenderer->setup(gameState.getGameState());
+				} else gameState.setGameState(STATE::STATE_GAME_INGAME);
+
 				return;
 			}
 	

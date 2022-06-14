@@ -42,14 +42,6 @@ public:
 		return arrows;
 	}
 
-	void setup(STATE gameState);
-	void resetDrawables();
-	void exitConfirmation();
-	void gameEnd();
-	void pauseGame();
-	void pauseGame(bool paused);
-	void setupDebugMenu(bool enabled);
-
 	HUD& getHud() {
 		return hud;
 	}
@@ -90,7 +82,25 @@ public:
 		}
 	}
 
+	void setup(STATE gameState);
+	void resetDrawables();
+	void exitConfirmation();
+	void gameEnd();
+	void pauseGame();
+	void pauseGame(bool paused);
+	void setupDebugMenu(bool enabled);
+
 	void renderDebugMenuOverlay(sf::RenderWindow& window);
+
+	sf::Text createText(double x, double y, std::string text, int size);
+	sf::Text createText(std::string text, int size);
+
+	sf::Text createCenteredTextX(double y, std::string text, int size);
+	sf::Text createCenteredTextX(double y, std::string text, int size, int half); //0 is left, 1 is right
+	sf::Text createCenteredTextY(double x, std::string text, int size);
+	sf::Text createCenteredTextY(double x, std::string text, int size, int half); //0 is top, 1 is bottom
+	sf::Text createCenteredTextXY(std::string text, int size);
+	sf::Text createCenteredTextXY(std::string text, int size, int side); // 0 is left center, 1 is right center, 2 is bottom center, 3 is top center
 
 private:
 	std::vector<Gui::Button*> buttons;
@@ -114,7 +124,6 @@ private:
 	sf::Font menuFont;
 
 	EntityHandler& e;
-
 	Wave& wave;
 
 	uint32_t time = 0;
