@@ -28,6 +28,7 @@ void TrailEntity::tick() {
 	if(alpha <= life) {
 		alpha = 0;
 		e.trails.erase(it);
+		delete it->first;
 	}
 }
 

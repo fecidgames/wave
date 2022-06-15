@@ -131,6 +131,14 @@ void InputHandler::update(sf::Event* e) {
 					if(gameState.getGameState(STATE::STATE_GAME_INGAME))
 						menuRenderer->gameEnd();
 				}
+				if(button->getId(110)) {
+					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
+					menuRenderer->hidePauseGUI();
+					entityHandler->addMenuParticles();
+
+					// setup so that the entities don't disappear, rather pause and not render
+					//menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
+				}
 			}
 		}
 
@@ -204,7 +212,11 @@ void InputHandler::update(sf::Event* e) {
 				if(gameState.getLastState(STATE::STATE_MENU_MAIN)) {
 					gameState.revertGameState();
 					menuRenderer->setup(gameState.getGameState());
-				} else gameState.setGameState(STATE::STATE_GAME_INGAME);
+				} else {
+					gameState.setGameState(STATE::STATE_GAME_INGAME);
+					menuRenderer->hidePauseGUI();
+					entityHandler->removeMenuParticles();
+				}
 
 				return;
 			}

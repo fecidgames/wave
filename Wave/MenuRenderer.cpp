@@ -188,6 +188,9 @@ void MenuRenderer::setupEntities(STATE gameState) {
 	}
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
+		if(wave.getGameState().getLastState(STATE::STATE_GAME_INGAME))
+			e.removeMenuParticles();
+
 		for(int i = 0; i < e.entities.size(); ++i) {
 			if(e.entities.at(i)->getId() == ID::MenuParticle)
 				return;
@@ -322,18 +325,19 @@ void MenuRenderer::pauseGame(bool paused) {
 		return;
 
 	gamePaused = paused;
+	pauseGuiShown = gamePaused;
 
 	if(gamePaused) {
 		hud.pauseTime();
 
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Settings", 11));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 110));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(11)) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(110)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -341,20 +345,25 @@ void MenuRenderer::pauseGame(bool paused) {
 	}
 }
 
+void MenuRenderer::hidePauseGUI() {
+	pauseGuiShown = !pauseGuiShown;
+}
+
 void MenuRenderer::pauseGame() {
 	gamePaused = !gamePaused;
+	pauseGuiShown = gamePaused;
 
 	if(gamePaused) {
 		hud.pauseTime();
 
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Settings", 11));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 110));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(11)) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(110)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -399,9 +408,21 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 			window.draw(r);
 
 
-		for(Gui::Button* b : buttons)
-			if(!b->getId(40))
+		for(Gui::Button* b : buttons) {
+			if(!b->getId(40)) {
+				if(!pauseGuiShown && gamePaused) {
+					if(!b->getId(9) || !b->getId(10) || !b->getId(110)) {
+						if(b->getId(110)) //I dont understand why I have to do this because the !b->getId(110) doesnt work wtf
+							break;
+
+						b->render(window);
+						break;
+					}
+				}
 				b->render(window);
+			}
+
+		}
 
 		for(Gui::Slider* s : sliders)
 			s->render(window);
@@ -449,12 +470,14 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 			sf::Text title("Game paused", menuFont, 40);
 			title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
 
-			window.draw(pauseBackground);
-			window.draw(title);
+			if(pauseGuiShown) {
+				window.draw(pauseBackground);
+				window.draw(title);
 
-			for(Gui::Button* b : buttons)
-				if(b->getId(9) || b->getId(10) || b->getId(11))
-					b->render(window);
+				for(Gui::Button* b : buttons)
+					if(b->getId(9) || b->getId(10) || b->getId(110))
+						b->render(window);
+			}
 		}
 	}
 

@@ -82,10 +82,15 @@ public:
 		}
 	}
 
+	bool isPauseGuiHidden() {
+		return !pauseGuiShown;
+	}
+
 	void setup(STATE gameState);
 	void resetDrawables();
 	void exitConfirmation();
 	void gameEnd();
+	void hidePauseGUI();
 	void pauseGame();
 	void pauseGame(bool paused);
 	void setupDebugMenu(bool enabled);
@@ -130,6 +135,7 @@ private:
 
 	bool exitConfirmationPopup = false;
 	bool gamePaused = false;
+	bool pauseGuiShown = false;
 
 	bool isOdd(int n) {
 		return n % 2 == 0;

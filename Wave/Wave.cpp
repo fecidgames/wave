@@ -113,10 +113,10 @@ void Wave::loop() {
 		while(window.pollEvent(e)) {
 			if(e.type == sf::Event::Closed) {
 				if(!menuRenderer.isExitUnconfirmed()) {
-					menuRenderer.exitConfirmation();
-
 					if(getGameState().getGameState(STATE::STATE_GAME_INGAME))
 						menuRenderer.pauseGame(true);
+
+					menuRenderer.exitConfirmation();
 				}
 			}
 

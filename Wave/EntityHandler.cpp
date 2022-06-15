@@ -6,9 +6,8 @@ EntityHandler::EntityHandler(Wave& wave) : wave(wave) {
 }
 
 EntityHandler::~EntityHandler() {
-	for(Entity* e : entities) {
-		delete e;
-	}
+	for(Entity* e : entities)
+		delete &e;
 }
 
 void EntityHandler::setup() {
@@ -21,16 +20,32 @@ void EntityHandler::setup() {
 }
 
 void EntityHandler::tick() {
-	if(wave.getMenuRenderer().isGamePaused())
-		return;
+	//All entities and trails will not update if the game is paused, with the exception of MenuParticles and their trails.
 
 	for(Entity* e : entities) {
-		e->tick();
+		//Allowing MenuParticles to be updated if the game is paused.
+		if(e->getId() == ID::MenuParticle && wave.getMenuRenderer().isGamePaused()) {
+			e->tick();
+		} else {
+			//Entities will update if the game is not paused.
+			if(!wave.getMenuRenderer().isGamePaused())
+				e->tick();
+		}
 	}
 
 	for(auto const& t : trails) {
-		t.first->tick();
+		//Allowing MenuParticle trails to be updated if the game is paused.
+		if(t.first->getId() == ID::MenuParticle && wave.getMenuRenderer().isGamePaused()) {
+			t.first->tick();
+		} else {
+			//Trails will update if the game is not paused.
+			if(!wave.getMenuRenderer().isGamePaused())
+				t.first->tick();
+		}
 	}
+
+	if(wave.getMenuRenderer().isGamePaused())
+		return;
 
 	if(wave.getGameState().getGameState(STATE::STATE_GAME_INGAME)) {
 		spawnTimer++;
@@ -42,24 +57,34 @@ void EntityHandler::tick() {
 }
 
 void EntityHandler::update() {
-	for(Entity* entity : entities) {
+	for(Entity* entity : entities)
 		entity->update();
-	}
 }
 
 void EntityHandler::render(sf::RenderWindow& w, bool afterGui) {
 	for(Entity* e : entities) {
-		if(!afterGui && !e->renderOverGui())
-			e->render(w);
-		if(afterGui && e->renderOverGui())
-			e->render(w);
+		if(wave.getMenuRenderer().isPauseGuiHidden() && wave.getMenuRenderer().isGamePaused()) {
+			if(e->getId() == ID::MenuParticle)
+				e->render(w);
+		} else {
+			if(!afterGui && !e->renderOverGui())
+				e->render(w);
+			if(afterGui && e->renderOverGui())
+				e->render(w);
+		}
 	}
 
+	//The trail ID is the same as the parent ID
 	for(auto const& t : trails) {
-		if(!afterGui && !t.first->renderOverGui())
-			t.first->render(w);
-		if(afterGui && t.first->renderOverGui()) 
-			t.first->render(w);
+		if(wave.getMenuRenderer().isPauseGuiHidden() && wave.getMenuRenderer().isGamePaused()) {
+			if(t.first->getId() == ID::MenuParticle)
+				t.first->render(w);
+		} else {
+			if(!afterGui && !t.first->renderOverGui())
+				t.first->render(w);
+			if(afterGui && t.first->renderOverGui()) 
+				t.first->render(w);
+		}
 	}
 }
 
@@ -82,6 +107,9 @@ void EntityHandler::removeMenuParticles() {
 	for(int32_t i = 0; i < entities.size(); i++)
 		if(entities.at(i)->getId() == ID::MenuParticle) {
 			colors.insert(colors.begin(), entities.at(i)->getColor());
+
+			delete entities.at(i);
+
 			entities.erase(entities.begin() + i);
 			i--;
 		}
