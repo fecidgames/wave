@@ -6,7 +6,7 @@ class EntityHandler;
 
 class TrailEntity : public Entity {
 public:
-	TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, int32_t life, sf::Color c, EntityHandler& e, double scale);
+	TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, int32_t life, sf::Color c, EntityHandler& e, double scale, int32_t renderLayer);
 
 	virtual void render(sf::RenderWindow& w);
 	virtual void tick();
@@ -26,6 +26,10 @@ public:
 	
 	virtual ID getId() {
 		return id;
+	}
+
+	virtual bool getId(ID id) {
+		return this->id == id;
 	}
 
 	virtual uint32_t getUid() {
@@ -64,12 +68,25 @@ public:
 		this-> y = y;
 	}
 
+	virtual int32_t getRenderLayer() {
+		return renderLayer;
+	}
+
+	virtual bool getRenderLayer(int32_t layer) {
+		return layer == renderLayer;
+	}
+
+	virtual void setRenderLayer(int32_t layer) {
+		renderLayer = layer;
+	}
+
 	virtual void update();
 
 private:
 	Entity* parent;
 	int32_t x = 0, y = 0;
 	int32_t velX = 0, velY = 0, life = 0;
+	int32_t renderLayer;
 	ID id;
 	uint32_t uid;
 	uint32_t alpha = 255;

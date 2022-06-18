@@ -30,6 +30,9 @@ private:
 	MenuRenderer* menuRenderer;
 	EntityHandler* entityHandler;
 
+	bool mo(sf::Event::MouseButtonEvent mb, int32_t x, int32_t y, int32_t width, int32_t height);
+	bool mo(sf::Event::MouseMoveEvent mb, int32_t x, int32_t y, int32_t width, int32_t height);
+
 	Wave& wave;
 
 	GameState& gameState;

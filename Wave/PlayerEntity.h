@@ -6,8 +6,8 @@ class EntityHandler;
 
 class PlayerEntity : public Entity {
 public:
-	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, double scale);
-	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health, double scale);
+	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, double scale, int32_t renderLayer);
+	PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health, double scale, int32_t renderLayer);
 
 
 	virtual void render(sf::RenderWindow& w);
@@ -26,6 +26,10 @@ public:
 
 	virtual ID getId() {
 		return id;
+	}
+
+	virtual bool getId(ID id) {
+		return this->id == id;
 	}
 
 	virtual int32_t getVelX() {
@@ -84,6 +88,16 @@ public:
 		return !alive;
 	}
 
+	virtual int32_t getRenderLayer() {
+		return renderLayer;
+	}
+
+	virtual bool getRenderLayer(int32_t layer) {
+		return layer == renderLayer;
+	}
+
+	virtual void setRenderLayer(int32_t layer);
+
 	virtual void update();
 
 	int32_t velX = 0, velY = 0;
@@ -94,6 +108,8 @@ private:
 
 	double health;
 	double scale;
+
+	int32_t renderLayer = 0;
 
 	ID id;
 	uint32_t uid;

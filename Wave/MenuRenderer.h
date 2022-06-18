@@ -87,6 +87,8 @@ public:
 	}
 
 	void setup(STATE gameState);
+	void setupInGame(STATE gameState);
+
 	void resetDrawables();
 	void exitConfirmation();
 	void gameEnd();

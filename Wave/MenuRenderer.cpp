@@ -2,7 +2,8 @@
 #include "Wave.h"
 
 MenuRenderer::MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state) : e(e), hud(hud), gameState(state), wave(wave) {
-	
+	if(!menuFont.loadFromFile("fonts/mainFont.ttf"))
+		throw "[mainFont.ttf] could not be loaded";
 }
 
 MenuRenderer::~MenuRenderer() {
@@ -20,9 +21,6 @@ MenuRenderer::~MenuRenderer() {
 }
 
 void MenuRenderer::setup(STATE gameState) {
-	if(!menuFont.loadFromFile("fonts/mainFont.ttf"))
-		throw "[mainFont.ttf] could not be loaded";
-
 	time = 0; //Resets time for player AI
 
 	clearLists();
@@ -30,6 +28,14 @@ void MenuRenderer::setup(STATE gameState) {
 	setupDrawables(gameState);
 	setupButtons(gameState);
 	setupEntities(gameState);
+}
+
+void MenuRenderer::setupInGame(STATE gameState) {
+	time = 0;
+
+	clearLists();
+	setupDrawables(gameState);
+	setupButtons(gameState);
 }
 
 void MenuRenderer::resetDrawables() {
@@ -43,7 +49,14 @@ void MenuRenderer::clearLists() {
 	rects.clear();
 	texts.clear();
 
-	buttons.clear();
+	for(int32_t i = 0; i < buttons.size(); i++) {
+		if(!buttons.at(i)->getId(9) && !buttons.at(i)->getId(10) && !buttons.at(i)->getId(110)) {
+			delete buttons.at(i);
+			buttons.erase(buttons.begin() + i);
+			i--;
+		}
+	}
+	
 	sliders.clear();
 	checkboxes.clear();
 	arrows.clear();
@@ -208,7 +221,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
 			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
 			
-			e, true, wave.getScale())
+			e, true, wave.getScale(), 2)
 		);
 		
 		e.add(new MenuParticleEntity(
@@ -219,7 +232,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
 			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
 			
-			e, true, wave.getScale())
+			e, true, wave.getScale(), 2)
 		);
 		
 		e.add(new MenuParticleEntity(
@@ -230,7 +243,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
 			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
 			
-			e, true, wave.getScale())
+			e, true, wave.getScale(), 2)
 		);
 		
 		e.add(new MenuParticleEntity(
@@ -241,7 +254,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			sf::Vector2f(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())), 
 			sf::Vector2f(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
 			
-			e, true, wave.getScale())
+			e, true, wave.getScale(), 2)
 		);
 		
 		e.add(new PlayerEntity(
@@ -252,17 +265,18 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			sf::Vector2i(wave.getWindow()->getSize().x / 2 + (16 * wave.getScale()), wave.getWindow()->getSize().x - (16 * wave.getScale())),
 			sf::Vector2i(16 * wave.getScale(), wave.getWindow()->getSize().y - (16 * wave.getScale())), 
 			
-			e, true, false, wave.getScale()));
+			e, true, false, wave.getScale(), 2)
+		);
 	}
 
 	if(gameState == STATE::STATE_GAME_INGAME) {
 		e.entities.clear();
 		if(this->gameState.getGameMode() == MODE::MODE_INFINITE) {
-			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale()));	
+			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
 		}
 		if(this->gameState.getGameMode() == MODE::MODE_DUAL) {
-			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) - (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale()));	
-			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) + (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale()));	
+			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) - (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
+			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) + (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
 		}
 	}
 
@@ -411,10 +425,7 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 		for(Gui::Button* b : buttons) {
 			if(!b->getId(40)) {
 				if(!pauseGuiShown && gamePaused) {
-					if(!b->getId(9) || !b->getId(10) || !b->getId(110)) {
-						if(b->getId(110)) //I dont understand why I have to do this because the !b->getId(110) doesnt work wtf
-							break;
-
+					if(!b->getId(9) && !b->getId(10) && !b->getId(110)) {
 						b->render(window);
 						break;
 					}

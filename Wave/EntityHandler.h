@@ -19,12 +19,18 @@ public:
 
 	void add(Entity* e);
 
-	void render(sf::RenderWindow& w, bool afterGui);
+	void render(sf::RenderWindow& w, int32_t layer);
 	void tick();
 
 	void addMenuParticles();
+	void addMenuParticles(int32_t layer);
 	void addMenuParticlesWithPreviousColor();
 	void removeMenuParticles();
+
+	void hideHostileEntities();
+	void hidePlayer();
+	void hideParticles();
+	void hideMeteors();
 
 	void update();
 

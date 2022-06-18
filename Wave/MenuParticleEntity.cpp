@@ -1,6 +1,6 @@
 #include "MenuParticleEntity.h"
 
-MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale) : scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(std::rand()%(255), std::rand()%(255), std::rand()%(255)) {
+MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(std::rand()%(255), std::rand()%(255), std::rand()%(255)) {
 	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
 	r.setPosition(sf::Vector2f(x, y));
 	r.setFillColor(color);
@@ -13,7 +13,7 @@ MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid
 	velY = (velY < 2) ? -6 : velY;
 }
 
-MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, sf::Color color) : scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(color) {
+MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, sf::Color color, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(color) {
 	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
 	r.setPosition(sf::Vector2f(x, y));
 	r.setFillColor(color);
@@ -30,12 +30,20 @@ void MenuParticleEntity::render(sf::RenderWindow& w) {
 	w.draw(r);
 }
 
+void MenuParticleEntity::setRenderLayer(int32_t layer) {
+	renderLayer = layer;
+
+	for(auto const& t : e.trails)
+		if(t.first->getUid() == uid)
+			t.first->setRenderLayer(layer);
+}
+
 void MenuParticleEntity::tick() {
 	r.move(sf::Vector2f((velX * scale), (velY * scale)));
 	x = r.getPosition().x;
 	y = r.getPosition().y;
 
-	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((velX > 0) ? (x + 1) : (x - 1), (velY > 0) ? (y + 1) : (y - 1), id, uid, 10, color, e, scale), this));
+	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((velX > 0) ? (x + 1) : (x - 1), (velY > 0) ? (y + 1) : (y - 1), id, uid, 10, color, e, scale, renderLayer), this));
 
 	if((x >= (horizontalBounds.y - r.getGlobalBounds().width)) || (x <= horizontalBounds.x))
 		setVelX(-getVelX());

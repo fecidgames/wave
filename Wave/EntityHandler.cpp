@@ -61,8 +61,18 @@ void EntityHandler::update() {
 		entity->update();
 }
 
-void EntityHandler::render(sf::RenderWindow& w, bool afterGui) {
+void EntityHandler::render(sf::RenderWindow& w, int32_t layer) {
 	for(Entity* e : entities) {
+		if(e->getRenderLayer(layer))
+			e->render(w);
+	}
+
+	for(auto const& t : trails) {
+		if(t.first->getRenderLayer(layer))
+			t.first->render(w);
+	}
+	
+	/*for(Entity* e : entities) {
 		if(wave.getMenuRenderer().isPauseGuiHidden() && wave.getMenuRenderer().isGamePaused()) {
 			if(e->getId() == ID::MenuParticle)
 				e->render(w);
@@ -72,10 +82,10 @@ void EntityHandler::render(sf::RenderWindow& w, bool afterGui) {
 			if(afterGui && e->renderOverGui())
 				e->render(w);
 		}
-	}
+	}*/
 
 	//The trail ID is the same as the parent ID
-	for(auto const& t : trails) {
+	/*for(auto const& t : trails) {
 		if(wave.getMenuRenderer().isPauseGuiHidden() && wave.getMenuRenderer().isGamePaused()) {
 			if(t.first->getId() == ID::MenuParticle)
 				t.first->render(w);
@@ -85,19 +95,49 @@ void EntityHandler::render(sf::RenderWindow& w, bool afterGui) {
 			if(afterGui && t.first->renderOverGui()) 
 				t.first->render(w);
 		}
-	}
+	}*/
+}
+
+void EntityHandler::hideHostileEntities() {
+	for(Entity* e : entities)
+		if(e->getId(ID::BasicEnemy) || e->getId(ID::FastEnemy) || e->getId(ID::MeteorShowerParticle) || e->getId(ID::SmartEnemy)) {
+			e->setRenderLayer(e->getRenderLayer() >= 0 ? -1 : 0);
+			std::cout << "Set render layer of E:" << e->getUid() << " to " << e->getRenderLayer() << std::endl;
+		}
+}
+
+void EntityHandler::hidePlayer() {
+	for(Entity* e : entities)
+		if(e->getId(ID::Player))
+			e->setRenderLayer(e->getRenderLayer() >= 0 ? -1 : 0);
+}
+
+void EntityHandler::hideParticles() {
+	for(Entity* e : entities)
+		if(e->getId(ID::MenuParticle))
+			e->setRenderLayer(e->getRenderLayer() >= 0 ? -1 : 0);
+}
+
+void EntityHandler::hideMeteors() {
+	for(Entity* e : entities)
+		if(e->getId(ID::MeteorShowerParticle))
+			e->setRenderLayer(e->getRenderLayer() >= 0 ? -1 : 0);
 }
 
 void EntityHandler::addMenuParticles() {
+	addMenuParticles(0);
+}
+
+void EntityHandler::addMenuParticles(int32_t layer) {
 	for(int32_t i = 0; i < 15; i++)
-		add(new MenuParticleEntity(std::rand()%(wave.getWindow()->getSize().x - 100), std::rand()%(wave.getWindow()->getSize().y - 50), ID::MenuParticle, i, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, false, wave.getScale()));
+		add(new MenuParticleEntity(std::rand()%(wave.getWindow()->getSize().x - 100), std::rand()%(wave.getWindow()->getSize().y - 50), ID::MenuParticle, i, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, false, wave.getScale(), layer));
 }
 
 void EntityHandler::addMenuParticlesWithPreviousColor() {
 	int32_t i = 0;
 	for(sf::Color color : colors) {
 		i++;
-		add(new MenuParticleEntity(std::rand()%(wave.getWindow()->getSize().x - 100), std::rand()%(wave.getWindow()->getSize().y - 50), ID::MenuParticle, i, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, false, wave.getScale(), color));
+		add(new MenuParticleEntity(std::rand()%(wave.getWindow()->getSize().x - 100), std::rand()%(wave.getWindow()->getSize().y - 50), ID::MenuParticle, i, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, false, wave.getScale(), color, 0));
 	}
 }
 
@@ -151,13 +191,13 @@ void EntityHandler::tickSpawner(int32_t time) {
 	uint32_t uid = 28 + time;
 
 	if(time == 1) {
-		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale()));
+		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
 	}
 	if(time == 300) {
-		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale()));
+		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
 	}
 	if(time == 600) {
-		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale()));
-		add(new FastEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::FastEnemy, uid + 1, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale()));
+		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+		add(new FastEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::FastEnemy, uid + 1, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
 	}
 }

@@ -18,6 +18,12 @@ void Wave::render() {
 	startupFadeCol = (startupFadeCol >= 25) ? (startupFadeCol - 25) : 0;
 	window.clear(sf::Color(startupFadeCol, startupFadeCol, startupFadeCol));
 
+	//Render layer system
+	for(int32_t i = 0; i < 3; i++) {
+		entityHandler.render(window, i);
+		//menuRenderer.render(window, i);
+	}
+
 	entityHandler.render(window, false);
 	menuRenderer.render(window, false);
 
@@ -184,6 +190,8 @@ void Wave::loadSettings() {
 		if(setting == "5")
 			setting_debugMenu = (value == "y") ? true : false;
 	}
+
+	//delete &settingsFile;  CHECK IF THIS WORKS!!!!!
 }
 
 void Wave::saveSettings() {
@@ -208,6 +216,8 @@ void Wave::saveSettings() {
 	content.append((setting_debugMenu == true) ? "y" : "n");
 
 	settingsFile << content;
+
+	//delete &settingsFile;  CHECK IF THIS WORKS!!!!!!!!!!!!!!!!!
 }
 
 void Wave::setVolume(int32_t volume) {

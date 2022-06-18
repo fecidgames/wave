@@ -1,6 +1,6 @@
 #include "PlayerEntity.h"
 
-PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, double scale) : scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), controllable(controllable) {
+PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, double scale, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), controllable(controllable) {
 	if(controllable) {
 		for(Entity* entity : e.entities)
 			if(entity->getId() == ID::Player)
@@ -14,7 +14,7 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 	health = 0;
 }
 
-PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health, double scale) : scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), controllable(controllable), health(health) {
+PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vector2i horizontalBounds, sf::Vector2i verticalBounds, EntityHandler& e, bool overGui, bool controllable, int32_t health, double scale, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), controllable(controllable), health(health) {
 	if(controllable) {
 		for(Entity* entity : e.entities)
 			if(entity->getId() == ID::Player)
@@ -36,6 +36,14 @@ void PlayerEntity::render(sf::RenderWindow& w) {
 	}
 }
 
+void PlayerEntity::setRenderLayer(int32_t layer) {
+	renderLayer = layer;
+
+	for(auto const& t : e.trails)
+		if(t.first->getUid() == uid)
+			t.first->setRenderLayer(layer);
+}
+
 void PlayerEntity::tick() {
 	x += velX * scale;
 	y += velY * scale;
@@ -50,7 +58,7 @@ void PlayerEntity::tick() {
 		setY(verticalBounds.x);
 
 	if(!(velX == 0 && velY == 0))
-		e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity(x, y, id, uid, 25.5f, color, e, scale), this));
+		e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity(x, y, id, uid, 25.5f, color, e, scale, renderLayer), this));
 
 	if(controllable && health > 1)
 		collision();

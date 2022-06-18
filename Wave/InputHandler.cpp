@@ -55,6 +55,11 @@ void InputHandler::update(sf::Event* e) {
 		//We'll look through the unpausable buttons first
 		for(Gui::Button* button : menuRenderer->getButtons()) {
 			if(mouseOver(e->mouseButton, button)) {
+				if(button->getId(110) && menuRenderer->isGamePaused() && menuRenderer->isPauseGuiHidden()) {
+					button->release();
+					return;
+				}
+
 				if(button->getId(90)) {
 					menuRenderer->exitConfirmation();
 					button->release();
@@ -111,6 +116,18 @@ void InputHandler::update(sf::Event* e) {
 					menuRenderer->exitConfirmation();
 
 				if(button->getId(4)) {
+					if(gameState.getLastState(STATE::STATE_GAME_INGAME)) {
+						gameState.revertGameState();
+
+						entityHandler->removeMenuParticles();
+						entityHandler->hideHostileEntities();
+						entityHandler->hidePlayer();
+
+						menuRenderer->hidePauseGUI();
+						menuRenderer->setupInGame(STATE::STATE_GAME_INGAME);
+						return;
+					}
+
 					gameState.setGameState(STATE::STATE_MENU_MAIN);
 					menuRenderer->setup(STATE::STATE_MENU_MAIN);
 				}
@@ -133,11 +150,13 @@ void InputHandler::update(sf::Event* e) {
 				}
 				if(button->getId(110)) {
 					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
-					menuRenderer->hidePauseGUI();
-					entityHandler->addMenuParticles();
 
-					// setup so that the entities don't disappear, rather pause and not render
-					//menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
+					entityHandler->addMenuParticles();
+					entityHandler->hideHostileEntities();
+					entityHandler->hidePlayer();
+
+					menuRenderer->hidePauseGUI();
+					menuRenderer->setupInGame(STATE::STATE_MENU_SETTINGS);
 				}
 			}
 		}
@@ -197,7 +216,6 @@ void InputHandler::update(sf::Event* e) {
 			}
 		}
 
-		//Slider slide handling
 		for(Gui::Slider* slider : menuRenderer->getSliders())
 			if(slider->isDragging())
 				slider->setBlockX(e->mouseMove.x - slider->getMXR());
@@ -214,8 +232,13 @@ void InputHandler::update(sf::Event* e) {
 					menuRenderer->setup(gameState.getGameState());
 				} else {
 					gameState.setGameState(STATE::STATE_GAME_INGAME);
-					menuRenderer->hidePauseGUI();
+
 					entityHandler->removeMenuParticles();
+					entityHandler->hideHostileEntities();
+					entityHandler->hidePlayer();
+
+					menuRenderer->hidePauseGUI();
+					menuRenderer->setupInGame(STATE::STATE_GAME_INGAME);
 				}
 
 				return;
@@ -284,28 +307,32 @@ void InputHandler::tick() {
 	}
 }
 
-bool InputHandler::mouseOver(sf::Event::MouseButtonEvent mb, Gui::Button* button) {
-	if((mb.x > button->getX()) && (mb.x < (button->getX() + button->getWidth())))
-		if((mb.y > button->getY()) && (mb.y < (button->getY() + button->getHeight())))
+bool InputHandler::mo(sf::Event::MouseButtonEvent mb, int32_t x, int32_t y, int32_t width, int32_t height) {
+	if((mb.x > x) && (mb.x < (x + width)))
+		if((mb.y > y) && (mb.y < (y + height)))
 			return true;
 
 	return false;
+}
+
+bool InputHandler::mo(sf::Event::MouseMoveEvent mb, int32_t x, int32_t y, int32_t width, int32_t height) {
+	if((mb.x > x) && (mb.x < (x + width)))
+		if((mb.y > y) && (mb.y < (y + height)))
+			return true;
+
+	return false;
+}
+
+bool InputHandler::mouseOver(sf::Event::MouseButtonEvent mb, Gui::Button* button) {
+	return mo(mb, button->getX(), button->getY(), button->getWidth(), button->getHeight());
 }
 
 bool InputHandler::mouseOver(sf::Event::MouseMoveEvent mb, Gui::Button* button) {
-	if((mb.x > button->getX()) && (mb.x < (button->getX() + button->getWidth())))
-		if((mb.y > button->getY()) && (mb.y < (button->getY() + button->getHeight())))
-			return true;
-
-	return false;
+	return mo(mb, button->getX(), button->getY(), button->getWidth(), button->getHeight());
 }
 
 bool InputHandler::mouseOver(sf::Event::MouseButtonEvent mb, Gui::Checkbox* checkbox) {
-	if((mb.x > checkbox->getX()) && (mb.x < (checkbox->getX() + checkbox->getWidth())))
-		if((mb.y > checkbox->getY() - checkbox->getHeight() / 2 + 5) && (mb.y < (checkbox->getY() - checkbox->getHeight() / 2 + 5 + checkbox->getHeight())))
-			return true;
-
-	return false;
+	return mo(mb, checkbox->getX(), checkbox->getY(), checkbox->getWidth(), checkbox->getHeight());
 }
 
 bool InputHandler::mouseOver(sf::Event::MouseButtonEvent mb, Gui::Arrow* arrow) {
