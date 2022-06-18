@@ -22,7 +22,7 @@ public:
 	MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state);
 	~MenuRenderer();
 
-	void render(sf::RenderWindow& window, bool onTop);
+	void render(sf::RenderWindow& window, int32_t layer);
 
 	GameState& gameState;
 
@@ -96,8 +96,6 @@ public:
 	void pauseGame();
 	void pauseGame(bool paused);
 	void setupDebugMenu(bool enabled);
-
-	void renderDebugMenuOverlay(sf::RenderWindow& window);
 
 	sf::Text createText(double x, double y, std::string text, int size);
 	sf::Text createText(std::string text, int size);

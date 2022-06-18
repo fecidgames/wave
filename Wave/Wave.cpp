@@ -18,20 +18,11 @@ void Wave::render() {
 	startupFadeCol = (startupFadeCol >= 25) ? (startupFadeCol - 25) : 0;
 	window.clear(sf::Color(startupFadeCol, startupFadeCol, startupFadeCol));
 
-	//Render layer system
-	for(int32_t i = 0; i < 3; i++) {
+	//We have 4 current render layers
+	for(int32_t i = 0; i < 5; i++) {
 		entityHandler.render(window, i);
-		//menuRenderer.render(window, i);
+		menuRenderer.render(window, i);
 	}
-
-	entityHandler.render(window, false);
-	menuRenderer.render(window, false);
-
-	entityHandler.render(window, true);
-	menuRenderer.render(window, true);
-
-	if(setting_debugMenu)
-		menuRenderer.renderDebugMenuOverlay(window); //This must always be on top
 
 	window.display();
 }

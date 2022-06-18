@@ -413,8 +413,8 @@ void MenuRenderer::exitConfirmation() {
 	}
 }
 
-void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
-	if(!onTop) {
+void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
+	if(layer == 1) {
 		for(sf::Text t : texts)
 			window.draw(t);
 
@@ -443,6 +443,7 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 
 		for(Gui::Arrow* a : arrows)
 			a->render(window);
+		
 
 		//======================================================//
 
@@ -465,34 +466,34 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 				}
 			}
 		}
+	}
 
-		//==========================================================//
+	//==========================================================//
 
-		if(gamePaused) {
-			Gui::Button* ct = new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9);
+	if(gamePaused && layer == 2) {
+		Gui::Button* ct = new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9);
 
-			sf::RectangleShape pauseBackground;
-			pauseBackground.setFillColor(sf::Color::Black);
-			pauseBackground.setOutlineColor(sf::Color::White);
-			pauseBackground.setOutlineThickness(2); 
-			pauseBackground.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
-			pauseBackground.setSize(sf::Vector2f(720, ct->getY() + ct->getHeight() + 8 - pauseBackground.getPosition().y));
+		sf::RectangleShape pauseBackground;
+		pauseBackground.setFillColor(sf::Color::Black);
+		pauseBackground.setOutlineColor(sf::Color::White);
+		pauseBackground.setOutlineThickness(2); 
+		pauseBackground.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
+		pauseBackground.setSize(sf::Vector2f(720, ct->getY() + ct->getHeight() + 8 - pauseBackground.getPosition().y));
 
-			sf::Text title("Game paused", menuFont, 40);
-			title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
+		sf::Text title("Game paused", menuFont, 40);
+		title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
 
-			if(pauseGuiShown) {
-				window.draw(pauseBackground);
-				window.draw(title);
+		if(pauseGuiShown) {
+			window.draw(pauseBackground);
+			window.draw(title);
 
-				for(Gui::Button* b : buttons)
-					if(b->getId(9) || b->getId(10) || b->getId(110))
-						b->render(window);
-			}
+			for(Gui::Button* b : buttons)
+				if(b->getId(9) || b->getId(10) || b->getId(110))
+					b->render(window);
 		}
 	}
 
-	if(onTop) {
+	if(layer == 3) {
 		for(Gui::Button* b : buttons)
 			if(b->getId(40))
 				b->render(window);
@@ -523,19 +524,19 @@ void MenuRenderer::render(sf::RenderWindow& window, bool onTop) {
 					b->render(window);
 		}
 	}
-}
 
-void MenuRenderer::renderDebugMenuOverlay(sf::RenderWindow& window) {
-	sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
-	sf::Text fps = createText(10, enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
+	if(layer == 4 && wave.isDebugMenuEnabled()) {
+		sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
+		sf::Text fps = createText(10, enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
 
-	window.draw(enabledNotify);
-	window.draw(fps);
+		window.draw(enabledNotify);
+		window.draw(fps);
 
-	if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
-		if(gameState.getGameMode(MODE::MODE_INFINITE) || gameState.getGameMode(MODE::MODE_DUAL)) {
-			for(int i = 0; i < e.entities.size(); i++) {
-				// list all entities in game
+		if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
+			if(gameState.getGameMode(MODE::MODE_INFINITE) || gameState.getGameMode(MODE::MODE_DUAL)) {
+				for(int i = 0; i < e.entities.size(); i++) {
+					// list all entities in game
+				}
 			}
 		}
 	}
