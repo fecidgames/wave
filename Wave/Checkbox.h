@@ -30,6 +30,8 @@ private:
 	double scale;
 	sf::Texture textureChecked;
 	sf::Texture textureNotChecked;
+
+	sf::Sprite spr;
 };
 
 }
