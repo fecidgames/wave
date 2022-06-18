@@ -6,13 +6,16 @@ Gui::Checkbox::Checkbox(int32_t x, int32_t y, double scale, bool checked, int32_
 
 	if(!textureChecked.loadFromFile("textures/checkbox_checked.png"))
 			throw std::exception("checkbox_checked.png not found!");
+
+	spr.setTexture(checked ? textureChecked : textureNotChecked);
+	spr.setScale(scale, scale);
+	spr.setOrigin(0, 0);
+	spr.setPosition(x, y - spr.getGlobalBounds().height / 2 + 5);
 }
 
 void Gui::Checkbox::render(sf::RenderWindow& window) {
-	sf::Sprite spr(checked ? textureChecked : textureNotChecked);
-	spr.setScale(scale, scale);
-	spr.setPosition(x, y - spr.getGlobalBounds().height / 2 + 5);
-
+	x = spr.getPosition().x;
+	y = spr.getPosition().y;
 	width  = spr.getGlobalBounds().width;
 	height = spr.getGlobalBounds().height;
 
@@ -21,6 +24,7 @@ void Gui::Checkbox::render(sf::RenderWindow& window) {
 
 void Gui::Checkbox::click() {
 	checked = !checked;
+	spr.setTexture(checked ? textureChecked : textureNotChecked);
 }
 
 bool Gui::Checkbox::isChecked() {
