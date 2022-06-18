@@ -402,10 +402,10 @@ void MenuRenderer::exitConfirmation() {
 
 	if(exitConfirmationPopup) {
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "No", 90));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 100));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 91));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(90) || buttons.at(i)->getId(100)) {
+			if(buttons.at(i)->getId(90) || buttons.at(i)->getId(91)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -499,7 +499,7 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 				b->render(window);
 
 		if(exitConfirmationPopup) {
-			Gui::Button* ye = new Gui::Button((wave.getWindow()->getSize().x) / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 100);
+			Gui::Button* ye = new Gui::Button((wave.getWindow()->getSize().x) / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 91);
 
 			sf::RectangleShape r1;
 			r1.setFillColor(sf::Color::Black);
@@ -520,7 +520,7 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 			window.draw(msg);
 
 			for(Gui::Button* b : buttons)
-				if(b->getId(90) || b->getId(100))
+				if(b->getId(90) || b->getId(91))
 					b->render(window);
 		}
 	}

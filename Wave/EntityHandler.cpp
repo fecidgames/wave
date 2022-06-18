@@ -8,6 +8,9 @@ EntityHandler::EntityHandler(Wave& wave) : wave(wave) {
 EntityHandler::~EntityHandler() {
 	for(Entity* e : entities)
 		delete &e;
+
+	for(auto const& t : trails)
+		delete &t.first;
 }
 
 void EntityHandler::setup() {
@@ -20,8 +23,6 @@ void EntityHandler::setup() {
 }
 
 void EntityHandler::tick() {
-	//MenuParticles update while game is paused.
-
 	for(Entity* e : entities)
 		if(!wave.getMenuRenderer().isGamePaused() || e->getId(ID::MenuParticle))
 			e->tick();

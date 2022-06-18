@@ -17,6 +17,8 @@ public:
 	void hover();
 	void unHover();
 
+	void notify();
+
 	int32_t getId();
 	bool getId(int32_t id);
 

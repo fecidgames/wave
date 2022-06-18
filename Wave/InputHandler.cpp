@@ -11,7 +11,7 @@ void InputHandler::update(sf::Event* e) {
 			if(mouseOver(e->mouseButton, button)) {
 
 				//These are the buttons that should still be pressable, even when the rest is paused
-				if(button->getId(9) || button->getId(10) || button->getId(90) || button->getId(100)) {
+				if(button->getId(9) || button->getId(10) || button->getId(90) || button->getId(91)) {
 					button->press();
 					break;
 				}
@@ -55,6 +55,8 @@ void InputHandler::update(sf::Event* e) {
 		//We'll look through the unpausable buttons first
 		for(Gui::Button* button : menuRenderer->getButtons()) {
 			if(mouseOver(e->mouseButton, button)) {
+				button->notify();
+
 				if(button->getId(110) && menuRenderer->isGamePaused() && menuRenderer->isPauseGuiHidden()) {
 					button->release();
 					return;
@@ -65,7 +67,7 @@ void InputHandler::update(sf::Event* e) {
 					button->release();
 					return;
 				}
-				if(button->getId(100))
+				if(button->getId(91))
 					wave.stop();
 
 				if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isExitUnconfirmed()) {
@@ -116,7 +118,7 @@ void InputHandler::update(sf::Event* e) {
 					menuRenderer->exitConfirmation();
 
 				if(button->getId(4)) {
-					if(gameState.getLastState(STATE::STATE_GAME_INGAME)) {
+					if(gameState.getLastState(STATE::STATE_GAME_INGAME) && gameState.getGameState(STATE::STATE_MENU_SETTINGS)) {
 						gameState.revertGameState();
 
 						entityHandler->removeMenuParticles();
@@ -145,7 +147,7 @@ void InputHandler::update(sf::Event* e) {
 					menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
 				}
 				if(button->getId(40)) {
-					if(gameState.getGameState(STATE::STATE_GAME_INGAME))
+					if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isGamePaused())
 						menuRenderer->gameEnd();
 				}
 				if(button->getId(110)) {
@@ -208,8 +210,8 @@ void InputHandler::update(sf::Event* e) {
 		//Handle button hover
 		for(Gui::Button* button : menuRenderer->getButtons()) {
 			if(mouseOver(e->mouseMove, button)) {
-				//If there is no exit gui, handle all hovers, if there is, just for button 90 and 100
-				if(!menuRenderer->isExitUnconfirmed() || button->getId(90) || button->getId(100))
+				//If there is no exit gui, handle all hovers, if there is, just for button 90 and 91
+				if(!menuRenderer->isExitUnconfirmed() || button->getId(90) || button->getId(91))
 					button->hover();
 			} else {
 				button->unHover();
@@ -249,7 +251,7 @@ void InputHandler::update(sf::Event* e) {
 				menuRenderer->setup(STATE::STATE_MENU_MAIN);
 			}
 
-			if(gameState.getGameState(STATE::STATE_GAME_INGAME))
+			if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isExitUnconfirmed())
 				menuRenderer->pauseGame();
 		}
 

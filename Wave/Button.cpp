@@ -24,6 +24,10 @@ void Gui::Button::render(sf::RenderWindow& window) {
 	window.draw(btnText);
 }
 
+void Gui::Button::notify() {
+	std::cout << "Pressed B:" << id << ".\n";
+}
+
 void Gui::Button::press() {
 	down = true;
 }
