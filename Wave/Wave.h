@@ -25,9 +25,6 @@ public:
 	void setVolume(int32_t volume);
 	int32_t getVolume();
 
-	void setGuiSize(int32_t hudSize);
-	int32_t getGuiSize();
-
 	void setVSyncEnabled(bool enabled);
 	bool isVSyncEnabled();
 
@@ -67,7 +64,6 @@ private:
 	void renderwin();
 
 	uint32_t setting_volume = 50; //0 is off, dont pause song when volume is 0
-	uint32_t setting_guiSize = 1; //1 is default. This is a gui & hud size multiplier
 
 	bool setting_vSync = true;
 	bool setting_fullscreen = false;

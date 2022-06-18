@@ -176,14 +176,12 @@ void Wave::loadSettings() {
 		if(setting == "0")
 			setting_volume = std::stoi(value);
 		if(setting == "1")
-			setting_guiSize = std::stoi(value);
-		if(setting == "2")
 			setting_vSync = (value == "y") ? true : false;
-		if(setting == "3")
+		if(setting == "2")
 			setting_fullscreen = (value == "y") ? true : false;
-		if(setting == "4")
+		if(setting == "3")
 			setting_menuParticles = (value == "y") ? true : false;
-		if(setting == "5")
+		if(setting == "4")
 			setting_debugMenu = (value == "y") ? true : false;
 	}
 }
@@ -195,18 +193,16 @@ void Wave::saveSettings() {
 	std::string content;
 	content.append("0:" + std::to_string(setting_volume));
 	content.append("#");
-	content.append("1:" + std::to_string(setting_guiSize));
-	content.append("#");
-	content.append("2:");
+	content.append("1:");
 	content.append((setting_vSync == true) ? "y" : "n");
 	content.append("#");
-	content.append("3:");
+	content.append("2:");
 	content.append((setting_fullscreen == true) ? "y" : "n");
 	content.append("#");
-	content.append("4:");
+	content.append("3:");
 	content.append((setting_menuParticles == true) ? "y" : "n");
 	content.append("#");
-	content.append("5:");
+	content.append("4:");
 	content.append((setting_debugMenu == true) ? "y" : "n");
 
 	settingsFile << content;
@@ -219,14 +215,6 @@ void Wave::setVolume(int32_t volume) {
 
 int32_t Wave::getVolume() {
 	return setting_volume;
-}
-
-void Wave::setGuiSize(int32_t hudSize) {
-	setting_guiSize = hudSize;
-}
-
-int32_t Wave::getGuiSize() {
-	return setting_guiSize;
 }
 
 void Wave::setVSyncEnabled(bool enabled) {

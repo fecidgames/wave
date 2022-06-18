@@ -50,7 +50,7 @@ void MenuRenderer::clearLists() {
 	texts.clear();
 
 	for(int32_t i = 0; i < buttons.size(); i++) {
-		if(!buttons.at(i)->getId(9) && !buttons.at(i)->getId(10) && !buttons.at(i)->getId(110)) {
+		if(!buttons.at(i)->getId(9) && !buttons.at(i)->getId(10) && !buttons.at(i)->getId(99)) {
 			delete buttons.at(i);
 			buttons.erase(buttons.begin() + i);
 			i--;
@@ -123,24 +123,20 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		sf::Text volume("Volume", menuFont, 30);
 		volume.setPosition(xOffset, 113);
 
-		sf::Text hudScale("HUD size", menuFont, 30);
-		hudScale.setPosition(xOffset, 170);
-
 		sf::Text vSync("vSync", menuFont, 30);
-		vSync.setPosition(xOffset, 170 + 57);
+		vSync.setPosition(xOffset, 170);
 
 		sf::Text fullscreen("Fullscreen", menuFont, 30);
-		fullscreen.setPosition(xOffset, 170 + 2 * 57);
+		fullscreen.setPosition(xOffset, 170 + 57);
 
 		sf::Text mp("Menu Particles", menuFont, 30);
-		mp.setPosition(xOffset, 170 + 3 * 57);
+		mp.setPosition(xOffset, 170 + 2 * 57);
 
 		sf::Text dm("Debug menu", menuFont, 30);
-		dm.setPosition(xOffset, 170 + 4 * 57);
+		dm.setPosition(xOffset, 170 + 3 * 57);
 
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), volume);
-		texts.insert(texts.begin(), hudScale);
 		texts.insert(texts.begin(), vSync);
 		texts.insert(texts.begin(), fullscreen);
 		texts.insert(texts.begin(), mp);
@@ -149,10 +145,10 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 		double cbOffset = mp.getPosition().x + (double) mp.getGlobalBounds().width + (20.0 * wave.getScale());
 
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 57, 2, wave.isVSyncEnabled(), 8));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isFullscreenEnabled(), 9));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 4 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187, 2, wave.isVSyncEnabled(), 8));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 57, 2, wave.isFullscreenEnabled(), 9));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
 
 		double blockSizeMultiplier = (wave.getScale() > 1.7) ? 1.7 : wave.getScale();
 
@@ -160,7 +156,6 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		volumeSlider->setBlockX(getVolumeX() + volumeSlider->getX());
 
 		sliders.insert(sliders.begin(), volumeSlider);
-		sliders.insert(sliders.begin(), new Gui::Slider(cbOffset, 187, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 7));
 	}
 
 	if(gameState == STATE::STATE_MENU_GAMEOVER) {
@@ -356,12 +351,12 @@ void MenuRenderer::pauseGame(bool paused) {
 
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 110));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 99));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(110)) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(99)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -382,12 +377,12 @@ void MenuRenderer::pauseGame() {
 
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
 		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 110));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 99));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(110)) {
+			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(99)) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -435,7 +430,7 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 		for(Gui::Button* b : buttons) {
 			if(!b->getId(40)) {
 				if(!pauseGuiShown && gamePaused) {
-					if(!b->getId(9) && !b->getId(10) && !b->getId(110)) {
+					if(!b->getId(9) && !b->getId(10) && !b->getId(99)) {
 						b->render(window);
 						break;
 					}
@@ -498,7 +493,7 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 			window.draw(title);
 
 			for(Gui::Button* b : buttons)
-				if(b->getId(9) || b->getId(10) || b->getId(110))
+				if(b->getId(9) || b->getId(10) || b->getId(99))
 					b->render(window);
 		}
 	}

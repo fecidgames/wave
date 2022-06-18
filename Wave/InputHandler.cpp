@@ -57,9 +57,9 @@ void InputHandler::update(sf::Event* e) {
 			if(mouseOver(e->mouseButton, button)) {
 				button->notify();
 
-				if(button->getId(110) && menuRenderer->isGamePaused() && menuRenderer->isPauseGuiHidden()) {
+				if(button->getId(99) && menuRenderer->isGamePaused() && menuRenderer->isPauseGuiHidden()) {
 					button->release();
-					return;
+					break;
 				}
 
 				if(button->getId(90)) {
@@ -161,17 +161,21 @@ void InputHandler::update(sf::Event* e) {
 
 					return;
 				}
-				if(button->getId(110)) {
-					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
+				if(button->getId(99)) {
+					if(!gameState.getGameState(STATE::STATE_MENU_SETTINGS)) {
+						gameState.setGameState(STATE::STATE_MENU_SETTINGS);
 
-					entityHandler->addMenuParticles();
-					entityHandler->hideHostileEntities();
-					entityHandler->hidePlayer();
+						if(wave.isMenuParticlesEnabled())
+							entityHandler->addMenuParticles();
 
-					menuRenderer->hidePauseGUI();
-					menuRenderer->setupInGame(STATE::STATE_MENU_SETTINGS);
+						entityHandler->hideHostileEntities();
+						entityHandler->hidePlayer();
 
-					return;
+						menuRenderer->hidePauseGUI();
+						menuRenderer->setupInGame(STATE::STATE_MENU_SETTINGS);
+
+						return;
+					}
 				}
 			}
 		}
