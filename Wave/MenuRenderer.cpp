@@ -185,7 +185,7 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 void MenuRenderer::setupEntities(STATE gameState) {
 	for(int i = 0; i < e.entities.size(); ++i) {
-		if(e.entities.at(i)->renderOverGui() && e.entities.at(i)->getId() == ID::MenuParticle || e.entities.at(i)->getId() == ID::Player) {
+		if(e.entities.at(i)->getRenderLayer(2) && e.entities.at(i)->getId() == ID::MenuParticle || e.entities.at(i)->getId() == ID::Player) {
 			e.entities.erase(e.entities.begin() + i);
 			i--;
 		}

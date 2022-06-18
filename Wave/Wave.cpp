@@ -13,7 +13,6 @@ void Wave::tick() {
 	inputHandler.tick();
 }
 
-double startupFadeCol = 250;
 void Wave::render() {
 	startupFadeCol = (startupFadeCol >= 25) ? (startupFadeCol - 25) : 0;
 	window.clear(sf::Color(startupFadeCol, startupFadeCol, startupFadeCol));
@@ -72,9 +71,11 @@ void Wave::renderwin() {
 		scale = 1.0;
 	}
 
+	std::cout << "[Window Frame Info]\n";
 	std::cout << "Scale:  " << std::to_string(scale) << std::endl;
 	std::cout << "Width:  " << window.getSize().x << std::endl;
 	std::cout << "Height: " << window.getSize().y << std::endl;
+	std::cout << std::endl; 
 
 	if(entityHandler.isSetup()) {
 		entityHandler.removeMenuParticles();
@@ -181,8 +182,6 @@ void Wave::loadSettings() {
 		if(setting == "5")
 			setting_debugMenu = (value == "y") ? true : false;
 	}
-
-	//delete &settingsFile;  CHECK IF THIS WORKS!!!!!
 }
 
 void Wave::saveSettings() {
@@ -207,8 +206,6 @@ void Wave::saveSettings() {
 	content.append((setting_debugMenu == true) ? "y" : "n");
 
 	settingsFile << content;
-
-	//delete &settingsFile;  CHECK IF THIS WORKS!!!!!!!!!!!!!!!!!
 }
 
 void Wave::setVolume(int32_t volume) {

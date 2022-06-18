@@ -1,6 +1,6 @@
 #include "MenuParticleEntity.h"
 
-MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(std::rand()%(255), std::rand()%(255), std::rand()%(255)) {
+MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), color(std::rand()%(255), std::rand()%(255), std::rand()%(255)) {
 	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
 	r.setPosition(sf::Vector2f(x, y));
 	r.setFillColor(color);
@@ -13,7 +13,7 @@ MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid
 	velY = (velY < 2) ? -6 : velY;
 }
 
-MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, sf::Color color, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), overGui(overGui), color(color) {
+MenuParticleEntity::MenuParticleEntity(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, bool overGui, double& scale, sf::Color color, int32_t renderLayer) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e), color(color) {
 	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
 	r.setPosition(sf::Vector2f(x, y));
 	r.setFillColor(color);

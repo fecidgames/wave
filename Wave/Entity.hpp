@@ -31,7 +31,5 @@ public:
 	virtual void setX(int32_t x) = 0;
 	virtual void setY(int32_t y) = 0;
 
-	virtual bool renderOverGui() = 0; //Will be unnecessary
-
 	virtual void update() = 0;
 };

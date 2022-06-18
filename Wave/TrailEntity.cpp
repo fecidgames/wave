@@ -5,8 +5,6 @@ TrailEntity::TrailEntity(int32_t x, int32_t y, ID id, uint32_t uid, int32_t life
 		if(entity->getUid() == uid && entity->getId() != ID::Trail)
 			parent = entity;
 	}
-
-	overGui = parent->renderOverGui();
 }
 
 void TrailEntity::render(sf::RenderWindow& w) {

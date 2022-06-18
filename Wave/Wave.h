@@ -79,5 +79,6 @@ private:
 	sf::RenderWindow window;
 
 	double scale = 1;
+	double startupFadeCol = 250;
 };
 
