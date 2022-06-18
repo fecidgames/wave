@@ -275,7 +275,7 @@ void MenuRenderer::setupEntities(STATE gameState) {
 		}
 		if(this->gameState.getGameMode() == MODE::MODE_DUAL) {
 			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) - (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
-			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) + (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 17, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
+			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) + (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 18, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
 		}
 	}
 

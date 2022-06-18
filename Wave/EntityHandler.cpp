@@ -40,7 +40,8 @@ void EntityHandler::tick() {
 		}
 	}
 
-	spawnTimer = 0;
+	if(!wave.getGameState().getGameState(STATE::STATE_GAME_INGAME))
+		spawnTimer = 0;
 }
 
 void EntityHandler::update() {
@@ -165,5 +166,12 @@ void EntityHandler::tickSpawner(int32_t time) {
 	if(time == 600) {
 		add(new BasicEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
 		add(new FastEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::FastEnemy, uid + 1, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+	}
+
+	if(time == 900) {
+		add(new SmartEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::SmartEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0, 17));
+		if(wave.getGameState().getGameMode(MODE::MODE_DUAL)) {
+			add(new SmartEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::SmartEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0, 18));
+		}
 	}
 }

@@ -4,6 +4,7 @@
 #include "PlayerEntity.h"
 #include "BasicEnemy.h"
 #include "FastEnemy.h"
+#include "SmartEnemy.h"
 #include "TrailEntity.h"
 
 class Wave;
