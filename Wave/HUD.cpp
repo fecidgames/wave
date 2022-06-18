@@ -46,6 +46,9 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		}
 	}
 
+	sf::Text healthNotifyP1("", mainFont, 16);
+	sf::Text healthNotifyP2("", mainFont, 16);
+
 	sf::RectangleShape healthRedBorderedP1;
 	sf::RectangleShape healthGreenUnborderedP1;
 
@@ -61,6 +64,10 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		healthGreenUnborderedP1.setPosition(sf::Vector2f(10, 10));
 		healthGreenUnborderedP1.setSize(sf::Vector2f((1080 / 3) * healthFactorP1, 64));
 		healthGreenUnborderedP1.setFillColor(sf::Color::Green);
+
+		healthNotifyP1.setString(std::to_string(player1->getHealth()) + "/" + std::to_string(cMaxHealth));
+		healthNotifyP1.setOutlineColor(sf::Color::Black);
+		healthNotifyP1.setOutlineThickness(2.0f);
 	}
 
 	if(player2 != nullptr) {
@@ -70,6 +77,10 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 			healthRedBorderedP1.setFillColor(sf::Color(healthRedBorderedP1.getFillColor().r, healthRedBorderedP1.getFillColor().g, healthRedBorderedP1.getFillColor().b, healthRedBorderedP1.getFillColor().a / 2));
 			healthRedBorderedP1.setOutlineColor(sf::Color(healthRedBorderedP1.getOutlineColor().r, healthRedBorderedP1.getOutlineColor().g, healthRedBorderedP1.getOutlineColor().b, healthRedBorderedP1.getOutlineColor().a / 2));
 		}
+
+		healthNotifyP2.setString(std::to_string((int32_t) player2->getHealth()) + "/" + std::to_string((int32_t) cMaxHealth));
+		healthNotifyP2.setOutlineColor(sf::Color::Black);
+		healthNotifyP2.setOutlineThickness(2.0f);
 	}
 
 	if(player1 != nullptr) {
@@ -86,6 +97,8 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 	if(player1 != nullptr)
 		if(player1->getHealth() > 1)
 			window.draw(healthGreenUnborderedP1);
+
+	healthNotifyP1.setPosition(13, 25);
 
 	if(player2 != nullptr) {
 		sf::Text playerMarkerP1("P1 [White]", mainFont, 22);

@@ -537,13 +537,22 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 		window.draw(enabledNotify);
 		window.draw(fps);
 
-		if(gameState.getGameState(STATE::STATE_GAME_INGAME)) {
-			if(gameState.getGameMode(MODE::MODE_INFINITE) || gameState.getGameMode(MODE::MODE_DUAL)) {
-				for(int i = 0; i < e.entities.size(); i++) {
-					// list all entities in game
-				}
-			}
+		bool flag = e.entities.size() > 0;
+		for(int i = 0; i < e.entities.size(); i++) {
+			std::string _str = e.entities.at(i)->getId(ID::BasicEnemy) ? "ID:BasicEnemy" : e.entities.at(i)->getId(ID::FastEnemy) ? "ID::FastEnemy" : e.entities.at(i)->getId(ID::MenuParticle) ? "ID:MenuParticle" : e.entities.at(i)->getId(ID::Player) ? "ID:Player" : "ID::SmartEnemy";
+			sf::Text _t = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 120 + (i * 18), "E:-NaN", 14);
+			_t.setString("E:" + std::to_string(e.entities.at(i)->getUid()) + "#" + _str);
+			window.draw(_t);
+			flag = true;
 		}
+
+		sf::Text tEntities = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 100, "Entities:", 16);
+		sf::Text nEntities = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 120, "No entities found", 14);
+
+		window.draw(tEntities);
+
+		if(!flag)
+			window.draw(nEntities);
 	}
 }
 

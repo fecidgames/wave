@@ -69,8 +69,8 @@ private:
 	void renderHealth(std::vector<Entity*>* entities);
 	void renderTimer();
 	
-	const double dMaxHealth = 100;
-	double cMaxHealth = dMaxHealth;
+	const double dMaxHealth = 100;	//Default max health
+	double cMaxHealth = dMaxHealth; //Custom max health
 
 	bool showMilliseconds = false;
 };
