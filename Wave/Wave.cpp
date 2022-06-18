@@ -1,6 +1,6 @@
 #include "Wave.h"
 
-Wave::Wave() : entityHandler(*this), hud(window, entityHandler), menuRenderer(*this, entityHandler, hud, state), inputHandler(*this, menuRenderer, entityHandler) {
+Wave::Wave() : soundHandler(), entityHandler(*this), hud(window, entityHandler), menuRenderer(*this, entityHandler, hud, state), inputHandler(*this, menuRenderer, entityHandler) {
 	init();
 }
 
@@ -45,6 +45,10 @@ MenuRenderer& Wave::getMenuRenderer() {
 void Wave::init() {
 	loadSettings();
 	renderwin(); //Window stuff
+
+	soundHandler.playMusic(0);
+	soundHandler.loopMusic(0);
+	soundHandler.updateVolume(setting_volume);
 
 	entityHandler.setup();
 	menuRenderer.setup(STATE::STATE_MENU_MAIN);
@@ -210,6 +214,7 @@ void Wave::saveSettings() {
 
 void Wave::setVolume(int32_t volume) {
 	setting_volume = volume;
+	soundHandler.updateVolume(setting_volume);
 }
 
 int32_t Wave::getVolume() {

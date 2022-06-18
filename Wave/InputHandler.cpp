@@ -105,17 +105,22 @@ void InputHandler::update(sf::Event* e) {
 				if(button->getId(0)) {
 					gameState.setGameState(STATE::STATE_MENU_SELECT);
 					menuRenderer->setup(STATE::STATE_MENU_SELECT);
+					return;
 				}
 				if(button->getId(1)) {
 					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
 					menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
+					return;
 				}
 				if(button->getId(2)) {
 					gameState.setGameState(STATE::STATE_MENU_HELP);
 					menuRenderer->setup(STATE::STATE_MENU_HELP);
+					return;
 				}
-				if(button->getId(3))
+				if(button->getId(3)) {
 					menuRenderer->exitConfirmation();
+					return;
+				}
 
 				if(button->getId(4)) {
 					if(gameState.getLastState(STATE::STATE_GAME_INGAME) && gameState.getGameState(STATE::STATE_MENU_SETTINGS)) {
@@ -132,23 +137,29 @@ void InputHandler::update(sf::Event* e) {
 
 					gameState.setGameState(STATE::STATE_MENU_MAIN);
 					menuRenderer->setup(STATE::STATE_MENU_MAIN);
+					return;
 				}
 				if(button->getId(5)) {
 					gameState.setGameState(STATE::STATE_GAME_INGAME);
 					menuRenderer->setup(STATE::STATE_GAME_INGAME);
 					menuRenderer->getHud().startTime();
+					return;
 				}
 				if(button->getId(8)) {
 					gameState.setGameState(STATE::STATE_MENU_SHOP);
 					menuRenderer->setup(STATE::STATE_MENU_SHOP);
+					return;
 				}
 				if(button->getId(11)) {
 					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
 					menuRenderer->setup(STATE::STATE_MENU_SETTINGS);
+					return;
 				}
 				if(button->getId(40)) {
 					if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isGamePaused())
 						menuRenderer->gameEnd();
+
+					return;
 				}
 				if(button->getId(110)) {
 					gameState.setGameState(STATE::STATE_MENU_SETTINGS);
@@ -159,6 +170,8 @@ void InputHandler::update(sf::Event* e) {
 
 					menuRenderer->hidePauseGUI();
 					menuRenderer->setupInGame(STATE::STATE_MENU_SETTINGS);
+
+					return;
 				}
 			}
 		}
@@ -202,8 +215,18 @@ void InputHandler::update(sf::Event* e) {
 		}
 
 		//Slider release & setting adjustment per id
-		for(Gui::Slider* slider : menuRenderer->getSliders())
+		for(Gui::Slider* slider : menuRenderer->getSliders()) {
+			if(slider->isDragging()) {
+				if(slider->getId(6)) {
+					double d = (slider->getBlockX() - slider->getX()) / (double) slider->getLength() * 100.0;
+					int32_t e = wave.nearest10(d);
+					wave.setVolume(e);
+					std::cout << "Set volume: " << e << ".\n";
+				}
+			}
+
 			slider->release();
+		}
 	}
 
 	if(type(e, sf::Event::MouseMoved)) {
@@ -219,8 +242,15 @@ void InputHandler::update(sf::Event* e) {
 		}
 
 		for(Gui::Slider* slider : menuRenderer->getSliders())
-			if(slider->isDragging())
+			if(slider->isDragging()) {
 				slider->setBlockX(e->mouseMove.x - slider->getMXR());
+				if(slider->getId(6)) {
+					double d = (slider->getBlockX() - slider->getX()) / (double) slider->getLength() * 100.0;
+					int32_t e = wave.nearest10(d);
+					wave.setVolume(e);
+					std::cout << "Set volume: " << e << ".\n";
+				}
+			}
 	}
 
 	if(type(e, sf::Event::KeyPressed)) {

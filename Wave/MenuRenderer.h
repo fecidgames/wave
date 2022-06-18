@@ -141,6 +141,9 @@ private:
 		return n % 2 == 0;
 	}
 
+	Gui::Slider* volumeSlider;
+	int32_t getVolumeX();
+
 	void setupButtons(STATE gameState);
 	void setupDrawables(STATE gameState);
 	void setupEntities(STATE gameState);

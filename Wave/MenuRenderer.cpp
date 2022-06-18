@@ -156,7 +156,10 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 		double blockSizeMultiplier = (wave.getScale() > 1.7) ? 1.7 : wave.getScale();
 
-		sliders.insert(sliders.begin(), new Gui::Slider(cbOffset, 130, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 6));
+		volumeSlider = new Gui::Slider(cbOffset, 130, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 6);
+		volumeSlider->setBlockX(getVolumeX() + volumeSlider->getX());
+
+		sliders.insert(sliders.begin(), volumeSlider);
 		sliders.insert(sliders.begin(), new Gui::Slider(cbOffset, 187, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 7));
 	}
 
@@ -186,6 +189,7 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 void MenuRenderer::setupEntities(STATE gameState) {
 	for(int i = 0; i < e.entities.size(); ++i) {
 		if(e.entities.at(i)->getRenderLayer(2) && e.entities.at(i)->getId() == ID::MenuParticle || e.entities.at(i)->getId() == ID::Player) {
+			e.entities.at(i)->setRenderLayer(-1);
 			e.entities.erase(e.entities.begin() + i);
 			i--;
 		}
@@ -332,6 +336,12 @@ void MenuRenderer::setupDebugMenu(bool enabled) {
 			}
 		}
 	}
+}
+
+int32_t MenuRenderer::getVolumeX() {
+	double r = wave.getVolume() / 100.0 * (double) volumeSlider->getLength();
+	std::cout << r << std::endl;
+	return r;
 }
 
 void MenuRenderer::pauseGame(bool paused) {

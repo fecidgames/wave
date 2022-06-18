@@ -8,6 +8,7 @@
 
 #include "InputHandler.h"
 #include "EntityHandler.h"
+#include "SoundHandler.h"
 #include "HUD.h"
 
 class Wave {
@@ -52,6 +53,12 @@ public:
 		return framesPerSecond;
 	}
 
+	uint32_t nearest10(int32_t n) {
+		int32_t a = (n / 10) * 10;
+		int32_t b = a + 10;
+		return (n - a > b - n)? b : a;
+	}
+
 private:
 	void init();
 	void render();
@@ -59,8 +66,8 @@ private:
 	void loop();
 	void renderwin();
 
-	uint32_t setting_volume = 100; //0 is off, dont pause song when volume is 0
-	uint32_t setting_guiSize = 0; //0 is default. This is a gui & hud size multiplier
+	uint32_t setting_volume = 50; //0 is off, dont pause song when volume is 0
+	uint32_t setting_guiSize = 1; //1 is default. This is a gui & hud size multiplier
 
 	bool setting_vSync = true;
 	bool setting_fullscreen = false;
@@ -70,6 +77,7 @@ private:
 	MenuRenderer menuRenderer;
 	InputHandler inputHandler;
 	EntityHandler entityHandler;
+	SoundHandler soundHandler;
 	HUD hud;
 
 	uint32_t framesPerSecond = 0;
