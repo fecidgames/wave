@@ -38,6 +38,8 @@ public:
 	virtual int32_t getRenderLayer()			{ return renderLayer; }
 	virtual bool getRenderLayer(int32_t layer)	{ return layer == renderLayer; }
 
+	PlayerEntity* getTarget();
+
 	virtual void update();
 
 private:

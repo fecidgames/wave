@@ -51,6 +51,10 @@ sf::RectangleShape SmartEnemy::getBounds() {
 	return r;
 }
 
+PlayerEntity* SmartEnemy::getTarget() {
+	return target;
+}
+
 void SmartEnemy::update() {
 	r.setSize(sf::Vector2f(32.0 * scale, 32.0 * scale));
 }

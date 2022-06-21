@@ -45,8 +45,10 @@ void PlayerEntity::setRenderLayer(int32_t layer) {
 }
 
 void PlayerEntity::tick() {
-	x += velX * scale;
-	y += velY * scale;
+	r.move(velX * scale, velY * scale);
+	
+	x = r.getPosition().x;
+	y = r.getPosition().y;
 
 	if(x >= horizontalBounds.y - 32 * scale)
 		setX(horizontalBounds.y - 32 * scale);

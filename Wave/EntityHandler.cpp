@@ -138,6 +138,15 @@ void EntityHandler::die(PlayerEntity* player) {
 				p->setAlive(false);
 				p1Died = p->isPlayerOne();
 			}
+			delete p;
+		}
+		if(entities.at(i)->getId() == ID::SmartEnemy) {
+			SmartEnemy* s = (SmartEnemy*) entities.at(i);
+			if(s->getTarget() == player) {
+				entities.erase(entities.begin() + i);
+				i--;
+				delete s;
+			}
 		}
 	}
 
