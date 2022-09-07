@@ -130,23 +130,44 @@ void EntityHandler::die(PlayerEntity* player) {
 	bool shouldEnd = false;
 	bool p1Died = false;
 
-	for(int i = 0; i < entities.size(); i++) {
-		if(entities.at(i)->getId() == ID::Player) {
-			PlayerEntity* p = (PlayerEntity*) entities.at(i);
-			if(p == player) {
-				dpCount++;
-				p->setAlive(false);
-				p1Died = p->isPlayerOne();
+	if (wave.getGameState().getGameMode(MODE::MODE_DUAL)) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*)entities.at(i);
+				if (p == player) {
+					dpCount++;
+					p->setAlive(false);
+					p1Died = p->isPlayerOne();
+				}
+				delete p;
 			}
-			delete p;
+			if (entities.at(i) != nullptr) {
+				if (entities.at(i)->getId() == ID::SmartEnemy) {
+					SmartEnemy* s = (SmartEnemy*)entities.at(i);
+					if (s->getTarget() == player) {
+						entities.erase(entities.begin() + i);
+						i--;
+						delete s;
+					}
+				}
+			}
 		}
-		if(entities.at(i)->getId() == ID::SmartEnemy) {
-			SmartEnemy* s = (SmartEnemy*) entities.at(i);
-			if(s->getTarget() == player) {
-				entities.erase(entities.begin() + i);
-				i--;
-				delete s;
+	}
+	if (wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*)entities.at(i);
+				if (p == player) {
+					dpCount++;
+					p->setAlive(false);
+					p1Died = true;
+				}
+				delete p;
 			}
+		}
+		for (int i = 0; i < entities.size(); i++) {
+			entities.erase(entities.begin() + i);
+			--i;
 		}
 	}
 

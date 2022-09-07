@@ -24,6 +24,8 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 	} else {
 		color = sf::Color::White;
 	}
+
+	std::cout << "Summoned player at coordinates " << x << ", " << y << ".";
 }
 
 void PlayerEntity::render(sf::RenderWindow& w) {
@@ -45,10 +47,8 @@ void PlayerEntity::setRenderLayer(int32_t layer) {
 }
 
 void PlayerEntity::tick() {
-	r.move(velX * scale, velY * scale);
-	
-	x = r.getPosition().x;
-	y = r.getPosition().y;
+	x += velX * scale;
+	y += velY * scale;
 
 	if(x >= horizontalBounds.y - 32 * scale)
 		setX(horizontalBounds.y - 32 * scale);
