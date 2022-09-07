@@ -184,6 +184,8 @@ void EntityHandler::die(PlayerEntity* player) {
 	}
 }
 
+int tempTimeLoop = 0;
+int newWaitTime = 300;
 void EntityHandler::tickSpawner(int32_t time) {
 	uint32_t uid = 28 + time;
 
@@ -202,6 +204,37 @@ void EntityHandler::tickSpawner(int32_t time) {
 		add(new SmartEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::SmartEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0, 17));
 		if(wave.getGameState().getGameMode(MODE::MODE_DUAL)) {
 			add(new SmartEnemy(std::rand()%(wave.getWindow()->getSize().x - (int) (32 * wave.getScale() + 10)), std::rand()%(wave.getWindow()->getSize().y - (int) (32 * wave.getScale() + 10)), ID::SmartEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0, 18));
+		}
+	}
+
+	if (time >= 900) {
+		tempTimeLoop++;
+		if (tempTimeLoop == newWaitTime) {
+			double r = std::rand() * 3 / RAND_MAX;
+			std::cout << "Random value: " << r << ".\n";
+			tempTimeLoop = 0;
+
+			if (r == 0) {
+				if (!entities.size() > 15) {
+					add(new BasicEnemy(std::rand() % (wave.getWindow()->getSize().x - (int)(32 * wave.getScale() + 10)), std::rand() % (wave.getWindow()->getSize().y - (int)(32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+					add(new FastEnemy(std::rand() % (wave.getWindow()->getSize().x - (int)(32 * wave.getScale() + 10)), std::rand() % (wave.getWindow()->getSize().y - (int)(32 * wave.getScale() + 10)), ID::FastEnemy, uid + 1, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+					newWaitTime = 400;
+				}
+			}
+			if (r == 1) {
+				if (!entities.size() > 15) {
+					add(new BasicEnemy(std::rand() % (wave.getWindow()->getSize().x - (int)(32 * wave.getScale() + 10)), std::rand() % (wave.getWindow()->getSize().y - (int)(32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+					add(new FastEnemy(std::rand() % (wave.getWindow()->getSize().x - (int)(32 * wave.getScale() + 10)), std::rand() % (wave.getWindow()->getSize().y - (int)(32 * wave.getScale() + 10)), ID::FastEnemy, uid + 1, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+					add(new FastEnemy(std::rand() % (wave.getWindow()->getSize().x - (int)(32 * wave.getScale() + 10)), std::rand() % (wave.getWindow()->getSize().y - (int)(32 * wave.getScale() + 10)), ID::FastEnemy, uid + 1, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+					newWaitTime = 240;
+				}
+			}
+			if (r == 2) {
+				if (!entities.size() > 15) {
+					add(new BasicEnemy(std::rand() % (wave.getWindow()->getSize().x - (int)(32 * wave.getScale() + 10)), std::rand() % (wave.getWindow()->getSize().y - (int)(32 * wave.getScale() + 10)), ID::BasicEnemy, uid, sf::Vector2f(0, wave.getWindow()->getSize().x), sf::Vector2f(0, wave.getWindow()->getSize().y), *this, wave.getScale(), 0));
+					newWaitTime = 540;
+				}
+			}
 		}
 	}
 }

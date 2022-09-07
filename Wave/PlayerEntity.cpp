@@ -25,7 +25,7 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 		color = sf::Color::White;
 	}
 
-	std::cout << "Summoned player at coordinates " << x << ", " << y << ".";
+	std::cout << "Summoned player at coordinates " << x << ", " << y << ".\n";
 }
 
 void PlayerEntity::render(sf::RenderWindow& w) {

@@ -179,6 +179,10 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 			texts.insert(texts.begin(), playTimeInf);
 		}
 	}
+
+	if (gameState == STATE::STATE_MENU_HELP) {
+		texts.insert(texts.begin(), createCenteredTextX(40, "How to play?", 50));
+	}
 }
 
 void MenuRenderer::setupEntities(STATE gameState) {
