@@ -305,7 +305,7 @@ void MenuRenderer::setupButtons(STATE gameState) {
 		}
 
 		if(!exists)
-			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", 40));
+			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 60, (380 / 2), 64, "Kill all players", 40));
 	}
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
@@ -541,9 +541,11 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 	if(layer == 4 && wave.isDebugMenuEnabled()) {
 		sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
 		sf::Text fps = createText(10, enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
+		sf::Text scoreNotify = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 5, "Score: " + std::to_string(score), 16);
 
 		window.draw(enabledNotify);
 		window.draw(fps);
+		window.draw(scoreNotify);
 
 		bool flag = e.entities.size() > 0;
 		for(int i = 0; i < e.entities.size(); i++) {
