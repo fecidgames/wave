@@ -22,6 +22,8 @@ void EntityHandler::setup() {
 		addMenuParticles();
 }
 
+int scoreCount = 0;
+int scoreTimer = 0;
 void EntityHandler::tick() {
 	for(Entity* e : entities)
 		if(!wave.getMenuRenderer().isGamePaused() || e->getId(ID::MenuParticle))
@@ -34,6 +36,12 @@ void EntityHandler::tick() {
 	if(!wave.getMenuRenderer().isGamePaused()) {
 		if(wave.getGameState().getGameState(STATE::STATE_GAME_INGAME)) {
 			spawnTimer++;
+			scoreTimer++;
+
+			if (scoreTimer >= 15) {
+				scoreTimer = 0;
+				scoreCount++;
+			}
 
 			tickSpawner(spawnTimer);
 			return;
@@ -178,9 +186,13 @@ void EntityHandler::die(PlayerEntity* player) {
 
 	if(shouldEnd) { //On GameOver
 		dpCount = 0; //Reset dead players count
+		scoreTimer = 0;
 		wave.getHud().stopTime();
 		wave.getMenuRenderer().sendTime(wave.getHud().getTimer().getElapsedMilliseconds(), !wave.getGameState().getGameMode(MODE::MODE_INFINITE));
+		wave.getMenuRenderer().sendScore(scoreCount);
 		wave.getMenuRenderer().gameEnd();
+
+		scoreCount = 0;
 	}
 }
 

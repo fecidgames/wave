@@ -170,7 +170,11 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		playTimeInf.setPosition(Window::WIDTH / 2 - playTimeDua.getGlobalBounds().width / 2, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
 		playTimeDua.setPosition(Window::WIDTH - playTimeInf.getGlobalBounds().width - 8, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
 
+		sf::Text score("Score: " + gameScore, menuFont, 30);
+		score.setPosition(Window::WIDTH / 2 - score.getGlobalBounds().width / 2, playTimeInf.getPosition().y + playTimeInf.getGlobalBounds().height + 16);
+
 		texts.insert(texts.begin(), title);
+		texts.insert(texts.begin(), score);
 
 		if(!wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
 			texts.insert(texts.begin(), playTimeDua);
