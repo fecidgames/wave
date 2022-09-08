@@ -149,7 +149,7 @@ void Wave::stop() {
 	exit(EXIT_SUCCESS);
 }
 
-void Wave::loadSettings() {
+void Wave::loadSettings() { //load saved total score and send to menuRenderer
 	std::ifstream settingsFile;
 	settingsFile.open("settings.wv");
 
@@ -186,7 +186,7 @@ void Wave::loadSettings() {
 	}
 }
 
-void Wave::saveSettings() {
+void Wave::saveSettings() { //save MenuRenderer's total_score uint32_t
 	std::ofstream settingsFile;
 	settingsFile.open("settings.wv");
 	

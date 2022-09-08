@@ -313,7 +313,7 @@ void InputHandler::update(sf::Event* e) {
 
 void InputHandler::tick() {
 	for(Entity* e : entityHandler->entities) {
-		if(PlayerEntity* p = dynamic_cast<PlayerEntity*>(e)) {
+		if(PlayerEntity* p = (PlayerEntity*) e) {
 			if(!p->isControllable())
 				return;
 

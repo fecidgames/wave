@@ -141,6 +141,7 @@ private:
 
 	uint32_t time = 0;
 	uint32_t score = 0;
+	uint32_t total_score = 0;
 
 	bool exitConfirmationPopup = false;
 	bool gamePaused = false;

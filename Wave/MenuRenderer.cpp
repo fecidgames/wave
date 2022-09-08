@@ -484,14 +484,15 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 	//==========================================================//
 
 	if(gamePaused && layer == 2) {
-		Gui::Button* ct = new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9);
+		double btnY = wave.getWindow()->getSize().y / 2;
+		double btnHeight = 64;
 
 		sf::RectangleShape pauseBackground;
 		pauseBackground.setFillColor(sf::Color::Black);
 		pauseBackground.setOutlineColor(sf::Color::White);
 		pauseBackground.setOutlineThickness(2); 
 		pauseBackground.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
-		pauseBackground.setSize(sf::Vector2f(720, ct->getY() + ct->getHeight() + 8 - pauseBackground.getPosition().y));
+		pauseBackground.setSize(sf::Vector2f(720, btnY + btnHeight + 8 - pauseBackground.getPosition().y));
 
 		sf::Text title("Game paused", menuFont, 40);
 		title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
@@ -512,16 +513,15 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 				b->render(window);
 
 		if(exitConfirmationPopup) {
-			Gui::Button* ye = new Gui::Button((wave.getWindow()->getSize().x) / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 91);
+			double btnY = wave.getWindow()->getSize().y / 2;
+			double btnHeight = 64;
 
 			sf::RectangleShape r1;
 			r1.setFillColor(sf::Color::Black);
 			r1.setOutlineColor(sf::Color::White);
 			r1.setOutlineThickness(2);
 			r1.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
-			r1.setSize(sf::Vector2f(720, ye->getY() + ye->getHeight() + 8 - r1.getPosition().y));
-
-			delete ye;
+			r1.setSize(sf::Vector2f(720, btnY + btnHeight + 8 - r1.getPosition().y));
 
 			sf::Text title = createText("Exit game?", 40);
 			title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
@@ -667,7 +667,7 @@ sf::Text MenuRenderer::createCenteredTextY(double x, std::string text, int size,
 	if(half == 1)
 		sfText.setPosition(x, wave.getWindow()->getSize().y / 4 + wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
 	if(!(half == 0) && !(half == 1)) {
-		std::cout << "Error: Centered text half was neither 0 nor 1, centering it instead.\n";
+		std::cout << "Error: Centered text half was neither 0 nor 1, centering it instead." << std::endl;
 		sfText.setPosition(x, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
 	}
 
@@ -696,7 +696,7 @@ sf::Text MenuRenderer::createCenteredTextXY(std::string text, int size, int side
 	else if(side == 3)
 		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 - sfText.getGlobalBounds().height / 2);
 	else {
-		std::cout << "Error: Text side modifier invalid, centering it instead.\n";
+		std::cout << "Error: Text side modifier invalid, centering it instead." << std::endl;
 		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
 	}
 
