@@ -11,7 +11,7 @@ void InputHandler::update(sf::Event* e) {
 			if(mouseOver(e->mouseButton, button)) {
 
 				//These are the buttons that should still be pressable, even when the rest is paused
-				if(button->getId(9) || button->getId(10) || button->getId(90) || button->getId(91)) {
+				if (button->getId({ 9, 10, 90, 91 })) {
 					button->press();
 					break;
 				}
@@ -199,7 +199,8 @@ void InputHandler::update(sf::Event* e) {
 			if(mouseOver(e->mouseButton, checkbox)) {
 				checkbox->click();
 
-				if(checkbox->getId(8)) { //vSync is handled in the wave class ;)
+				//These settings are handled in Wave.cpp
+				if(checkbox->getId(8)) {
 					if(checkbox->isChecked()) 
 						wave.setVSyncEnabled(true);
 					if(!checkbox->isChecked())
@@ -236,10 +237,10 @@ void InputHandler::update(sf::Event* e) {
 		for(Gui::Slider* slider : menuRenderer->getSliders()) {
 			if(slider->isDragging()) {
 				if(slider->getId(6)) {
-					double d = (slider->getBlockX() - slider->getX()) / (double) slider->getLength() * 100.0;
-					int32_t e = wave.nearest10(d);
-					wave.setVolume(e);
-					std::cout << "Set volume: " << e << ".\n";
+					double d = ((double) slider->getBlockX() - (double) slider->getX()) / (double) slider->getLength() * 100.0;
+					wave.setVolume(wave.nearest10(d));
+
+					std::cout << "Set volume: " << wave.nearest10(d) << ".\n";
 				}
 			}
 
@@ -263,7 +264,7 @@ void InputHandler::update(sf::Event* e) {
 			if(slider->isDragging()) {
 				slider->setBlockX(e->mouseMove.x - slider->getMXR());
 				if(slider->getId(6)) {
-					double d = (slider->getBlockX() - slider->getX()) / (double) slider->getLength() * 100.0;
+					double d = ((double) slider->getBlockX() - (double) slider->getX()) / (double) slider->getLength() * 100.0;
 					int32_t e = wave.nearest10(d);
 					wave.setVolume(e);
 					std::cout << "Set volume: " << e << ".\n";

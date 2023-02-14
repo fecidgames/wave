@@ -1,6 +1,8 @@
 #pragma once
 
 #include "STATE.h"
+#include <iostream>
+#include <initializer_list>
 
 namespace Gui {
 
@@ -21,6 +23,7 @@ public:
 
 	int32_t getId();
 	bool getId(int32_t id);
+	bool getId(std::initializer_list<int> ids);
 
 	float_t getX();
 	float_t getY();

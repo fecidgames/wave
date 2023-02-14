@@ -30,6 +30,10 @@ sf::RenderWindow* Wave::getWindow() {
 	return &window;
 }
 
+EntityHandler& Wave::getEntityHandler() {
+	return entityHandler;
+}
+
 GameState& Wave::getGameState() {
 	return state;
 }
@@ -71,9 +75,7 @@ void Wave::renderwin() {
 		} else {
 			scale = window.getSize().y / 720.0;
 		}
-	} else {
-		scale = 1.0;
-	}
+	} else scale = 1.0;
 
 	std::cout << "[Window Frame Info]\n";
 	std::cout << "Scale:  " << std::to_string(scale) << std::endl;
@@ -107,7 +109,7 @@ void Wave::loop() {
 	sf::Time prevTime = clock_3.getElapsedTime();
 	sf::Time currentTime;
 
-	double_t lastTime = dt.asMilliseconds() * 1000;
+	double_t lastTime = (double) dt.asMilliseconds() * 1000.0;
 	double_t ms = 1000000000.0 / 60.0;
 	double_t delta = 0.0;
 	while(window.isOpen()) {
@@ -125,7 +127,7 @@ void Wave::loop() {
 			inputHandler.update(&e);
 		}
 
-		double_t now = clock_2.getElapsedTime().asMilliseconds() * 1000;
+		double_t now = (double) clock_2.getElapsedTime().asMilliseconds() * 1000.0;
 		delta += (now - lastTime) / ms;
 		lastTime = now;
 
@@ -176,13 +178,13 @@ void Wave::loadSettings() { //load saved total score and send to menuRenderer
 		if(setting == "0")
 			setting_volume = std::stoi(value);
 		if(setting == "1")
-			setting_vSync = (value == "y") ? true : false;
+			setting_vSync = (value == "y");
 		if(setting == "2")
-			setting_fullscreen = (value == "y") ? true : false;
+			setting_fullscreen = (value == "y");
 		if(setting == "3")
-			setting_menuParticles = (value == "y") ? true : false;
+			setting_menuParticles = (value == "y");
 		if(setting == "4")
-			setting_debugMenu = (value == "y") ? true : false;
+			setting_debugMenu = (value == "y");
 	}
 }
 
@@ -194,16 +196,19 @@ void Wave::saveSettings() { //save MenuRenderer's total_score uint32_t
 	content.append("0:" + std::to_string(setting_volume));
 	content.append("#");
 	content.append("1:");
-	content.append((setting_vSync == true) ? "y" : "n");
+	content.append((setting_vSync) ? "y" : "n");
 	content.append("#");
 	content.append("2:");
-	content.append((setting_fullscreen == true) ? "y" : "n");
+	content.append((setting_fullscreen) ? "y" : "n");
 	content.append("#");
 	content.append("3:");
-	content.append((setting_menuParticles == true) ? "y" : "n");
+	content.append((setting_menuParticles) ? "y" : "n");
 	content.append("#");
 	content.append("4:");
-	content.append((setting_debugMenu == true) ? "y" : "n");
+	content.append((setting_debugMenu) ? "y" : "n");
+	content.append("#");
+	content.append("4:");
+	content.append("0"); // Points
 
 	settingsFile << content;
 }

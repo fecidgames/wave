@@ -46,59 +46,61 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 		}
 	}
 
-	sf::Text healthNotifyP1("", mainFont, 16);
-	sf::Text healthNotifyP2("", mainFont, 16);
+	sf::Text hNotifyP1("", mainFont, 16);
+	sf::Text hNotifyP2("", mainFont, 16);
 
-	sf::RectangleShape healthRedBorderedP1;
-	sf::RectangleShape healthGreenUnborderedP1;
+	sf::RectangleShape hbRedP1;
+	sf::RectangleShape huGreenP1;
 
 	if(player1 != nullptr) {
 		double healthFactorP1 = player1->getHealth() / cMaxHealth;
 
-		healthRedBorderedP1.setPosition(sf::Vector2f(10, 10));
-		healthRedBorderedP1.setSize(sf::Vector2f(1080 / 3, 64));
-		healthRedBorderedP1.setFillColor(sf::Color::Red);
-		healthRedBorderedP1.setOutlineColor(sf::Color::White);
-		healthRedBorderedP1.setOutlineThickness(3);
+		hbRedP1.setPosition(sf::Vector2f(10, 10));
+		hbRedP1.setSize(sf::Vector2f(1080 / 3, 64));
+		hbRedP1.setFillColor(sf::Color::Red);
+		hbRedP1.setOutlineColor(sf::Color::White);
+		hbRedP1.setOutlineThickness(3);
 
-		healthGreenUnborderedP1.setPosition(sf::Vector2f(10, 10));
-		healthGreenUnborderedP1.setSize(sf::Vector2f((1080 / 3) * healthFactorP1, 64));
-		healthGreenUnborderedP1.setFillColor(sf::Color::Green);
+		huGreenP1.setPosition(sf::Vector2f(10, 10));
+		huGreenP1.setSize(sf::Vector2f((1080 / 3) * healthFactorP1, 64));
+		huGreenP1.setFillColor(sf::Color::Green);
 
-		healthNotifyP1.setString(std::to_string(player1->getHealth()) + "/" + std::to_string(cMaxHealth));
-		healthNotifyP1.setOutlineColor(sf::Color::Black);
-		healthNotifyP1.setOutlineThickness(2.0f);
+		hNotifyP1.setString(std::to_string(player1->getHealth()) + "/" + std::to_string(cMaxHealth));
+		hNotifyP1.setOutlineColor(sf::Color::Black);
+		hNotifyP1.setOutlineThickness(2.0f);
 	}
 
 	if(player2 != nullptr) {
-		if(player2->getBounds().getGlobalBounds().intersects(healthRedBorderedP1.getGlobalBounds())) {
-			healthGreenUnborderedP1.setFillColor(sf::Color(healthGreenUnborderedP1.getFillColor().r, healthGreenUnborderedP1.getFillColor().g, healthGreenUnborderedP1.getFillColor().b, healthGreenUnborderedP1.getFillColor().a / 2));
-			healthGreenUnborderedP1.setOutlineColor(sf::Color(healthGreenUnborderedP1.getOutlineColor().r, healthGreenUnborderedP1.getOutlineColor().g, healthGreenUnborderedP1.getOutlineColor().b, healthGreenUnborderedP1.getOutlineColor().a / 2));
-			healthRedBorderedP1.setFillColor(sf::Color(healthRedBorderedP1.getFillColor().r, healthRedBorderedP1.getFillColor().g, healthRedBorderedP1.getFillColor().b, healthRedBorderedP1.getFillColor().a / 2));
-			healthRedBorderedP1.setOutlineColor(sf::Color(healthRedBorderedP1.getOutlineColor().r, healthRedBorderedP1.getOutlineColor().g, healthRedBorderedP1.getOutlineColor().b, healthRedBorderedP1.getOutlineColor().a / 2));
+		if(player2->getBounds().getGlobalBounds().intersects(hbRedP1.getGlobalBounds())) {
+			huGreenP1.setFillColor(sf::Color(huGreenP1.getFillColor().r, huGreenP1.getFillColor().g, huGreenP1.getFillColor().b, huGreenP1.getFillColor().a / 2));
+			huGreenP1.setOutlineColor(sf::Color(huGreenP1.getOutlineColor().r, huGreenP1.getOutlineColor().g, huGreenP1.getOutlineColor().b, huGreenP1.getOutlineColor().a / 2));
+
+			hbRedP1.setFillColor(sf::Color(hbRedP1.getFillColor().r, hbRedP1.getFillColor().g, hbRedP1.getFillColor().b, hbRedP1.getFillColor().a / 2));
+			hbRedP1.setOutlineColor(sf::Color(hbRedP1.getOutlineColor().r, hbRedP1.getOutlineColor().g, hbRedP1.getOutlineColor().b, hbRedP1.getOutlineColor().a / 2));
 		}
 
-		healthNotifyP2.setString(std::to_string((int32_t) player2->getHealth()) + "/" + std::to_string((int32_t) cMaxHealth));
-		healthNotifyP2.setOutlineColor(sf::Color::Black);
-		healthNotifyP2.setOutlineThickness(2.0f);
+		hNotifyP2.setString(std::to_string((int32_t) player2->getHealth()) + "/" + std::to_string((int32_t) cMaxHealth));
+		hNotifyP2.setOutlineColor(sf::Color::Black);
+		hNotifyP2.setOutlineThickness(2.0f);
 	}
 
 	if(player1 != nullptr) {
-		if(player1->getBounds().getGlobalBounds().intersects(healthRedBorderedP1.getGlobalBounds())) {
-			healthGreenUnborderedP1.setFillColor(sf::Color(healthGreenUnborderedP1.getFillColor().r, healthGreenUnborderedP1.getFillColor().g, healthGreenUnborderedP1.getFillColor().b, healthGreenUnborderedP1.getFillColor().a / 2));
-			healthGreenUnborderedP1.setOutlineColor(sf::Color(healthGreenUnborderedP1.getOutlineColor().r, healthGreenUnborderedP1.getOutlineColor().g, healthGreenUnborderedP1.getOutlineColor().b, healthGreenUnborderedP1.getOutlineColor().a / 2));
-			healthRedBorderedP1.setFillColor(sf::Color(healthRedBorderedP1.getFillColor().r, healthRedBorderedP1.getFillColor().g, healthRedBorderedP1.getFillColor().b, healthRedBorderedP1.getFillColor().a / 2));
-			healthRedBorderedP1.setOutlineColor(sf::Color(healthRedBorderedP1.getOutlineColor().r, healthRedBorderedP1.getOutlineColor().g, healthRedBorderedP1.getOutlineColor().b, healthRedBorderedP1.getOutlineColor().a / 2));
+		if(player1->getBounds().getGlobalBounds().intersects(hbRedP1.getGlobalBounds())) {
+			huGreenP1.setFillColor(sf::Color(huGreenP1.getFillColor().r, huGreenP1.getFillColor().g, huGreenP1.getFillColor().b, huGreenP1.getFillColor().a / 2));
+			huGreenP1.setOutlineColor(sf::Color(huGreenP1.getOutlineColor().r, huGreenP1.getOutlineColor().g, huGreenP1.getOutlineColor().b, huGreenP1.getOutlineColor().a / 2));
+
+			hbRedP1.setFillColor(sf::Color(hbRedP1.getFillColor().r, hbRedP1.getFillColor().g, hbRedP1.getFillColor().b, hbRedP1.getFillColor().a / 2));
+			hbRedP1.setOutlineColor(sf::Color(hbRedP1.getOutlineColor().r, hbRedP1.getOutlineColor().g, hbRedP1.getOutlineColor().b, hbRedP1.getOutlineColor().a / 2));
 		}
 	}
 
-	window.draw(healthRedBorderedP1);
+	window.draw(hbRedP1);
 
 	if(player1 != nullptr)
 		if(player1->getHealth() > 1)
-			window.draw(healthGreenUnborderedP1);
+			window.draw(huGreenP1);
 
-	healthNotifyP1.setPosition(13, 25);
+	hNotifyP1.setPosition(13, 25);
 
 	if(player2 != nullptr) {
 		sf::Text playerMarkerP1("P1 [White]", mainFont, 22);
@@ -151,7 +153,6 @@ void HUD::renderHealth(std::vector<Entity*>* entities) {
 void HUD::renderTimer() {
 	std::string time = formatTime(timer.getElapsedMilliseconds());
 
-	
 	sf::Text timeText(time, mainFont, 30);
 	timeText.setPosition((int32_t) (window.getSize().x / 2 - timeText.getGlobalBounds().width / 2), 5);
 	timeText.setOutlineColor(sf::Color::Black);

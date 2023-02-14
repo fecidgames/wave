@@ -147,8 +147,8 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187, 2, wave.isVSyncEnabled(), 8));
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 57, 2, wave.isFullscreenEnabled(), 9));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isMenuParticlesEnabled(), 10));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isDebugMenuEnabled(), 11));
 
 		double blockSizeMultiplier = (wave.getScale() > 1.7) ? 1.7 : wave.getScale();
 
@@ -185,7 +185,21 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 	}
 
 	if (gameState == STATE::STATE_MENU_HELP) {
-		texts.insert(texts.begin(), createCenteredTextX(40, "How to play?", 50));
+		sf::Text title = createCenteredTextX(40, "How to play?", 50);
+
+		sf::RectangleShape topLine;
+		topLine.setFillColor(sf::Color::White);
+		topLine.setPosition(10, title.getPosition().y + title.getGlobalBounds().height + 25);
+		topLine.setSize(sf::Vector2f(Window::WIDTH - 20.0, 1.0));
+		
+		sf::RectangleShape centerLine;
+		centerLine.setFillColor(sf::Color::White);
+		centerLine.setPosition(10, Window::HEIGHT / 2);
+		centerLine.setSize(sf::Vector2f(Window::WIDTH - 20.0, 1.0));
+		
+		texts.insert(texts.begin(), title);
+		rects.insert(rects.begin(), topLine);
+		rects.insert(rects.begin(), centerLine);
 	}
 }
 
@@ -526,7 +540,7 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 			sf::Text title = createText("Exit game?", 40);
 			title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
 			
-			sf::Text msg = createCenteredTextX(wave.getWindow()->getSize().y / 4 + 2 * title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
+			sf::Text msg = createCenteredTextX((int) wave.getWindow()->getSize().y / 4 + 2 * (int) title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
 
 			window.draw(r1);
 			window.draw(title);
@@ -540,8 +554,8 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 
 	if(layer == 4 && wave.isDebugMenuEnabled()) {
 		sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
-		sf::Text fps = createText(10, enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
-		sf::Text scoreNotify = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 5, "Score: " + std::to_string(score), 16);
+		sf::Text fps = createText(10, (int) enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
+		sf::Text scoreNotify = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 5, "Score: " + std::to_string(e.scoreCount), 16);
 
 		window.draw(enabledNotify);
 		window.draw(fps);
@@ -550,14 +564,15 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 		bool flag = e.entities.size() > 0;
 		for(int i = 0; i < e.entities.size(); i++) {
 			std::string _str = e.entities.at(i)->getId(ID::BasicEnemy) ? "ID:BasicEnemy" : e.entities.at(i)->getId(ID::FastEnemy) ? "ID::FastEnemy" : e.entities.at(i)->getId(ID::MenuParticle) ? "ID:MenuParticle" : e.entities.at(i)->getId(ID::Player) ? "ID:Player" : "ID::SmartEnemy";
-			sf::Text _t = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 120 + (i * 18), "E:-NaN", 14);
+			sf::Text _t = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + (i * 18) + 120, "E:-NaN", 14);
 			_t.setString("E:" + std::to_string(e.entities.at(i)->getUid()) + "#" + _str);
+
 			window.draw(_t);
 			flag = true;
 		}
 
-		sf::Text tEntities = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 100, "Entities:", 16);
-		sf::Text nEntities = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 120, "No entities found", 14);
+		sf::Text tEntities = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 100, "Entities:", 16);
+		sf::Text nEntities = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 120, "No entities found", 14);
 
 		window.draw(tEntities);
 

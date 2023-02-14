@@ -22,7 +22,6 @@ void EntityHandler::setup() {
 		addMenuParticles();
 }
 
-int scoreCount = 0;
 int scoreTimer = 0;
 void EntityHandler::tick() {
 	for(Entity* e : entities)
@@ -149,6 +148,7 @@ void EntityHandler::die(PlayerEntity* player) {
 				}
 				delete p;
 			}
+
 			if (entities.at(i) != nullptr) {
 				if (entities.at(i)->getId() == ID::SmartEnemy) {
 					SmartEnemy* s = (SmartEnemy*)entities.at(i);
@@ -225,6 +225,16 @@ void EntityHandler::tickSpawner(int32_t time) {
 			double r = std::rand() * 3 / RAND_MAX;
 			std::cout << "Random value: " << r << ".\n";
 			tempTimeLoop = 0;
+
+			if (entities.size() >= 15) {
+				for (int i = 0; i < entities.size(); i++) {
+					if (entities.at(i)->getId() == ID::BasicEnemy || entities.at(i)->getId() == ID::FastEnemy) {
+						if (std::rand() * 3 / RAND_MAX == 2) {
+							entities.erase(entities.begin() + i);
+						}
+					}
+				}
+			}
 
 			if (r == 0) {
 				if (!entities.size() > 15) {
