@@ -186,20 +186,18 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 	if (gameState == STATE::STATE_MENU_HELP) {
 		sf::Text title = createCenteredTextX(40, "How to play?", 50);
+		std::string subtitleString = (this->gameState.getHelpScreen(HELP::SINGLEPLAYER)) ? "Singleplayer" : (this->gameState.getHelpScreen(HELP::DUAL)) ? "Dual" : "Battle";
 
-		sf::RectangleShape topLine;
-		topLine.setFillColor(sf::Color::White);
-		topLine.setPosition(10, title.getPosition().y + title.getGlobalBounds().height + 25);
-		topLine.setSize(sf::Vector2f(Window::WIDTH - 20.0, 1.0));
-		
-		sf::RectangleShape centerLine;
-		centerLine.setFillColor(sf::Color::White);
-		centerLine.setPosition(10, Window::HEIGHT / 2);
-		centerLine.setSize(sf::Vector2f(Window::WIDTH - 20.0, 1.0));
+		sf::Text subtitle = createCenteredTextX(title.getPosition().y + title.getGlobalBounds().height + 10, subtitleString, 25);
+
+		Gui::Arrow* arrowRight = new Gui::Arrow(title.getPosition().x + title.getGlobalBounds().width + 70, title.getPosition().y + 25, 50, 40, false, 1);
+		Gui::Arrow* arrowLeft = new Gui::Arrow(title.getPosition().x - 75, title.getPosition().y + 25, 50, 40, true, 2);
 		
 		texts.insert(texts.begin(), title);
-		rects.insert(rects.begin(), topLine);
-		rects.insert(rects.begin(), centerLine);
+		texts.insert(texts.begin(), subtitle);
+
+		arrows.insert(arrows.begin(), arrowRight);
+		arrows.insert(arrows.begin(), arrowLeft);
 	}
 }
 
@@ -340,6 +338,9 @@ void MenuRenderer::setupButtons(STATE gameState) {
 	
 	if(gameState == STATE::STATE_MENU_GAMEOVER)
 		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Menu", 4));
+
+	if(gameState == STATE::STATE_MENU_HELP)
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
 }
 
 void MenuRenderer::setupDebugMenu(bool enabled) {

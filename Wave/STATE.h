@@ -38,6 +38,12 @@ enum class STATE {
 	STATE_GAME_PAUSED
 };
 
+enum class HELP {
+	SINGLEPLAYER,
+	DUAL,
+	BATTLE
+};
+
 class GameState {
 	
 private:
@@ -45,10 +51,23 @@ private:
 	STATE lastState = gameState;
 
 	MODE gameMode = MODE::MODE_INFINITE;
+	HELP helpScreen = HELP::SINGLEPLAYER;
 
 public:
 	STATE getGameState() {
 		return gameState;
+	}
+
+	HELP getHelpScreen() {
+		return helpScreen;
+	}
+
+	bool getHelpScreen(HELP helpScreen) {
+		return this->helpScreen == helpScreen;
+	}
+
+	void setHelpScreen(HELP helpScreen) {
+		this->helpScreen = helpScreen;
 	}
 
 	void revertGameState() {
