@@ -52,8 +52,7 @@ void MenuRenderer::clearLists() {
 	for(int32_t i = 0; i < buttons.size(); i++) {
 		if(!buttons.at(i)->getId(9) && !buttons.at(i)->getId(10) && !buttons.at(i)->getId(99)) {
 			delete buttons.at(i);
-			buttons.erase(buttons.begin() + i);
-			i--;
+			buttons.erase(buttons.begin() + i--);
 		}
 	}
 	

@@ -191,11 +191,12 @@ void InputHandler::handleArrowPresses(sf::Event* e) {
 	// Don't allow arrows to be interacted with when the exit gui is open
 	if (menuRenderer->isExitUnconfirmed())
 		return;
-
-	for (Gui::Arrow* arrow : menuRenderer->getArrows()) {
-		if (mouseOver(e->mouseButton, arrow)) {
-			menuRenderer->setGameMode((menuRenderer->getGameMode() == "Infinite") ? "Dual" : "Infinite");
-			menuRenderer->resetDrawables();
+	if (type(e, sf::Event::MouseButtonReleased)) {
+		for (Gui::Arrow* arrow : menuRenderer->getArrows()) {
+			if (mouseOver(e->mouseButton, arrow)) {
+				menuRenderer->setGameMode((menuRenderer->getGameMode() == "Infinite") ? "Dual" : "Infinite");
+				menuRenderer->resetDrawables();
+			}
 		}
 	}
 }
@@ -268,9 +269,7 @@ void InputHandler::update(sf::Event* e) {
 				slider->setBlockX(e->mouseMove.x - slider->getMXR());
 				if(slider->getId(6)) {
 					double d = ((double) slider->getBlockX() - (double) slider->getX()) / (double) slider->getLength() * 100.0;
-					int32_t e = wave.nearest10(d);
-					wave.setVolume(e);
-					std::cout << "Set volume: " << e << ".\n";
+					wave.setVolume(wave.nearest10(d));
 				}
 			}
 	}
@@ -316,47 +315,50 @@ void InputHandler::update(sf::Event* e) {
 }
 
 void InputHandler::tick() {
-	for(Entity* e : entityHandler->entities) {
-		if(PlayerEntity* p = dynamic_cast<PlayerEntity*>(e)) {
-			if(!p->isControllable())
+	for (Entity* e : entityHandler->entities) {
+		if (PlayerEntity* p = dynamic_cast<PlayerEntity*>(e)) {
+			if (!p->isControllable())
 				return;
 
-			if(p->isDead()) {
+			if (p->isDead()) {
 				p->setVelX(0);
 				p->setVelY(0);
 				return;
 			}
 
-			if(p->isPlayerOne()) {
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-					p->setVelY(-5);
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-					p->setVelY(5);
-				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-					p->setVelY(0);
+			sf::Vector2f movement(0.f, 0.f);
 
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-					p->setVelX(-5);
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-					p->setVelX(5);
-				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-					p->setVelX(0);
+			if (p->isPlayerOne()) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+					movement.y -= 1.f;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+					movement.y += 1.f;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+					movement.x -= 1.f;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+					movement.x += 1.f;
+			} else {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+					movement.y -= 1.f;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+					movement.y += 1.f;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+					movement.x -= 1.f;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+					movement.x += 1.f;
 			}
-			if(!p->isPlayerOne()) {
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-					p->setVelY(-5);
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-					p->setVelY(5);
-				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-					p->setVelY(0);
 
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-					p->setVelX(-5);
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-					p->setVelX(5);
-				if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-					p->setVelX(0);
+			// Normalize the movement vector if necessary
+			float length = std::sqrt(movement.x * movement.x + movement.y * movement.y);
+			if (length > 1.f) {
+				movement /= length;
 			}
+
+			// Limit the movement speed to 5 pixels per tick
+			movement *= 5.f;
+
+			p->setVelX(movement.x);
+			p->setVelY(movement.y);
 		}
 	}
 }

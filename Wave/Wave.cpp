@@ -88,7 +88,7 @@ void Wave::renderwin() {
 		entityHandler.addMenuParticlesWithPreviousColor();
 	}
 	
-	auto ico = sf::Image();
+	sf::Image ico = sf::Image();
 	ico.loadFromFile("textures/wave.png");
 
 	window.setIcon(ico.getSize().x, ico.getSize().y, ico.getPixelsPtr());
@@ -123,7 +123,6 @@ void Wave::loop() {
 					menuRenderer.exitConfirmation();
 				}
 			}
-
 			inputHandler.update(&e);
 		}
 
