@@ -33,6 +33,11 @@ private:
 	bool mo(sf::Event::MouseButtonEvent mb, int32_t x, int32_t y, int32_t width, int32_t height);
 	bool mo(sf::Event::MouseMoveEvent mb, int32_t x, int32_t y, int32_t width, int32_t height);
 
+	void handleButtonPresses(sf::Event* e);
+	void handleSliderPresses(sf::Event* e);
+	void handleArrowPresses(sf::Event* e);
+	void handleCheckboxPresses(sf::Event* e);
+
 	Wave& wave;
 
 	GameState& gameState;

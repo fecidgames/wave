@@ -190,8 +190,8 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 		sf::Text subtitle = createCenteredTextX(title.getPosition().y + title.getGlobalBounds().height + 10, subtitleString, 25);
 
-		Gui::Arrow* arrowRight = new Gui::Arrow(title.getPosition().x + title.getGlobalBounds().width + 70, title.getPosition().y + 25, 50, 40, false, 1);
-		Gui::Arrow* arrowLeft = new Gui::Arrow(title.getPosition().x - 75, title.getPosition().y + 25, 50, 40, true, 2);
+		Gui::Arrow* arrowRight = new Gui::Arrow(title.getPosition().x + title.getGlobalBounds().width + 70, title.getPosition().y + 25, 50, 40, false, 2);
+		Gui::Arrow* arrowLeft = new Gui::Arrow(title.getPosition().x - 75, title.getPosition().y + 25, 50, 40, true, 3);
 		
 		texts.insert(texts.begin(), title);
 		texts.insert(texts.begin(), subtitle);
@@ -305,50 +305,50 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	//LAST BUTTON ID: 11
+	Gui::Button* BACK_BUTTON = new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", Gui::Button::ID_GLOBAL_BACK);
 
 	if(wave.isDebugMenuEnabled()) {
 		bool exists = false;
 		for(Gui::Button* b : buttons) {
-			if(b->getId(40)) {
+			if(b->getId(Gui::Button::ID_DEBUG_KILLALL)) {
 				exists = true;
 				break;
 			}
 		}
 
 		if(!exists)
-			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 60, (380 / 2), 64, "Kill all players", 40));
+			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 60, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL));
 	}
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", 0));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", 1));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", 2));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", 3));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", 8));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", Gui::Button::ID_MAIN_GAMEMODES));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", Gui::Button::ID_MAIN_OPTIONS));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", Gui::Button::ID_MAIN_HELP));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", Gui::Button::ID_MAIN_QUIT));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", Gui::Button::ID_MAIN_SHOP));
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", 5));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", Gui::Button::ID_SELECT_PLAY));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS)
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
 	
 	if(gameState == STATE::STATE_MENU_GAMEOVER)
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Menu", 4));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
 
 	if(gameState == STATE::STATE_MENU_HELP)
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
 }
 
 void MenuRenderer::setupDebugMenu(bool enabled) {
 	if(enabled) {
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", 40));
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(40)) {
+			if(buttons.at(i)->getId(Gui::Button::ID_DEBUG_KILLALL)) {
 				buttons.erase(buttons.begin() + i);
 				break;
 			}
@@ -398,14 +398,14 @@ void MenuRenderer::pauseGame() {
 	if(gamePaused) {
 		hud.pauseTime();
 
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 99));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", Gui::Button::ID_PAUSE_CONTINUE));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", Gui::Button::ID_PAUSE_MAINMENU));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", Gui::Button::ID_PAUSE_OPTIONS));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(99)) {
+			if(buttons.at(i)->getId({ Gui::Button::ID_PAUSE_CONTINUE, Gui::Button::ID_PAUSE_MAINMENU, Gui::Button::ID_PAUSE_OPTIONS })) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
