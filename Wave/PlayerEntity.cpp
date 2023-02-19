@@ -11,6 +11,10 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 		color = sf::Color::White;
 	}
 
+	std::cout << "Summoned P:" << uid << " at " << x << ", " << y << ".\n";
+
+	r.setPosition(x, y);
+
 	health = 0;
 }
 
@@ -24,6 +28,10 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 	} else {
 		color = sf::Color::White;
 	}
+
+	r.setPosition(x, y);
+
+	std::cout << "Summoned P:" << uid << " at " << x << ", " << y << ".\n";
 }
 
 void PlayerEntity::render(sf::RenderWindow& w) {

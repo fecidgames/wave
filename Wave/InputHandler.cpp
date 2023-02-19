@@ -156,8 +156,14 @@ void InputHandler::update(sf::Event* e) {
 					return;
 				}
 				if(button->getId(40)) {
-					if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isGamePaused())
-						menuRenderer->gameEnd();
+					if(gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isGamePaused()) {
+						for(int i = 0; i < entityHandler->entities.size(); i++) {
+							if(entityHandler->entities.at(i)->getId() == ID::Player) {
+								entityHandler->die((PlayerEntity*) entityHandler->entities.at(i));
+								i--;
+							}
+						}
+					}
 
 					return;
 				}
