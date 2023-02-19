@@ -40,6 +40,8 @@ public:
 	std::vector<Entity*> entities;
 	std::map<Entity*, Entity*> trails;
 
+	int32_t scoreCount = 0;
+
 	Wave& getWaveAccess() {
 		return wave;	
 	}

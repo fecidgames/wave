@@ -22,6 +22,7 @@ void EntityHandler::setup() {
 		addMenuParticles();
 }
 
+int scoreTimer = 0;
 void EntityHandler::tick() {
 	for(Entity* e : entities)
 		if(!wave.getMenuRenderer().isGamePaused() || e->getId(ID::MenuParticle))
@@ -34,6 +35,12 @@ void EntityHandler::tick() {
 	if(!wave.getMenuRenderer().isGamePaused()) {
 		if(wave.getGameState().getGameState(STATE::STATE_GAME_INGAME)) {
 			spawnTimer++;
+			scoreTimer++;
+
+			if (scoreTimer >= 15) {
+				scoreTimer = 0;
+				scoreCount++;
+			}
 
 			tickSpawner(spawnTimer);
 			return;
@@ -130,21 +137,45 @@ void EntityHandler::die(PlayerEntity* player) {
 	bool shouldEnd = false;
 	bool p1Died = false;
 
-	for(int i = 0; i < entities.size(); i++) {
-		if(entities.at(i)->getId() == ID::Player) {
-			PlayerEntity* p = (PlayerEntity*) entities.at(i);
-			if(p == player) {
-				dpCount++;
-				p->setAlive(false);
-				p1Died = p->isPlayerOne();
+	if (wave.getGameState().getGameMode(MODE::MODE_DUAL)) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*)entities.at(i);
+				if (p == player) {
+					dpCount++;
+					p->setAlive(false);
+					p1Died = p->isPlayerOne();
+				}
+				delete p;
+			}
+
+			if (entities.at(i) != nullptr) {
+				if (entities.at(i)->getId() == ID::SmartEnemy) {
+					SmartEnemy* s = (SmartEnemy*)entities.at(i);
+					if (s->getTarget() == player) {
+						entities.erase(entities.begin() + i);
+						i--;
+						delete s;
+					}
+				}
 			}
 		}
-		if(entities.at(i)->getId() == ID::SmartEnemy) {
-			SmartEnemy* s = (SmartEnemy*) entities.at(i);
-			if(s->getTarget() == player) {
-				entities.erase(entities.begin() + i);
-				i--;
+	}
+	if (wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*)entities.at(i);
+				if (p == player) {
+					dpCount++;
+					p->setAlive(false);
+					p1Died = true;
+				}
+				delete p;
 			}
+		}
+		for (int i = 0; i < entities.size(); i++) {
+			entities.erase(entities.begin() + i);
+			--i;
 		}
 	}
 
@@ -155,12 +186,18 @@ void EntityHandler::die(PlayerEntity* player) {
 
 	if(shouldEnd) { //On GameOver
 		dpCount = 0; //Reset dead players count
+		scoreTimer = 0;
 		wave.getHud().stopTime();
 		wave.getMenuRenderer().sendTime(wave.getHud().getTimer().getElapsedMilliseconds(), !wave.getGameState().getGameMode(MODE::MODE_INFINITE));
+		wave.getMenuRenderer().sendScore(scoreCount);
 		wave.getMenuRenderer().gameEnd();
+
+		scoreCount = 0;
 	}
 }
 
+int tempTimeLoop = 0;
+int newWaitTime = 300;
 void EntityHandler::tickSpawner(int32_t time) {
 	uint32_t uid = 28 + time;
 

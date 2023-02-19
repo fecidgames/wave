@@ -21,6 +21,7 @@ public:
 	GameState& getGameState();
 	HUD& getHud();
 	MenuRenderer& getMenuRenderer();
+	EntityHandler& getEntityHandler();
 
 	void setVolume(int32_t volume);
 	int32_t getVolume();

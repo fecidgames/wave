@@ -52,8 +52,7 @@ void MenuRenderer::clearLists() {
 	for(int32_t i = 0; i < buttons.size(); i++) {
 		if(!buttons.at(i)->getId(9) && !buttons.at(i)->getId(10) && !buttons.at(i)->getId(99)) {
 			delete buttons.at(i);
-			buttons.erase(buttons.begin() + i);
-			i--;
+			buttons.erase(buttons.begin() + i--);
 		}
 	}
 	
@@ -147,8 +146,8 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187, 2, wave.isVSyncEnabled(), 8));
 		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 57, 2, wave.isFullscreenEnabled(), 9));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isMenuParticlesEnabled(), 10));	//Menuparticles checkbox
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isDebugMenuEnabled(), 11));		//Debugmenu checkbox
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isMenuParticlesEnabled(), 10));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isDebugMenuEnabled(), 11));
 
 		double blockSizeMultiplier = (wave.getScale() > 1.7) ? 1.7 : wave.getScale();
 
@@ -170,7 +169,11 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		playTimeInf.setPosition(Window::WIDTH / 2 - playTimeDua.getGlobalBounds().width / 2, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
 		playTimeDua.setPosition(Window::WIDTH - playTimeInf.getGlobalBounds().width - 8, title.getPosition().y + title.getGlobalBounds().height + 8 + 16);
 
+		sf::Text score("Score: " + gameScore, menuFont, 30);
+		score.setPosition(Window::WIDTH / 2 - score.getGlobalBounds().width / 2, playTimeInf.getPosition().y + playTimeInf.getGlobalBounds().height + 16);
+
 		texts.insert(texts.begin(), title);
+		texts.insert(texts.begin(), score);
 
 		if(!wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
 			texts.insert(texts.begin(), playTimeDua);
@@ -178,6 +181,22 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		} else {
 			texts.insert(texts.begin(), playTimeInf);
 		}
+	}
+
+	if (gameState == STATE::STATE_MENU_HELP) {
+		sf::Text title = createCenteredTextX(40, "How to play?", 50);
+		std::string subtitleString = (this->gameState.getHelpScreen(HELP::SINGLEPLAYER)) ? "Singleplayer" : (this->gameState.getHelpScreen(HELP::DUAL)) ? "Dual" : "Battle";
+
+		sf::Text subtitle = createCenteredTextX(title.getPosition().y + title.getGlobalBounds().height + 10, subtitleString, 25);
+
+		Gui::Arrow* arrowRight = new Gui::Arrow(title.getPosition().x + title.getGlobalBounds().width + 70, title.getPosition().y + 25, 50, 40, false, 2);
+		Gui::Arrow* arrowLeft = new Gui::Arrow(title.getPosition().x - 75, title.getPosition().y + 25, 50, 40, true, 3);
+		
+		texts.insert(texts.begin(), title);
+		texts.insert(texts.begin(), subtitle);
+
+		arrows.insert(arrows.begin(), arrowRight);
+		arrows.insert(arrows.begin(), arrowLeft);
 	}
 }
 
@@ -285,47 +304,50 @@ void MenuRenderer::setupEntities(STATE gameState) {
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	//LAST BUTTON ID: 11
+	Gui::Button* BACK_BUTTON = new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", Gui::Button::ID_GLOBAL_BACK);
 
 	if(wave.isDebugMenuEnabled()) {
 		bool exists = false;
 		for(Gui::Button* b : buttons) {
-			if(b->getId(40)) {
+			if(b->getId(Gui::Button::ID_DEBUG_KILLALL)) {
 				exists = true;
 				break;
 			}
 		}
 
 		if(!exists)
-			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", 40));
+			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 60, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL));
 	}
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", 0));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", 1));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", 2));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", 3));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", 8));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", Gui::Button::ID_MAIN_GAMEMODES));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", Gui::Button::ID_MAIN_OPTIONS));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", Gui::Button::ID_MAIN_HELP));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", Gui::Button::ID_MAIN_QUIT));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", Gui::Button::ID_MAIN_SHOP));
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", 5));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", Gui::Button::ID_SELECT_PLAY));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS)
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", 4));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
 	
 	if(gameState == STATE::STATE_MENU_GAMEOVER)
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Menu", 4));
+		buttons.insert(buttons.begin(), BACK_BUTTON);
+
+	if(gameState == STATE::STATE_MENU_HELP)
+		buttons.insert(buttons.begin(), BACK_BUTTON);
 }
 
 void MenuRenderer::setupDebugMenu(bool enabled) {
 	if(enabled) {
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", 40));
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(40)) {
+			if(buttons.at(i)->getId(Gui::Button::ID_DEBUG_KILLALL)) {
 				buttons.erase(buttons.begin() + i);
 				break;
 			}
@@ -375,14 +397,14 @@ void MenuRenderer::pauseGame() {
 	if(gamePaused) {
 		hud.pauseTime();
 
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 99));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", Gui::Button::ID_PAUSE_CONTINUE));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", Gui::Button::ID_PAUSE_MAINMENU));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", Gui::Button::ID_PAUSE_OPTIONS));
 	} else {
 		hud.resumeTime();
 
 		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(99)) {
+			if(buttons.at(i)->getId({ Gui::Button::ID_PAUSE_CONTINUE, Gui::Button::ID_PAUSE_MAINMENU, Gui::Button::ID_PAUSE_OPTIONS })) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -476,14 +498,15 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 	//==========================================================//
 
 	if(gamePaused && layer == 2) {
-		Gui::Button* ct = new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9);
+		double btnY = wave.getWindow()->getSize().y / 2;
+		double btnHeight = 64;
 
 		sf::RectangleShape pauseBackground;
 		pauseBackground.setFillColor(sf::Color::Black);
 		pauseBackground.setOutlineColor(sf::Color::White);
 		pauseBackground.setOutlineThickness(2); 
 		pauseBackground.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
-		pauseBackground.setSize(sf::Vector2f(720, ct->getY() + ct->getHeight() + 8 - pauseBackground.getPosition().y));
+		pauseBackground.setSize(sf::Vector2f(720, btnY + btnHeight + 8 - pauseBackground.getPosition().y));
 
 		sf::Text title("Game paused", menuFont, 40);
 		title.setPosition(pauseBackground.getPosition().x + pauseBackground.getGlobalBounds().width / 2 - title.getGlobalBounds().width / 2, pauseBackground.getPosition().y + 16);
@@ -504,21 +527,20 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 				b->render(window);
 
 		if(exitConfirmationPopup) {
-			Gui::Button* ye = new Gui::Button((wave.getWindow()->getSize().x) / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 91);
+			double btnY = wave.getWindow()->getSize().y / 2;
+			double btnHeight = 64;
 
 			sf::RectangleShape r1;
 			r1.setFillColor(sf::Color::Black);
 			r1.setOutlineColor(sf::Color::White);
 			r1.setOutlineThickness(2);
 			r1.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
-			r1.setSize(sf::Vector2f(720, ye->getY() + ye->getHeight() + 8 - r1.getPosition().y));
-
-			delete ye;
+			r1.setSize(sf::Vector2f(720, btnY + btnHeight + 8 - r1.getPosition().y));
 
 			sf::Text title = createText("Exit game?", 40);
 			title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
 			
-			sf::Text msg = createCenteredTextX(wave.getWindow()->getSize().y / 4 + 2 * title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
+			sf::Text msg = createCenteredTextX((int) wave.getWindow()->getSize().y / 4 + 2 * (int) title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
 
 			window.draw(r1);
 			window.draw(title);
@@ -532,22 +554,25 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 
 	if(layer == 4 && wave.isDebugMenuEnabled()) {
 		sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
-		sf::Text fps = createText(10, enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
+		sf::Text fps = createText(10, (int) enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
+		sf::Text scoreNotify = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 5, "Score: " + std::to_string(e.scoreCount), 16);
 
 		window.draw(enabledNotify);
 		window.draw(fps);
+		window.draw(scoreNotify);
 
 		bool flag = e.entities.size() > 0;
 		for(int i = 0; i < e.entities.size(); i++) {
 			std::string _str = e.entities.at(i)->getId(ID::BasicEnemy) ? "ID:BasicEnemy" : e.entities.at(i)->getId(ID::FastEnemy) ? "ID::FastEnemy" : e.entities.at(i)->getId(ID::MenuParticle) ? "ID:MenuParticle" : e.entities.at(i)->getId(ID::Player) ? "ID:Player" : "ID::SmartEnemy";
-			sf::Text _t = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 120 + (i * 18), "E:-NaN", 14);
+			sf::Text _t = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + (i * 18) + 120, "E:-NaN", 14);
 			_t.setString("E:" + std::to_string(e.entities.at(i)->getUid()) + "#" + _str);
+
 			window.draw(_t);
 			flag = true;
 		}
 
-		sf::Text tEntities = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 100, "Entities:", 16);
-		sf::Text nEntities = createText(10, fps.getPosition().y + fps.getGlobalBounds().height + 120, "No entities found", 14);
+		sf::Text tEntities = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 100, "Entities:", 16);
+		sf::Text nEntities = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 120, "No entities found", 14);
 
 		window.draw(tEntities);
 
@@ -657,7 +682,7 @@ sf::Text MenuRenderer::createCenteredTextY(double x, std::string text, int size,
 	if(half == 1)
 		sfText.setPosition(x, wave.getWindow()->getSize().y / 4 + wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
 	if(!(half == 0) && !(half == 1)) {
-		std::cout << "Error: Centered text half was neither 0 nor 1, centering it instead.\n";
+		std::cout << "Error: Centered text half was neither 0 nor 1, centering it instead." << std::endl;
 		sfText.setPosition(x, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
 	}
 
@@ -686,7 +711,7 @@ sf::Text MenuRenderer::createCenteredTextXY(std::string text, int size, int side
 	else if(side == 3)
 		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 - sfText.getGlobalBounds().height / 2);
 	else {
-		std::cout << "Error: Text side modifier invalid, centering it instead.\n";
+		std::cout << "Error: Text side modifier invalid, centering it instead." << std::endl;
 		sfText.setPosition(wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2);
 	}
 

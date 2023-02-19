@@ -82,6 +82,13 @@ public:
 		}
 	}
 
+	void sendScore(int _score) {
+		this->score = _score;
+		gameScore = std::to_string(score) + " points.";
+
+		//add score to total points for shop stuff
+	}
+
 	bool isPauseGuiHidden() {
 		return !pauseGuiShown;
 	}
@@ -123,6 +130,7 @@ private:
 	std::string dualBest = "00:00"; //Only dual
 	std::string winningPlayer = "Player 1";
 	std::string pTime = "00:00";
+	std::string gameScore = "0 points";
 
 	HUD& hud;
 
@@ -132,6 +140,8 @@ private:
 	Wave& wave;
 
 	uint32_t time = 0;
+	uint32_t score = 0;
+	uint32_t total_score = 0;
 
 	bool exitConfirmationPopup = false;
 	bool gamePaused = false;

@@ -52,6 +52,14 @@ bool Gui::Button::getId(int32_t id) {
 	return id == this->id;
 }
 
+bool Gui::Button::getId(std::initializer_list<int> ids) {
+	for (auto id : ids)
+		if (id == this->id)
+			return true;
+
+	return false;
+}
+
 float_t Gui::Button::getX() {
 	return x;
 }

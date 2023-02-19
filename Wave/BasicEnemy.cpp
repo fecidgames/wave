@@ -28,15 +28,22 @@ void BasicEnemy::setRenderLayer(int32_t layer) {
 }
 
 void BasicEnemy::tick() {
-	r.move(sf::Vector2f((velX * scale), (velY * scale)));
+	sf::Vector2f movementVector(velX, velY);
+	float magnitude = std::sqrt(movementVector.x * movementVector.x + movementVector.y * movementVector.y);
+	if (magnitude > 5) {
+		movementVector.x *= 5 / magnitude;
+		movementVector.y *= 5 / magnitude;
+	}
+
+	r.move(sf::Vector2f(movementVector.x * scale, movementVector.y * scale));
 	x = r.getPosition().x;
 	y = r.getPosition().y;
 
-	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((velX > 0) ? (x + 1) : (x - 1), (velY > 0) ? (y + 1) : (y - 1), id, uid, 10, sf::Color::Red, e, scale, renderLayer), this));
+	e.trails.insert(std::pair<TrailEntity*, Entity*>(new TrailEntity((movementVector.x > 0) ? (x + 1) : (x - 1), (movementVector.y > 0) ? (y + 1) : (y - 1), id, uid, 10, sf::Color::Red, e, scale, renderLayer), this));
 
-	if((x >= horizontalBounds.y - 32 * scale) || (x <= horizontalBounds.x))
+	if ((x >= horizontalBounds.y - 32 * scale) || (x <= horizontalBounds.x))
 		setVelX(-getVelX());
-	if((y >= verticalBounds.y - 32 * scale) || (y <= verticalBounds.x))
+	if ((y >= verticalBounds.y - 32 * scale) || (y <= verticalBounds.x))
 		setVelY(-getVelY());
 }
 

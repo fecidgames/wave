@@ -3,7 +3,7 @@
 SmartEnemy::SmartEnemy(int32_t x, int32_t y, ID id, uint32_t uid, sf::Vector2f horizontalBounds, sf::Vector2f verticalBounds, EntityHandler& e, double scale, int32_t renderLayer, int32_t target) : renderLayer(renderLayer), scale(scale), x(x), y(y), id(id), uid(uid), horizontalBounds(horizontalBounds), verticalBounds(verticalBounds), e(e) {
 	r.setSize(sf::Vector2f(32 * scale, 32 * scale));
 	r.setPosition(sf::Vector2f(x, y));
-	r.setFillColor(sf::Color::Red);
+	r.setFillColor(sf::Color::Green);
 
 	int32_t rand = std::rand()%(6);
 	if(isOdd(rand)) {
