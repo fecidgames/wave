@@ -58,6 +58,24 @@ public:
 		return gameState;
 	}
 
+	HELP nextHelpScreen() {
+		if (helpScreen == HELP::SINGLEPLAYER)
+			return HELP::DUAL;
+		else if (helpScreen == HELP::DUAL)
+			return HELP::BATTLE;
+		else
+			return HELP::SINGLEPLAYER;
+	}
+
+	HELP previousHelpScreen() {
+		if (helpScreen == HELP::SINGLEPLAYER)
+			return HELP::BATTLE;
+		else if (helpScreen == HELP::DUAL)
+			return HELP::SINGLEPLAYER;
+		else
+			return HELP::DUAL;
+	}
+
 	HELP getHelpScreen() {
 		return helpScreen;
 	}

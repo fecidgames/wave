@@ -194,8 +194,19 @@ void InputHandler::handleArrowPresses(sf::Event* e) {
 	if (type(e, sf::Event::MouseButtonReleased)) {
 		for (Gui::Arrow* arrow : menuRenderer->getArrows()) {
 			if (mouseOver(e->mouseButton, arrow)) {
-				menuRenderer->setGameMode((menuRenderer->getGameMode() == "Infinite") ? "Dual" : "Infinite");
-				menuRenderer->resetDrawables();
+				if (arrow->getId(1)) {
+					menuRenderer->setGameMode((menuRenderer->getGameMode() == "Infinite") ? "Dual" : "Infinite");
+					menuRenderer->resetDrawables();
+				}
+
+				if (arrow->getId(2)) {
+					gameState.setHelpScreen(gameState.nextHelpScreen());
+					menuRenderer->resetDrawables();
+				}
+				if (arrow->getId(3)) {
+					gameState.setHelpScreen(gameState.previousHelpScreen());
+					menuRenderer->resetDrawables();
+				}
 			}
 		}
 	}

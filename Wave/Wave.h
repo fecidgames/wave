@@ -80,6 +80,7 @@ private:
 	uint32_t framesPerSecond = 0;
 
 	GameState state;
+	HELP help;
 
 	sf::RenderWindow window;
 
