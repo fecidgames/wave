@@ -174,7 +174,7 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 		texts.insert(texts.begin(), points);
 		
 		if (wave.getGameState().getGameMode(MODE::MODE_DUAL))
-			texts.insert(texts.begin(), winner);
+			texts.insert(texts.begin(), winner); 
 	}
 
 	if (gameState == STATE::STATE_MENU_HELP) {
