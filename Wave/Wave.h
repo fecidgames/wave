@@ -26,6 +26,9 @@ public:
 	void setVolume(int32_t volume);
 	int32_t getVolume();
 
+	void setSoundEnabled(bool enabled);
+	bool isSoundEnabled();
+
 	void setVSyncEnabled(bool enabled);
 	bool isVSyncEnabled();
 
@@ -70,6 +73,7 @@ private:
 	bool setting_fullscreen = false;
 	bool setting_menuParticles = true;
 	bool setting_debugMenu = false;
+	bool setting_sound = true;
 
 	MenuRenderer menuRenderer;
 	InputHandler inputHandler;

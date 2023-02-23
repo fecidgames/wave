@@ -52,6 +52,7 @@ void Wave::init() {
 
 	soundHandler.playMusic(0);
 	soundHandler.loopMusic(0);
+	soundHandler.muteMusic(!setting_sound);
 	soundHandler.updateVolume(setting_volume);
 
 	entityHandler.setup();
@@ -184,6 +185,8 @@ void Wave::loadSettings() { //load saved total score and send to menuRenderer
 			setting_menuParticles = (value == "y");
 		if(setting == "4")
 			setting_debugMenu = (value == "y");
+		if(setting == "5")
+			setting_sound = (value == "y");
 	}
 }
 
@@ -206,8 +209,8 @@ void Wave::saveSettings() { //save MenuRenderer's total_score uint32_t
 	content.append("4:");
 	content.append((setting_debugMenu) ? "y" : "n");
 	content.append("#");
-	content.append("4:");
-	content.append("0"); // Points
+	content.append("5:");
+	content.append((setting_sound) ? "y" : "n");
 
 	settingsFile << content;
 }
@@ -255,4 +258,13 @@ void Wave::setDebugMenuEnabled(bool enabled) {
 
 bool Wave::isDebugMenuEnabled() {
 	return setting_debugMenu;
+}
+
+void Wave::setSoundEnabled(bool enabled) {
+	setting_sound = enabled;
+	soundHandler.muteMusic(!enabled);
+}
+
+bool Wave::isSoundEnabled() {
+	return setting_sound;
 }

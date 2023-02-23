@@ -110,44 +110,54 @@ void MenuRenderer::setupDrawables(STATE gameState) {
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS) {
-		sf::Text title("Options", menuFont, 50);
-		title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, 40);
+		double xOffsetCategory = 50.0 * wave.getScale();
+		double xOffsetText = 50.0 * wave.getScale() + 40;
 
-		double xOffset = 50.0 * wave.getScale();
+		double scale = wave.getScale() * 0.6 + 0.2;
 
-		sf::Text volume("Volume", menuFont, 30);
-		volume.setPosition(xOffset, 113);
+		double yOffset = 113 * scale;
+		double rule = 57 * scale;
 
-		sf::Text vSync("vSync", menuFont, 30);
-		vSync.setPosition(xOffset, 170);
+		sf::Text title = createCenteredTextX(40, "Options", 50 * scale);
 
-		sf::Text fullscreen("Fullscreen", menuFont, 30);
-		fullscreen.setPosition(xOffset, 170 + 57);
+		sf::Text category_sound = createText(xOffsetCategory, yOffset, "Sound options:", 35 * scale);
+		sf::Text sound = createText(xOffsetText, yOffset + rule, "Sound enabled:", 30 * scale);
+		sf::Text volume = createText(xOffsetText, yOffset + rule * 2, "Volume:", 30 * scale);
 
-		sf::Text mp("Menu Particles", menuFont, 30);
-		mp.setPosition(xOffset, 170 + 2 * 57);
+		sf::Text category_video = createText(xOffsetCategory, yOffset + rule * 4, "Video settings:", 35 * scale);
+		sf::Text vsync = createText(xOffsetText, yOffset + rule * 5, "vSync:", 30 * scale);
+		sf::Text fullscreen = createText(xOffsetText, yOffset + rule * 6, "Fullscreen:", 30 * scale);
 
-		sf::Text dm("Debug menu", menuFont, 30);
-		dm.setPosition(xOffset, 170 + 3 * 57);
+		sf::Text category_misc = createText(xOffsetCategory, yOffset + rule * 8, "Miscellaneous:", 35 * scale);
+		sf::Text menuparticles = createText(xOffsetText, yOffset + rule * 9, "Menu particles:", 30 * scale);
+		sf::Text debugmenu = createText(xOffsetText, yOffset + rule * 10, "Debug menu:", 30 * scale);
 
 		texts.insert(texts.begin(), title);
+
+		texts.insert(texts.begin(), category_sound);
+		texts.insert(texts.begin(), sound);
 		texts.insert(texts.begin(), volume);
-		texts.insert(texts.begin(), vSync);
+
+		texts.insert(texts.begin(), category_video);
+		texts.insert(texts.begin(), vsync);
 		texts.insert(texts.begin(), fullscreen);
-		texts.insert(texts.begin(), mp);
-		texts.insert(texts.begin(), dm);
+
+		texts.insert(texts.begin(), category_misc);
+		texts.insert(texts.begin(), menuparticles);
+		texts.insert(texts.begin(), debugmenu);
 
 
-		double cbOffset = mp.getPosition().x + (double) mp.getGlobalBounds().width + (20.0 * wave.getScale());
+		double cbOffset = menuparticles.getPosition().x + (double) menuparticles.getGlobalBounds().width + 20.0 * wave.getScale();
 
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187, 2, wave.isVSyncEnabled(), 8));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 57, 2, wave.isFullscreenEnabled(), 9));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 2 * 57, 2, wave.isMenuParticlesEnabled(), 10));
-		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, 187 + 3 * 57, 2, wave.isDebugMenuEnabled(), 11));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, sound.getPosition().y + sound.getGlobalBounds().height / 2, scale * 2, wave.isSoundEnabled(), 12));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, vsync.getPosition().y + vsync.getGlobalBounds().height / 2, scale * 2, wave.isVSyncEnabled(), 8));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, fullscreen.getPosition().y + fullscreen.getGlobalBounds().height / 2, scale * 2, wave.isFullscreenEnabled(), 9));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, menuparticles.getPosition().y + menuparticles.getGlobalBounds().height / 2, scale * 2, wave.isMenuParticlesEnabled(), 10));
+		checkboxes.insert(checkboxes.begin(), new Gui::Checkbox(cbOffset, debugmenu.getPosition().y + debugmenu.getGlobalBounds().height / 2, scale * 2, wave.isDebugMenuEnabled(), 11));
 
 		double blockSizeMultiplier = (wave.getScale() > 1.7) ? 1.7 : wave.getScale();
 
-		volumeSlider = new Gui::Slider(cbOffset, 130, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 6);
+		volumeSlider = new Gui::Slider(cbOffset, volume.getPosition().y + volume.getGlobalBounds().height / 2, wave.getWindow()->getSize().x - cbOffset - (16.0 * wave.getScale()), 16 * blockSizeMultiplier, 32 * blockSizeMultiplier, 6);
 		volumeSlider->setBlockX(getVolumeX() + volumeSlider->getX());
 
 		sliders.insert(sliders.begin(), volumeSlider);

@@ -2,7 +2,7 @@
 
 SoundHandler::SoundHandler() {
 	if(!bgMusic.openFromFile("sounds/Cheerfully Brainless.ogg"))
-		std::cout << "[mainFont.ttf] could not be loaded\n";
+		std::cout << "[Cheerfully Brainless.ogg] could not be loaded\n";
 }
 
 void SoundHandler::playMusic(int32_t id) {
@@ -19,6 +19,13 @@ void SoundHandler::loopMusic(int32_t id) {
 	}
 }
 
+void SoundHandler::muteMusic(bool mute) {
+	muted = mute;
+	bgMusic.setVolume((mute) ? 0 : volume);
+}
+
 void SoundHandler::updateVolume(int32_t volume) {
-	bgMusic.setVolume(volume);
+	this->volume = volume;
+	if(!muted)
+		bgMusic.setVolume(volume);
 }

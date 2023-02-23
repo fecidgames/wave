@@ -222,18 +222,11 @@ void InputHandler::handleCheckboxPresses(sf::Event* e) {
 				checkbox->click();
 
 				// These settings are handled in Wave.cpp
-				if (checkbox->getId(8)) {
-					if (checkbox->isChecked())
-						wave.setVSyncEnabled(true);
-					if (!checkbox->isChecked())
-						wave.setVSyncEnabled(false);
-				}
-				if (checkbox->getId(9)) {
-					if (checkbox->isChecked())
-						wave.setFullscreenEnabled(true);
-					if (!checkbox->isChecked())
-						wave.setFullscreenEnabled(false);
-				}
+				if (checkbox->getId(8))
+					wave.setVSyncEnabled(checkbox->isChecked());
+				if (checkbox->getId(9))
+					wave.setFullscreenEnabled(checkbox->isChecked());
+
 				if (checkbox->getId(10)) {
 					if (checkbox->isChecked()) {
 						wave.setMenuParticlesEnabled(true);
@@ -244,14 +237,11 @@ void InputHandler::handleCheckboxPresses(sf::Event* e) {
 						entityHandler->removeMenuParticles();
 					}
 				}
-				if (checkbox->getId(11)) {
-					if (checkbox->isChecked()) {
-						wave.setDebugMenuEnabled(true);
-					}
-					if (!checkbox->isChecked()) {
-						wave.setDebugMenuEnabled(false);
-					}
-				}
+
+				if (checkbox->getId(11))
+					wave.setDebugMenuEnabled(checkbox->isChecked());
+				if (checkbox->getId(12))
+					wave.setSoundEnabled(checkbox->isChecked());
 			}
 		}
 	}
