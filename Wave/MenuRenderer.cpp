@@ -227,10 +227,9 @@ void MenuRenderer::setupEntities(STATE gameState) {
 		if(wave.getGameState().getLastState(STATE::STATE_GAME_INGAME))
 			e.removeMenuParticles();
 
-		for(int i = 0; i < e.entities.size(); ++i) {
+		for(int i = 0; i < e.entities.size(); ++i)
 			if(e.entities.at(i)->getId() == ID::MenuParticle)
 				return;
-		}
 
 		if(wave.isMenuParticlesEnabled())
 			e.addMenuParticles();
