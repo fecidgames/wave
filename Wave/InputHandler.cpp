@@ -118,15 +118,7 @@ void InputHandler::handleButtonPresses(sf::Event* e) {
 					if (gameState.getGameState(STATE::STATE_GAME_INGAME) && !menuRenderer->isGamePaused()) {
 						for (int i = 0; i < entityHandler->entities.size(); i++) {
 							if (entityHandler->entities.at(i)->getId() == ID::Player) {
-								if (gameState.getGameMode(MODE::MODE_INFINITE)) {
-									entityHandler->die((PlayerEntity*)entityHandler->entities.at(i));
-									return;
-								} else {
-									if (gameState.getGameMode(MODE::MODE_DUAL)) {
-										PlayerEntity* pe = (PlayerEntity*)entityHandler->entities.at(i);
-										//handle player death for 2 players (currently bugged so fix~)
-									}
-								}
+								entityHandler->die((PlayerEntity*)entityHandler->entities.at(i));
 							}
 						}
 					}

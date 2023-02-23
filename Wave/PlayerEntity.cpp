@@ -34,11 +34,15 @@ PlayerEntity::PlayerEntity(uint32_t x, uint32_t y, ID id, uint32_t uid, sf::Vect
 
 void PlayerEntity::render(sf::RenderWindow& w) {
 	if(alive) {
-		r.setSize(sf::Vector2f(32 * scale, 32 * scale));
-		r.setPosition(x, y);
-		r.setFillColor(color);
+		try {
+			r.setSize(sf::Vector2f(32 * scale, 32 * scale));
+			r.setPosition(x, y);
+			r.setFillColor(color);
 
-		w.draw(r);
+			w.draw(r);
+		} catch(char *e) {
+			printf("Exception Caught: %s\n", e);
+		}
 	}
 }
 
