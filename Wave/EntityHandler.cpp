@@ -135,32 +135,94 @@ void EntityHandler::add(Entity* e) {
 
 void EntityHandler::die(PlayerEntity* player) {
 	bool shouldEnd = false;
-	bool p1Died = false;
+
+	if (wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*)entities.at(i);
+				if (shouldEnd = (p == player)) {
+					p->setAlive(false);
+					break;
+				}
+			}
+		}
+	}
 
 	if (wave.getGameState().getGameMode(MODE::MODE_DUAL)) {
+		std::string winningPlayer = "";
+
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities.at(i)->getId() == ID::Player) {
 				PlayerEntity* p = (PlayerEntity*)entities.at(i);
 				if (p == player) {
+					p->setAlive(false);
+					winningPlayer = (p->isPlayerOne()) ? "Player 1" : "Player 2";
+					break;
+				}
+			}
+		}
+
+		shouldEnd = true;
+		for (Entity* e : entities)
+			if (e->getId() == ID::Player)
+				if(((PlayerEntity*)e)->isAlive())
+					shouldEnd = false;
+
+		if (shouldEnd)
+			wave.getMenuRenderer().setWinningPlayer(winningPlayer);
+	}
+
+	if (shouldEnd) {
+		for (int i = 0; i < entities.size(); i++) {
+			entities.erase(entities.begin() + i);
+			--i;
+		}
+
+		scoreTimer = 0;
+		wave.getHud().stopTime();
+		wave.getMenuRenderer().sendTime(wave.getHud().getTimer().getElapsedMilliseconds(), !wave.getGameState().getGameMode(MODE::MODE_INFINITE));
+		wave.getMenuRenderer().sendScore(scoreCount);
+		wave.getMenuRenderer().gameEnd();
+
+		scoreCount = 0;
+	}
+
+
+	/*bool shouldEnd = false;
+	bool p1Died = false;
+
+	if (wave.getGameState().getGameMode(MODE::MODE_DUAL)) {
+		printf("DUAL DEATH EVENT\n");
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.at(i)->getId() == ID::Player) {
+				PlayerEntity* p = (PlayerEntity*)entities.at(i);
+				printf("Found PlayerEntity\n");
+				if (p == player) {
 					dpCount++;
 					p->setAlive(false);
 					p1Died = p->isPlayerOne();
+					printf("Player killed\n");
 				}
 				delete p;
+				printf("Deleted player instance from memory\n");
 			}
 
-			if (entities.at(i) != nullptr) {
+			/*if (entities.at(i) != nullptr) {
+				printf("Start looking for SmartEnemy\n");
 				if (entities.at(i)->getId() == ID::SmartEnemy) {
 					SmartEnemy* s = (SmartEnemy*)entities.at(i);
+					printf("Located SmartEnemy\n");
 					if (s->getTarget() == player) {
 						entities.erase(entities.begin() + i);
 						i--;
 						delete s;
+						printf("Deleted SmartEnemy\n");
 					}
 				}
 			}
 		}
 	}
+
 	if (wave.getGameState().getGameMode(MODE::MODE_INFINITE)) {
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities.at(i)->getId() == ID::Player) {
@@ -193,7 +255,7 @@ void EntityHandler::die(PlayerEntity* player) {
 		wave.getMenuRenderer().gameEnd();
 
 		scoreCount = 0;
-	}
+	}*/
 }
 
 int tempTimeLoop = 0;
