@@ -161,5 +161,9 @@ private:
 	void clearLists();
 
 	void playerPos(PlayerEntity* p);
+
+	void pauseGameBase();
+
+	void renderForLayer(sf::RenderWindow& window, int32_t layer);
 };
 

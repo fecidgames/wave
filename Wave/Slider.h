@@ -33,9 +33,13 @@ public:
 	int32_t getBlockX();
 	void setBlockX(int32_t blockX);
 
+	int32_t getLayer() { return layer; }
+
 private:
 	int32_t x, y, length, blockWidth, blockHeight, id, blockX = 0;
 	int32_t mxr;
+
+	int32_t layer = 1;
 
 	bool hovering = false;
 	bool dragging = false;

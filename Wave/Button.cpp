@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Gui::Button::Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id) : x(x), y(y), width(width), height(height), text(text), id(id) {
+Gui::Button::Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id, int32_t layer) : layer(layer), x(x), y(y), width(width), height(height), text(text), id(id) {
 
 }
 

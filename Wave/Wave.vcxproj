@@ -27,6 +27,7 @@
     <ClCompile Include="FastEnemy.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="LaserEntity.cpp" />
     <ClCompile Include="MenuParticleEntity.cpp" />
     <ClCompile Include="MenuRenderer.cpp" />
     <ClCompile Include="PlayerEntity.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="FastEnemy.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="LaserEntity.h" />
     <ClInclude Include="MenuParticleEntity.h" />
     <ClInclude Include="MenuRenderer.h" />
     <ClInclude Include="PlayerEntity.h" />

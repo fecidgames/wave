@@ -1,5 +1,6 @@
 #include "MenuRenderer.h"
 #include "Wave.h"
+#include "LaserEntity.h" //Temporary, delete later!!
 
 MenuRenderer::MenuRenderer(Wave& wave, EntityHandler& e, HUD& hud, GameState& state) : e(e), hud(hud), gameState(state), wave(wave) {
 	if(!menuFont.loadFromFile("fonts/mainFont.ttf"))
@@ -301,14 +302,10 @@ void MenuRenderer::setupEntities(STATE gameState) {
 			e.add(new PlayerEntity(wave.getWindow()->getSize().x / 2 - (16 * wave.getScale()) + (20 * wave.getScale()), wave.getWindow()->getSize().y / 2 - (16 * wave.getScale()), ID::Player, 18, sf::Vector2i(0, wave.getWindow()->getSize().x), sf::Vector2i(0, wave.getWindow()->getSize().y), e, false, true, hud.getMaxHealth(), wave.getScale(), 0));	
 		}
 	}
-
-	if(gameState == STATE::STATE_MENU_GAMEOVER) {
-	
-	}
 }
 
 void MenuRenderer::setupButtons(STATE gameState) {
-	Gui::Button* BACK_BUTTON = new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", Gui::Button::ID_GLOBAL_BACK);
+	Gui::Button* BACK_BUTTON = new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Back", Gui::Button::ID_GLOBAL_BACK, 1);
 
 	if(wave.isDebugMenuEnabled()) {
 		bool exists = false;
@@ -320,20 +317,20 @@ void MenuRenderer::setupButtons(STATE gameState) {
 		}
 
 		if(!exists)
-			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 60, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL));
+			buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 60, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL, 3));
 	}
 
 	if(gameState == STATE::STATE_MENU_MAIN) {
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", Gui::Button::ID_MAIN_GAMEMODES));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", Gui::Button::ID_MAIN_OPTIONS));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", Gui::Button::ID_MAIN_HELP));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", Gui::Button::ID_MAIN_QUIT));
-		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", Gui::Button::ID_MAIN_SHOP));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 130, 380, 64, "Gamemodes", Gui::Button::ID_MAIN_GAMEMODES, 1));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 210, 380, 64, "Options", Gui::Button::ID_MAIN_OPTIONS, 1));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190 + 396), 130, 64, 64, "?", Gui::Button::ID_MAIN_HELP, 1));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x - (380 / 2) - (16 * wave.getScale())), wave.getWindow()->getSize().y - 64 - (16 * wave.getScale()), (380 / 2), 64, "Quit", Gui::Button::ID_MAIN_QUIT, 1));
+		buttons.insert(buttons.begin(), new Gui::Button((wave.getWindow()->getSize().x / 2 - 190), 290, 380, 64, "Shop", Gui::Button::ID_MAIN_SHOP, 1));
 	}
 
 	if(gameState == STATE::STATE_MENU_SELECT) {
 		buttons.insert(buttons.begin(), BACK_BUTTON);
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", Gui::Button::ID_SELECT_PLAY));
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), wave.getWindow()->getSize().y - 280, (wave.getWindow()->getSize().x / 2) - (32 * wave.getScale()), 64, "Play gamemode", Gui::Button::ID_SELECT_PLAY, 1));
 	}
 
 	if(gameState == STATE::STATE_MENU_SETTINGS)
@@ -348,7 +345,7 @@ void MenuRenderer::setupButtons(STATE gameState) {
 
 void MenuRenderer::setupDebugMenu(bool enabled) {
 	if(enabled) {
-		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL));
+		buttons.insert(buttons.begin(), new Gui::Button(16 * wave.getScale(), (16 * wave.getScale()) + 50, (380 / 2), 64, "Kill all players", Gui::Button::ID_DEBUG_KILLALL, 3));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
 			if(buttons.at(i)->getId(Gui::Button::ID_DEBUG_KILLALL)) {
@@ -372,17 +369,29 @@ void MenuRenderer::pauseGame(bool paused) {
 	gamePaused = paused;
 	pauseGuiShown = gamePaused;
 
-	if(gamePaused) {
+	pauseGameBase();
+}
+
+void MenuRenderer::pauseGame() {
+	gamePaused = !gamePaused;
+	pauseGuiShown = gamePaused;
+
+	pauseGameBase();
+}
+
+void MenuRenderer::pauseGameBase() {
+	if (gamePaused) {
 		hud.pauseTime();
 
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", 9));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", 10));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", 99));
-	} else {
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", Gui::Button::ID_PAUSE_CONTINUE, 3));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", Gui::Button::ID_PAUSE_MAINMENU, 3));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", Gui::Button::ID_PAUSE_OPTIONS, 3));
+	}
+	else {
 		hud.resumeTime();
 
-		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId(9) || buttons.at(i)->getId(10) || buttons.at(i)->getId(99)) {
+		for (int i = 0; i < buttons.size(); i++) {
+			if (buttons.at(i)->getId({ Gui::Button::ID_PAUSE_CONTINUE, Gui::Button::ID_PAUSE_MAINMENU, Gui::Button::ID_PAUSE_OPTIONS })) {
 				buttons.erase(buttons.begin() + i);
 				i--;
 			}
@@ -392,28 +401,6 @@ void MenuRenderer::pauseGame(bool paused) {
 
 void MenuRenderer::hidePauseGUI() {
 	pauseGuiShown = !pauseGuiShown;
-}
-
-void MenuRenderer::pauseGame() {
-	gamePaused = !gamePaused;
-	pauseGuiShown = gamePaused;
-
-	if(gamePaused) {
-		hud.pauseTime();
-
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Continue", Gui::Button::ID_PAUSE_CONTINUE));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Main menu", Gui::Button::ID_PAUSE_MAINMENU));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2 - 16 - 64, 720 - 16, 64, "Options", Gui::Button::ID_PAUSE_OPTIONS));
-	} else {
-		hud.resumeTime();
-
-		for(int i = 0; i < buttons.size(); i++) {
-			if(buttons.at(i)->getId({ Gui::Button::ID_PAUSE_CONTINUE, Gui::Button::ID_PAUSE_MAINMENU, Gui::Button::ID_PAUSE_OPTIONS })) {
-				buttons.erase(buttons.begin() + i);
-				i--;
-			}
-		}
-	}
 }
 
 void MenuRenderer::gameEnd() {
@@ -432,8 +419,8 @@ void MenuRenderer::exitConfirmation() {
 	exitConfirmationPopup = !exitConfirmationPopup;
 
 	if(exitConfirmationPopup) {
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "No", 90));
-		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 91));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "No", 90, 4));
+		buttons.insert(buttons.begin(), new Gui::Button(wave.getWindow()->getSize().x / 2 + 8 - 360, wave.getWindow()->getSize().y / 2, 360 - 16, 64, "Yes", 91, 4));
 	} else {
 		for(int i = 0; i < buttons.size(); i++) {
 			if(buttons.at(i)->getId(90) || buttons.at(i)->getId(91)) {
@@ -453,27 +440,7 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 			window.draw(r);
 
 
-		for(Gui::Button* b : buttons) {
-			if(!b->getId(40)) {
-				if(!pauseGuiShown && gamePaused) {
-					if(!b->getId(9) && !b->getId(10) && !b->getId(99)) {
-						b->render(window);
-						break;
-					}
-				}
-				b->render(window);
-			}
-
-		}
-
-		for(Gui::Slider* s : sliders)
-			s->render(window);
-
-		for(Gui::Checkbox* c : checkboxes)
-			c->render(window);
-
-		for(Gui::Arrow* a : arrows)
-			a->render(window);
+		renderForLayer(window, layer);
 		
 
 		//======================================================//
@@ -518,71 +485,103 @@ void MenuRenderer::render(sf::RenderWindow& window, int32_t layer) {
 		if(pauseGuiShown) {
 			window.draw(pauseBackground);
 			window.draw(title);
-
-			for(Gui::Button* b : buttons)
-				if(b->getId(9) || b->getId(10) || b->getId(99))
-					b->render(window);
 		}
+
+		renderForLayer(window, layer);
 	}
 
 	if(layer == 3) {
-		for(Gui::Button* b : buttons)
-			if(b->getId(40))
-				b->render(window);
+		//This line we want!!!
+		sf::Vertex top[] = {
+			sf::Vertex(sf::Vector2f(10, 10), sf::Color::Transparent),
+			sf::Vertex(sf::Vector2f(160, 10), sf::Color::Transparent),
+			sf::Vertex(sf::Vector2f(160, 20), sf::Color::Red),
+			sf::Vertex(sf::Vector2f(10, 20), sf::Color::Red)
+		};
 
-		if(exitConfirmationPopup) {
-			double btnY = wave.getWindow()->getSize().y / 2;
-			double btnHeight = 64;
+		sf::Vertex btm[] = {
+			sf::Vertex(sf::Vector2f(10, 20), sf::Color::Red),
+			sf::Vertex(sf::Vector2f(160, 20), sf::Color::Red),
+			sf::Vertex(sf::Vector2f(160, 30), sf::Color::Transparent),
+			sf::Vertex(sf::Vector2f(10, 30), sf::Color::Transparent)
+		};
 
-			sf::RectangleShape r1;
-			r1.setFillColor(sf::Color::Black);
-			r1.setOutlineColor(sf::Color::White);
-			r1.setOutlineThickness(2);
-			r1.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
-			r1.setSize(sf::Vector2f(720, btnY + btnHeight + 8 - r1.getPosition().y));
+		window.draw(top, 4, sf::Quads);
+		window.draw(btm, 4, sf::Quads);
 
-			sf::Text title = createText("Exit game?", 40);
-			title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
-			
-			sf::Text msg = createCenteredTextX((int) wave.getWindow()->getSize().y / 4 + 2 * (int) title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
-
-			window.draw(r1);
-			window.draw(title);
-			window.draw(msg);
-
-			for(Gui::Button* b : buttons)
-				if(b->getId(90) || b->getId(91))
-					b->render(window);
-		}
+		renderForLayer(window, layer);
 	}
 
-	if(layer == 4 && wave.isDebugMenuEnabled()) {
-		sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
-		sf::Text fps = createText(10, (int) enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
-		sf::Text scoreNotify = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 5, "Score: " + std::to_string(e.scoreCount), 16);
+	if (exitConfirmationPopup) {
+		double btnY = wave.getWindow()->getSize().y / 2;
+		double btnHeight = 64;
 
-		window.draw(enabledNotify);
-		window.draw(fps);
-		window.draw(scoreNotify);
+		sf::RectangleShape r1;
+		r1.setFillColor(sf::Color::Black);
+		r1.setOutlineColor(sf::Color::White);
+		r1.setOutlineThickness(2);
+		r1.setPosition(sf::Vector2f(wave.getWindow()->getSize().x / 2 - 360, wave.getWindow()->getSize().y / 4));
+		r1.setSize(sf::Vector2f(720, btnY + btnHeight + 8 - r1.getPosition().y));
 
-		bool flag = e.entities.size() > 0;
-		for(int i = 0; i < e.entities.size(); i++) {
-			std::string _str = e.entities.at(i)->getId(ID::BasicEnemy) ? "ID:BasicEnemy" : e.entities.at(i)->getId(ID::FastEnemy) ? "ID::FastEnemy" : e.entities.at(i)->getId(ID::MenuParticle) ? "ID:MenuParticle" : e.entities.at(i)->getId(ID::Player) ? "ID:Player" : "ID::SmartEnemy";
-			sf::Text _t = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + (i * 18) + 120, "E:-NaN", 14);
-			_t.setString("E:" + std::to_string(e.entities.at(i)->getUid()) + "#" + _str);
+		sf::Text title = createText("Exit game?", 40);
+		title.setPosition(wave.getWindow()->getSize().x / 2 - title.getGlobalBounds().width / 2, wave.getWindow()->getSize().y / 4 + title.getGlobalBounds().height);
 
-			window.draw(_t);
-			flag = true;
+		sf::Text msg = createCenteredTextX((int)wave.getWindow()->getSize().y / 4 + 2 * (int)title.getGlobalBounds().height + 35, "Are you sure you want to exit?", 25);
+
+		window.draw(r1);
+		window.draw(title);
+		window.draw(msg);
+	}
+
+	if(layer == 4) {
+		if (wave.isDebugMenuEnabled()) {
+			sf::Text enabledNotify = createText(10, 10, "Debug menu:", 16);
+			sf::Text fps = createText(10, (int)enabledNotify.getGlobalBounds().height + 15, "FPS: " + std::to_string(wave.fps()), 14);
+			sf::Text scoreNotify = createText(10, (int)fps.getPosition().y + (int)fps.getGlobalBounds().height + 5, "Score: " + std::to_string(e.scoreCount), 16);
+
+			window.draw(enabledNotify);
+			window.draw(fps);
+			window.draw(scoreNotify);
+
+			bool flag = e.entities.size() > 0;
+			for (int i = 0; i < e.entities.size(); i++) {
+				std::string _str = e.entities.at(i)->getId(ID::BasicEnemy) ? "ID:BasicEnemy" : e.entities.at(i)->getId(ID::FastEnemy) ? "ID::FastEnemy" : e.entities.at(i)->getId(ID::MenuParticle) ? "ID:MenuParticle" : e.entities.at(i)->getId(ID::Player) ? "ID:Player" : "ID::SmartEnemy";
+				sf::Text _t = createText(10, (int)fps.getPosition().y + (int)fps.getGlobalBounds().height + (i * 18) + 120, "E:-NaN", 14);
+				_t.setString("E:" + std::to_string(e.entities.at(i)->getUid()) + "#" + _str);
+
+				window.draw(_t);
+				flag = true;
+			}
+
+			sf::Text tEntities = createText(10, (int)fps.getPosition().y + (int)fps.getGlobalBounds().height + 100, "Entities:", 16);
+			sf::Text nEntities = createText(10, (int)fps.getPosition().y + (int)fps.getGlobalBounds().height + 120, "No entities found", 14);
+
+			window.draw(tEntities);
+
+			if (!flag)
+				window.draw(nEntities);
 		}
 
-		sf::Text tEntities = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 100, "Entities:", 16);
-		sf::Text nEntities = createText(10, (int) fps.getPosition().y + (int) fps.getGlobalBounds().height + 120, "No entities found", 14);
-
-		window.draw(tEntities);
-
-		if(!flag)
-			window.draw(nEntities);
+		renderForLayer(window, layer);
 	}
+}
+
+void MenuRenderer::renderForLayer(sf::RenderWindow& window, int32_t layer) {
+	for (Gui::Button* b : buttons)
+		if (b->getLayer() == layer)
+			b->render(window);
+
+	for (Gui::Slider* s : sliders)
+		if (s->getLayer() == layer) 
+			s->render(window);
+
+	for (Gui::Checkbox* c : checkboxes)
+		if(c->getLayer() == layer)
+			c->render(window);
+
+	for (Gui::Arrow* a : arrows)
+		if(a->getLayer() == layer)
+			a->render(window);
 }
 
 void MenuRenderer::playerPos(PlayerEntity* p) {
@@ -717,7 +716,7 @@ sf::Text MenuRenderer::createCenteredTextXY(std::string text, int size, int side
 	else {
 		std::cout << "Error: Text side modifier invalid, centering it instead." << std::endl;
 		sfText.setPosition((int32_t) (wave.getWindow()->getSize().x / 2 - sfText.getGlobalBounds().width / 2), (int32_t) (wave.getWindow()->getSize().y / 2 - sfText.getGlobalBounds().height / 2));
-	}
+	} 
 
 	return sfText;
 }

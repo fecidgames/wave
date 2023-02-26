@@ -17,7 +17,9 @@ enum class ID {
 	SmartEnemy,
 
 	MeteorShower,
-	MeteorShowerParticle
+	MeteorShowerParticle,
+
+	Laser
 };
 
 enum class MODE {

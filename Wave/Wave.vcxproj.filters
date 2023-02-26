@@ -99,6 +99,9 @@
     <ClCompile Include="SmartEnemy.cpp">
       <Filter>Source Files\Entity\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="LaserEntity.cpp">
+      <Filter>Source Files\Entity\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Wave.h">
@@ -162,6 +165,9 @@
       <Filter>Header Files\Handling</Filter>
     </ClInclude>
     <ClInclude Include="SmartEnemy.h">
+      <Filter>Header Files\Entity\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="LaserEntity.h">
       <Filter>Header Files\Entity\Entities</Filter>
     </ClInclude>
   </ItemGroup>

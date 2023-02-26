@@ -20,8 +20,11 @@ public:
 
 	bool isInverted();
 
+	int32_t getLayer() { return layer; }
+
 private:
 	int32_t x, y, width, height, id;
+	int32_t layer = 1;
 	bool inverted;
 };
 

@@ -23,6 +23,8 @@ public:
 	int32_t getHeight();
 	double getScale();
 
+	int32_t getLayer() { return layer; }
+
 
 private:
 	bool checked = true;
@@ -30,6 +32,8 @@ private:
 	double scale;
 	sf::Texture textureChecked;
 	sf::Texture textureNotChecked;
+
+	int32_t layer = 1;
 
 	sf::Sprite spr;
 };

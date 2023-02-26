@@ -9,7 +9,7 @@ namespace Gui {
 class Button {
 
 public:
-	Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id);
+	Button(float_t x, float_t y, float_t width, float_t height, std::string text, int32_t id, int32_t layer);
 
 	void render(sf::RenderWindow& window);
 
@@ -31,6 +31,8 @@ public:
 	float_t getHeight();
 
 	std::string getText();
+
+	int32_t getLayer() { return layer; }
 
 	const static int ID_MAIN_GAMEMODES = 0;
 	const static int ID_MAIN_OPTIONS = 1;
@@ -57,6 +59,7 @@ private:
 	std::string text;
 
 	int32_t id;
+	int32_t layer = 1;
 
 	bool down = false;
 	bool hovering = false;
